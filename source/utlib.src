@@ -7,3 +7,173 @@
       Return
  1000 Format ((1x,5i12))
       End
+c
+c.....
+c
+      Subroutine IVcPr (IV,N)
+      Parameter (Iw=6)
+      Dimension IV (N)
+      Write (Iw,1000) IV
+      Return
+ 1000 Format ((1x,5i12))
+      End
+c
+c.....
+c
+      Subroutine PriMa (A,Lable,m,n)
+      Implicit Double Precision (A-H,O-Z)
+      Parameter (Iw=6, NumCol=5)
+      Dimension A (m,*), Lable (*)
+c
+c ... Print square matrix A (m * m) (filled to n * n)
+c ... with row labeles stored in Label (*)
+c
+   12 Format (20x,5(4x,i4,4x))
+   13 Format (1h )
+   14 Format (1x,i4,i15,5f12.6)
+c
+      j1 = 1
+      j2 = NumCol
+      If (n .Le. NumCol) j2 = n
+   17 Continue
+         Write (Iw,12) (j,j=j1,j2)
+         Write (Iw,13)
+         Do 4 i=1,n
+            Write (Iw, 14) i, Lable (i), (A (i,j), j=j1,j2)
+    4    Continue
+         Write (Iw,13)
+         if (j2 .eq. n) go to 99
+         j1 = j1 + numcol
+         j2 = j2 + numcol
+         if (j2. gt. n) j2 = n
+      go to 17
+   99 Continue
+      Return
+      End
+c
+c.....
+c
+      Subroutine PrtVC (A,B,n)
+      Implicit Double Precision (A-H,O-Z)
+      Parameter (Iw=6)
+      Dimension A (n), B (n)
+      Write (Iw,1000) (A (j), B (j),j=1,n)
+ 1000 Format ((1x,2f20.12))
+      Return
+      End
+c
+c.....
+c
+      Subroutine PrtVe (A,N)
+      Implicit Double Precision (A-H,O-Z)
+      Parameter (Iw=6)
+      Dimension A (N)
+      write (Iw,1000) A
+      write (Iw,5000)
+ 1000 format ((1x,6f12.6))
+ 5000 format (1x,1h )
+      Return
+      End
+c
+c.....
+c
+      subroutine seqclo (ifile,fstat)
+c ... stripped version of gus-98 sqopn and seqclo.
+c ... (unix version only)
+      character*(*) fstat
+      parameter (mxunit=99)
+      common /opnseq/ nftopn (mxunit)
+c
+c     ----- close the sequential file ifile -----
+c     ----- fstat may be 'keep' or 'delete' -----
+c
+      close (unit=ifile, status=fstat)
+      nftopn (ifile) = 0
+      return
+      end
+c
+c.....
+c
+      subroutine seqopn (iunit,fname,fstat,fmt)
+c ... stripped version of gus-98 sqopn and seqopn.
+c ... (unix version only)
+      implicit double precision (a-h,o-z)
+      character*(*) fname,fstat,fmt
+      parameter (mxunit=99,iw=6)
+      character*256 filenm
+      character*1 null
+      common /opnseq/ nftopn(mxunit)
+c
+c     open sequential file -iunit- with generic name -fname-
+c     with status -fstat-, as either readonly/readwrite, and
+c     for either formatted or unformatted i/o. example:
+c     call seqopn(is,'aoints','unknown',.false.,'unformatted')
+c
+      if(iunit.eq.5) then
+         do 100 i=1,mxunit
+            nftopn(i)=0
+  100    continue
+      end if
+c
+c     this is for the aix xl fortran version 3, which doesn't
+c     silently ignore requests to open a file which is already open
+c
+      if(nftopn(iunit).eq.1) return
+      nftopn(iunit) = 1
+      filenm=' '
+      call getenv (fname,filenm)
+      if (iout.eq.1) return
+      if (fname.eq.'output') then
+         if(filenm(1:1).ne.' '  .and.  filenm(1:6).ne.'output') then
+            open(unit=iunit, file=filenm, status=fstat,
+     *           access='sequential', form=fmt)
+         end if
+      else
+         null = char(0)
+         do 3 kol=1,256
+            if(filenm(kol:kol).eq.' '  .or.
+     *         filenm(kol:kol).eq.null) go to 4
+    3    continue
+         kol=257
+    4    continue
+         if(kol.eq.1) then
+            write(iw,1) fname
+            stop
+         end if
+         kol=kol-1
+         open (unit=iunit, file=filenm(1:kol), status=fstat,
+     *        access='sequential', form=fmt)
+      end if
+    1 format(1x,'you must assign generic name ',a,' with a setenv.')
+      return
+      end
+c
+c.....
+c
+      Subroutine ToSma (String,Length)
+      Character*(*) String
+      Character*26 CapLet, SmaLet
+      Data CapLet / 26hQWERTZUIOPASDFGHJKLYXCVBNM /
+      Data SmaLet / 26hqwertzuiopasdfghjklyxcvbnm /
+      Do 20 i=1,Length
+         Do 10 j=1,26
+            If (String (i:i) .eq. CapLet (j:j)) then
+                String (i:i) = SmaLet (j:j)
+                go to 20 
+            EndIf
+   10    continue
+   20 continue
+      Return
+      End
+c
+c.....
+c
+      Subroutine VClear (V,N)
+      Implicit Double Precision (A-H,O-Z)
+      Parameter (Zero=0.0d+00)
+      Dimension V (*)
+      Do 10 i=1,N
+         V (i) = Zero
+   10 Continue
+      Return
+      End
