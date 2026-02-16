@@ -1,0 +1,9 @@
+      Subroutine IMtPr (Mt,Nx,N)
+      Parameter (Iw=6)
+      Dimension Mt (Nx,*)
+      Do 10 i=1,N
+         Write (Iw,1000) (Mt (i,j),j=1,N)
+   10 Continue
+      Return
+ 1000 Format ((1x,5i12))
+      End

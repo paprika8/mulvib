@@ -1,0 +1,32 @@
+Key-words appearing on Title line of MulVib
+===========================================
+
+#info		Info-only-run. Stops after evaluation of basis states.
+#restart	Continue Lanczos iterations from previous run.
+#nosave		Do not save data for further restart.
+#noplot		Do not produce plot data.
+
+#full		Full diagonalization instaed of Lanczos (testing?).
+#nosym		Turns off symmetry. This is not clear, whaether
+		this option works, and whether it makes sence
+		to use it for treating coupling of several states
+		of the same symmetry (since the formalism of 2x2
+		linear coupling model may be invalid in such a case,
+		especcially concernig algorithm for derivaton of
+		lambda constants). ABT 15-02-2015
+
+#debug		General debugging option.
+
+Extended print out for specific programs:
+
+#initz		initz.
+#input		input.
+#mtcor		mtcor.
+#mult_tst	lacor.
+#mulvib		mulvib.
+      
+#fuldg		fuldg.
+#h-mat		fulldg option.
+#h-vec		fulldg option.	
+#h-eig		fulldg option.	
+

@@ -1,0 +1,7 @@
+LDR := gfortran
+LDOPTS :=  
+LIBRARIES := -lblas
+#BLAS := blas.o
+BLAS :=  
+VECTOR :=  
+QUICHE := zunix.o

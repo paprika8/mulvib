@@ -1,0 +1,123 @@
+      Subroutine MtCor (IPart, IReAd, ZnFrq, ZklSqr, P, Q)
+      Implicit Double Precision (A-H,O-Z)
+      Parameter (Zero=0.0d+00)
+c
+c.... In-memory  Q = H * P  using symmetry
+c
+*unx  Include 'infcom.com'
+*aix  Include (infcom.com)
+c
+      Dimension IPart (NConf), IReAd (NConf), ZnFrq (NMod,NQMax), 
+     #          ZklSqr (NMod,NQMax,MxLT), P (NMatx), Q (NMatx)
+c
+      Dimension IConf (MxMod)
+      Logical IDeb
+c
+ 1100 Format ((1x,23i3))
+ 1200 Format (1x,'Ns,Ms,NM,KSym,KSta,KEnd:',6i5,' Hii=',f10.6)
+c
+c.... Initializations
+c
+      ITs1 = Index (Title,'#debug')
+      ITs2 = Index (Title,'#mtcor')
+      IDeb = ITs1.Ne.0 .Or. ITs2.Ne.0
+c
+      Call VClear (Q,NMatx)
+      Do 10 i=1,NMod
+         IConf (i) = 1
+   10 Continue
+c
+c.... Loop over configurations
+c
+      Do 50 i=1,NConf
+         If (IDeb) Write (6,1100) i, ((IConf (jx)-1),jx=1,Nmod),
+     #             IPart (i), IReAd (i)
+         Ns = IPart (i)
+         If (Ns .Eq. 0) go to 40
+         Ix = IReAd (i)
+         Pi = P (Ix)
+         Term = Zero
+         Hii = EnEl (Ns)
+c....... Diagonal contribution
+         Do 15 k=1,NMod
+            n0  = IConf (k)
+            Hii = Hii + ZnFrq (k,n0)
+   15    Continue
+c....... Off-diagonat contribution
+c....... Loop over states interacting with Ns
+         MEnd = NInt (Ns)
+         If (MEnd .Eq. 0) go to 40
+         Do 30 m=1,MEnd
+            Ms = IntEl (Ns,m)
+            NM = ILTr  (Ns,Ms)
+c.......... Loop over coupling modes
+            KSym = MulTab (ISyEl (Ns), ISyEl (Ms))
+            KSta = ModBlo (KSym)
+            KEnd = KSta + NModSy (KSym) - 1
+            Do 20 k=KSta,KEnd
+               n1 = IConf (k) + 1
+               If (n1 .Le. LimQN (k)) then
+                  j  = i + Indxx (k)
+                  Jx = IReAd (j)
+                  Hij  = ZklSqr (k,n1,NM)
+                  Term = Term + Hij * P (Jx)
+                  Q (Jx) = Q (Jx) + Hij * Pi
+               EndIf
+   20       Continue
+            If (IDeb) Write (6,1200) Ns,Ms,NM,KSym,KSta,KEnd,Hii
+   30    Continue
+         Q (Ix) = Q (Ix) + Hii * Pi + Term
+c....... Get next set of quantum nubers
+   40    Call NstDo (IConf,NMod,LimQN)
+   50 Continue
+      Return
+      End
+c
+c.....
+c
+      Subroutine MtCorX (ZnFrq, ZklSqr, P, Q)
+      Implicit Double Precision (A-H,O-Z)
+      Parameter (Zero=0.0d+00)
+c
+c.... In-memory  Q = H * P  without symmetry.
+c.... All empty positions in -ZklSqr- should be zeroed !
+c
+*unx  Include 'infcom.com'
+*aix  Include (infcom.com)
+c
+      Dimension ZnFrq (NMod,NQMax), ZklSqr (NMod,NQMax,MxLT), 
+     #          P (NMatx), Q (NMatx)
+      Dimension IConf (MxMod)
+c
+      Call VClear (Q,NMatx)
+      Do 10 i=1,NMod
+         IConf (i) = 1
+   10 Continue
+c
+      Do 40 i=1,NConf
+         Do 30 Ie=1,Nel
+         Do 30 Je=1,Ie
+            IeSh = (Ie-1)*NConf
+            JeSh = (Je-1)*NConf
+            NM = ILTr (Ie,Je)
+            If (Ie.Eq.Je) Hii = EnEl (Ie)
+            Do 20 k=1,NMod
+               n0 = IConf (k)
+               n1 = n0 + 1
+               If (Ie .Eq. Je) Hii = Hii + ZnFrq (k,n0)
+               If (n1 .Le. LimQN (k)) then
+                  j = i + Indxx (k)
+                  Hij = ZklSqr (k,n1,NM)
+                  Q (i+IeSh) = Q (i+IeSh) + Hij * P (j+JeSh)
+                  Q (j+IeSh) = Q (j+IeSh) + Hij * P (i+JeSh)
+                  If (Ie.Eq.Je) go to 20
+                  Q (i+JeSh) = Q (i+JeSh) + Hij * P (j+IeSh)
+                  Q (j+JeSh) = Q (j+JeSh) + Hij * P (i+IeSh)
+               EndIf
+   20       Continue
+            If (Ie.Eq.Je) Q (i+IeSh) = Q (i+IeSh) + Hii * P (i+IeSh)
+   30    Continue
+         Call NstDo (IConf,NMod,LimQN)
+   40 Continue
+      Return
+      End

@@ -1,0 +1,29 @@
+blas.src:c                                prepare for phase 2.
+blas.src:c                   phase 2.  sum is small.
+clean.src:     #        d14.7,' : ',i5,'.',/,1x,'Normalization :',f12.7,/)
+fuldg.src:      Deb  = ITs1.Ne.0 .Or. ITs2.Ne.0
+fuldg.src:C !!!! inf(SUN) = 2.225074D-308 !!!!! --- to be checked
+initz.old: 1300 Format ((1x,5f12.6))
+initz.old:      IDeb = ITs1.Ne.0 .Or. (ITs2.Ne.0 .And. ITs3.Ne.0)
+initz.src: 1300 Format ((1x,5f12.6))
+initz.src:      IDeb = ITs1.Ne.0 .Or. ITs2.Ne.0
+input.old: 1300 Format (1x,'fwhm=',f12.6,' npont=',i6,' shape=',a4)
+input.src: 1300 Format (1x,'fwhm=',f12.6,' npont=',i6,' shape=',a4)
+lacor.src:c3400    Format (1x,'i=',i3,' A=',f12.6,' B=',f12.6)
+lacor.src.old:c3400    Format (1x,'i=',i3,' A=',f12.6,' B=',f12.6)
+mtcor.src:      IDeb = ITs1.Ne.0 .Or. ITs2.Ne.0
+splot.src:      data zero, two, four / 0.0d+00, 2.0d+00, 4.0d+00 /
+splot.src: 1100 format (1x,e12.7e1,2x,',',2x,e12.7e1)
+unport.f:C          SYSTEMS WITH 32 BIT INTEGERS USE A VALUE OF 2.               
+unport.f:C        VERSION 2.3, RELEASED SEPTEMBER 1992.  IF YOU HAVE RECEIVED    
+unport.f:CAIX5 FORMAT(I2,':',I2.2,':',I2.2,' CST ',I2,'-',A3,'-',I4)             
+unport.f:C        VERSION 2.3, RELEASED SEPTEMBER 1992.  IF YOU HAVE RECEIVED    
+unport.f:C   2. ASK FOR THE VALUE FOR -NAME- FROM DISK, FROM A FILENAME          
+unport.src:C          SYSTEMS WITH 32 BIT INTEGERS USE A VALUE OF 2.
+unport.src:C        VERSION 2.3, RELEASED SEPTEMBER 1992.  IF YOU HAVE RECEIVED
+unport.src:CAIX5 FORMAT(I2,':',I2.2,':',I2.2,' CST ',I2,'-',A3,'-',I4)
+unport.src:C        VERSION 2.3, RELEASED SEPTEMBER 1992.  IF YOU HAVE RECEIVED
+unport.src:C   2. ASK FOR THE VALUE FOR -NAME- FROM DISK, FROM A FILENAME
+utlib.src:   14 Format (1x,i4,i15,5f12.6)
+utlib.src:         if (j2. gt. n) j2 = n
+utlib.src: 1000 format ((1x,6f12.6))

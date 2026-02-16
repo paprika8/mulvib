@@ -1,0 +1,100 @@
+      Subroutine Initz (ZnFrq, ZklSqr, IPart, IReAd)
+      Implicit Double Precision (A-H,O-Z)
+c
+c.... Generate basis states and precompute various quantities
+c.... Note that -IPart- and -IReAd- are DUMMY without symmtery.
+c
+*unx  Include 'infcom.com'
+*unx  Include 'ioscom.com'
+*aix  Include (infcom.com)
+*aix  Include (ioscom.com)
+c
+      Dimension ZnFrq (NMod,NQMax), ZklSqr (NMod,NQMax,MxLT),
+     #          IPart (*), IReAd (*)
+      Dimension IScrt (MxMod)
+      Logical IDeb
+c
+ 1000 Format (1x,'Basis states description (No; QNs; IPart; IReAd) :')
+ 1100 Format ((1x,23i3))
+ 1400 Format (1x,'Entry :',i2,' (states',2i2,')')
+ 1300 Format ((1x,5f12.6))
+ 1200 Format (1x,'Dimension of vibronic Hamiltonian matrix :',i10,'.',/,
+     #        1x,'End of input and initialization.')
+c
+      ITs1 = Index (Title,'#debug')
+      ITs2 = Index (Title,'#initz')
+      IDeb = ITs1.Ne.0 .Or. ITs2.Ne.0
+c
+c....... Basis state stuff
+c
+      If (NoSym .Ne. 0) then
+         NMatx = NConf * Nel
+      else
+c
+         If (IDeb) Write (Iw,1000)
+         Do 10 i=1,NMod
+            IScrt (i) = 1
+   10    Continue
+c
+         NDm = 0
+         Do 40 i=1,NConf
+            IVS = 1
+            Do 30 j=1,NVibS
+               JSym = ISyMod (j)
+               If (JSym .Eq. 1) go to 30
+               Ks = ModBlo (JSym)
+               Kn = NModSy (JSym)
+               Ke = Ks + Kn - 1
+               NSum =  - Kn
+               Do 20 k=Ks,Ke
+                  NSum = NSum + IScrt (k)
+   20          Continue
+               If (Mod (NSum,2) .Eq. 0) go to 30
+               IVS = MulTab (IVS,JSym)
+   30       Continue
+            IES = MulTab (IVS,IToSym)
+            NSt = NelSy  (IES)
+            IPart (i) = NSt
+            IRead (i) = 0
+            If (NSt .Ne. 0) then
+               NDm = NDm + 1
+               IReAd (i) = NDm
+            End If
+            If (IDeb) Write (Iw,1100) i, ((IScrt (jx)-1),jx=1,Nmod), 
+     #                IPart (i), IReAd (i)
+            Call NstDo (IScrt,NMod,LimQN)
+   40    Continue
+         NMatx = NDm
+      End If
+c
+c.... Precompute factors for matrix x vector multiplication
+c
+      Do 50 i=1,NQMax
+         Termi = DFloat (i-1)
+         SqTer = Dsqrt  (Termi)
+         Do 50 j=1,NMod
+            ZnFrq (j,i) = Termi * Freqs (j)
+            Do 50 k=1,MxLT
+               ZklSqr (j,i,k) = SqTer * VibCon (k,j)
+   50 Continue
+c
+      If (IDeb) then
+         Write (Iw,*) ' Matrix ZnFrq :'
+         Do 60 i=1,NMod
+            Write (Iw,1300) (ZnFrq (i,j),j=1,NQMax)
+   60    Continue
+         Write (Iw,*) ' Matrix ZklSqr :'
+         k = 0
+         Do 70 m=1,Nel
+         Do 70 n=1,m
+            k = k + 1
+            Write (Iw,1400) k, m, n
+            Do 70 i=1,NMod
+               Write (Iw,1300) (ZklSqr (i,j,k),j=1,NQMax)
+   70    Continue
+      End If
+c
+      Write (Iw,1200) NMatx
+      Call Timit (1)
+      Return
+      End

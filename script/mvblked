@@ -1,0 +1,121 @@
+#!/bin/csh
+#
+#  Stripped GUS-98 C-shell script to link-edit MULVIB, with loadmap.
+#
+#    EXE is normally 'mulvib',
+#    VERNO is the next version number, e.g. 01, 02, 03, ...
+#    This produces executable "EXE.VERNO.exe".
+#
+#  The legal values for TARGET are
+#       decaxpf77,decaxpf90,hp9000,ibm6000,ibm9076,pcunix,sgi,sun
+#
+set MVBROOT=/e/CourseWork
+set TARGET=pcunix
+set PARALLEL=false
+chdir $MVBROOT
+#
+set EXE=$1
+set VERNO=$2
+if (null$EXE == null) set EXE=mulvib
+if (null$VERNO == null) set VERNO=00
+date
+#
+echo MULVIB will be linked into the executable image $EXE.$VERNO.x.
+#
+if (-e $EXE.$VERNO.exe) then
+   echo An old executable $EXE.$VERNO.exe already exists!
+   echo Bombing out...
+   exit
+endif
+#
+#   Define the options for the system loader 'ld'.  These are
+#       LDR       - the name of the loader (usually a compiler).
+#       LDOPTS    - options, such as asking for a load map.
+#       LIBRARIES - extra system libraries which must be searched.
+#       BLAS      - set to blas.o if not using system BLAS.
+#                   set to blank if using system BLAS.
+#       VECTOR    - set to vector.o on a vector processor.
+#                   set to blank on a scalar processor.
+#       QUICHE    - set to zunix.o if using true dynamic memory,
+#                   possibly add other system specific objects.
+#                   set to blank otherwise.
+#
+if ($TARGET == decaxpf77 || $TARGET == decaxpf90) then
+   if( $TARGET == decaxpf77) set LDR='f77'
+   if( $TARGET == decaxpf90) set LDR='f90'
+   set LDOPTS='-Wl,-M'   # add -non_shared to see libraries
+   set LIBRARIES=' '
+   set BLAS='blas.o'
+   set VECTOR=' '
+   set QUICHE='zunix.o'
+endif
+#
+if ($TARGET == hp9000) then
+   set LDR='f77'
+   set LDOPTS='+O2 +DA2.0 +FPD +U77 +Ofastaccess -Wl,-a,archive'
+   set LIBRARIES='/opt/fortran/lib/pa1.1/libblas.a'
+   set BLAS=' '
+   set VECTOR=' '
+   set QUICHE='zunix.o zhp9000.o'
+endif
+#
+#   To see length of common blocks and subroutine sizes,
+#     add "-Wl,-bmap:../lked.sizes" to LDOPTS.
+#   To avoid use of dynamic link libraries, if xlfrte is absent,
+#     add "-Wl,-bnso -Wl,-bI:/lib/syscalls.exp" to LDOPTS.
+#
+if (($TARGET == ibm6000) || ($TARGET == ibm9076)) then
+   if ($TARGET == ibm6000) set LDR='xlf'
+   if ($TARGET == ibm9076) set LDR='mpxlf'
+   set LDOPTS='-Wl,-m  -Wl,-bmaxdata:900000000  -Wl,-bloadmap:../lked.map'
+   set LIBRARIES='-lblas'
+   set BLAS=' '
+   set VECTOR=' '
+   set QUICHE='zunix.o'
+endif
+#
+if ($TARGET == pcunix) then
+   set LDR='gfortran'
+   set LDOPTS=' '
+#  set LIBRARIES='-lblas'
+   set BLAS='blas.o'
+   set LIBRARIES=' '
+#  set BLAS=' '
+   set VECTOR=' '
+   set QUICHE='zunix.o'
+endif
+#
+if ($TARGET == sgi) then
+   set LDR='f77'
+   set LDOPTS='-Wl,-M -64 -mips4'
+   set LIBRARIES=' '
+   set BLAS='blas.o'
+   set VECTOR=' '
+   set QUICHE='zunix.o'
+endif
+#
+if ($TARGET == sun) then
+   set LDR='f77'
+   set LDOPTS='-m'
+#
+# To include (statically) native BLAS
+#  set LIBRARIES='-Bstatic -xlic_lib=sunperf -Bdynamic'
+#  set BLAS=''
+#
+   set LIBRARIES=' '
+   set BLAS='blas.o'
+   set VECTOR=' '
+   set QUICHE='zunix.o'
+endif
+#
+set echo
+chdir object
+$LDR   -o ../$EXE.$VERNO.exe   $LDOPTS    \
+       mulvib.o unport64.o                 \
+       clean.o fuldg.o initz.o input.o   \
+       lacor.o mtcor.o nstdo.o splot.o   \
+       tridg.o utlib.o                   \
+       $BLAS   $VECTOR  $QUICHE  $LIBRARIES
+#
+unset echo
+time

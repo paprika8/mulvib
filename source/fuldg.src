@@ -1,0 +1,496 @@
+      Subroutine FulDg (ZnFrq, ZklSqr, IPart, IReAd, P, Q, H, IScr)
+      Implicit Double Precision (A-H,O-Z)
+      Parameter (Zero=0.0d+00, One=1.0d+00, Ten=10.0d+00)
+      Parameter (MxH=2000, MxL=10, MxQ=9)
+c
+c.... Build and diagonalize exactly full Hamiltonian.
+c.... Note that -IPart- and -IReAd- are DUMMY without symmtery.
+c.... Returns eigenvalues in -P- and
+c.... first elements of eigenvecors in -Q-.
+c
+*unx  Include 'infcom.com'
+*unx  Include 'ioscom.com'
+*f2c  Include 'infcom.com'
+*f2c  Include 'ioscom.com'
+*aix  Include (infcom.com)
+*aix  Include (ioscom.com)
+c
+      Dimension ZnFrq (NMod, NQMax), ZklSqr (NMod, NQMax, MxLT), 
+     #          IPart (*), IReAd (*), P (NMatx), Q (NMatx), 
+     #          H (NMatx,*), IScr (NMatx)
+c
+      Dimension IConf (MxL)
+      Logical   Deb
+c
+ 1000 Format (1x,'>>> Error: FulDg is presently restricted to',/,
+     #        5x,'Max matrix dim.  =',i4,/,
+     #        5x,'Max No. of modes =',i4,/,
+     #        5x,'Max qunt. number =',i4,' <<<')
+ 1100 Format (1x,'Energies and Intensities :')
+c
+      If (NMatx.Gt.MxH .Or. NMod.Gt.MxL .Or. NQMax.Gt.MxQ) then
+         Write (Iw,1000) MxH, MxL, MxQ
+         stop
+      EndIf
+c
+      ITs1 = Index (Title,'#debug')
+      ITs2 = Index (Title,'#fuldg')
+      ITsH = Index (Title,'#h-mat')
+      ITsV = Index (Title,'#h-vec')
+      ITsE = Index (Title,'#h-eig')
+      Deb  = ITs1.Ne.0 .Or. ITs2.Ne.0
+c
+c.... Set basis state labels
+c
+      If (Deb .Or. ITsH .Ne. 0 .Or. ITsV .Ne. 0) then
+      If (NoSym .Eq. 0) then
+         Do 10 i=1,NMod
+            IConf (i) = 1
+   10    Continue
+         Do 30 i=1,NConf
+            If (IPart (i) .Eq. 0) go to 30
+            TX = Zero
+            Do 20 j=1,NMod
+               XJ = Ten ** DFloat (NMod-j)
+               TX = TX + IConf (j) * XJ
+   20       Continue
+            IScr (IReAd (i)) = TX
+   30    Call NstDo (IConf, NMod, LimQN)
+      else
+         Do 70 Ie=1,Nel
+            IeSh = (Ie-1)*NConf
+            Do 40 i=1,NMod
+               IConf (i) = 1
+   40       Continue
+            Do 60 i=1,NConf
+               TX = Zero
+               Do 50 j=1,NMod
+                  XJ = Ten ** DFloat (NMod-j)
+                  TX = TX + IConf (j) * XJ
+   50          Continue
+               Iscr (i+IeSh) = TX
+   60       Call NstDo (IConf,NMod,LimQN)
+   70    Continue
+      End If
+      End If
+c
+c.... Set up Hamiltonian using Matrix x Vector utility
+c
+      Call VClear (P,NMatx)
+      Do 80 m=1,NMatx
+         P (m) = One
+         If (NoSym .Eq. 0) then
+            Call MtCor (IPart, IReAd, ZnFrq, ZklSqr, P, H (1,m))
+         else
+            Call MtCorX (ZnFrq, ZklSqr, P, H (1,m))
+         End If
+         P (m) = Zero
+   80 Continue
+c
+      If (Deb .Or. ITsH .Ne. 0) then
+         Write (Iw,*) ' Matrix H :'
+         Call PriMa (H,IScr,NMatx,NMatx)
+      End If
+c
+c.... Diagonalize
+c
+      Call ExDiag (NMatx, NMatx, H, P, H, Q, .True.)
+c
+c.... Print results
+c
+      If (Deb .Or. ITsE .Ne. 0) then
+         Write (Iw,*) ' Eigenvalues of H :'
+         Call PrtVe (P,NMatx)
+      End If
+      If (Deb .Or. ITsV .Ne. 0) then
+         Write (Iw,*) ' Eigenvectors of H :'
+         Call PriMa (H,IScr,NMatx,NMatx)
+      End If
+      Write (Iw,1100)
+      Call FulPr (H, P)
+c
+c.... Intensity
+c
+      Do 90 i=1,NMatx
+         Q (i) = H (1,i)
+   90 Continue
+      Call Timit (1)
+      Return
+      End
+c
+c....
+c
+      Subroutine ExDiag (nd,n,a,d,x,e,full)
+      Implicit Double Precision (A-H,O-Z)
+c
+c      computation of all eigenvalues and eigenvectors of a real
+c      symmetric matrix by the method of qr transformations.
+c      if the euclidean norm of the rows varies   s t r o n g l y
+c      most accurate results may be obtained by permuting rows and
+c      columns to give an arrangement with increasing norms of rows.
+c
+c      two machine constants must be adjusted appropriately,
+c
+c      eps = minimum of all x such that 1+x is greater than 1 on the
+c            computer,
+c      tol = inf / eps  with inf = minimum of all positive x represen-
+c            table within the computer.
+C
+C !!!! inf(SUN) = 2.225074D-308 !!!!! --- to be checked
+c
+c      input
+c
+c     (nd)   row dimension of eigenvector matrix x.
+c            also, row dimension of matrix a when the latter is in
+c            full storage mode.
+c
+c      (n)   order of the matrix
+c
+c      (a)   the matrix to be diagonalized.
+c            if full (see below) is true, then a is taken to be in
+c            full storage mode, corresponding to a dimension a(nd,nd)
+c            statement. only the lower triangle need be set.
+c            when full is false, a is in lower triangle storage mode.
+c            a remains unaltered, unless overwritten by x.
+c
+c      (e)   scratch vector, of dimension ge n.
+c
+c   (full)   logical. flags the storage mode of a.
+c
+c      output
+c
+c      (d)   components d(1), ..., d(n) hold the computed eigenvalues
+c            in ascending sequence.
+c
+c      (x)   eigenvector matrix x(nd,nd) the eigenvectors
+c            are normalized and orthogonal to working accuracy.
+c            x can overwrite a, regardless of its storage mode.
+c
+c
+      logical full
+      dimension   a(1),d(1),x(1),e(1)
+c
+      data ms1,m1,m2,zero,one / -1, 1, 2, 0.0d+00, 1.0d+00 /
+c
+c     ........ ibm r*8 accuracy parameters
+c
+*aix  data eps,tol /z3410000000000000,z0d10000000000000/
+*unx  data eps,tol /z'3410000000000000',z'0d10000000000000'/
+*f2c  data eps,tol /6.372367644529809D-058,9.153422936374701D-246/
+c
+c     ........ ibm r*4 accuracy parameters
+c
+c     data eps,tol /z3c100000,z05100000/
+c
+c     ......... fps 164 parameters
+c
+c     data eps,tol /z'79c8000000000000',z'0668000000000000'/
+c
+c
+      if(n.eq.m1) go to 400
+c
+      ni=n+ms1
+      nm1=nd+ms1
+      neg=-nd
+      nn=(n-1)*nd+n
+      np1=nd+m1
+      neg1=-np1
+      kk=nn+neg
+      if(full) then
+c
+c       full storage mode -- copy
+c
+      kf=n
+      do 11 k=1,nn,np1
+      do 10 i=k,kf
+   10 x(i)=a(i)
+   11 kf=kf+nd
+c
+      else
+c
+c        lower triangle storage mode
+c        copy upper triangle first to prevent overwriting
+c        when x and a have same address
+c
+      j=n*(n+1)/2
+      kf=nn-n+m1
+      do 2 k=nn,m1,neg1
+      do 1 i=k,kf,ms1
+      x(i)=a(j)
+    1 j=j+ms1
+    2 kf=kf+neg
+c
+c     now can set lower triangle
+c
+      kf=n
+      do 4 k=m2,kk,np1
+      j=k+nm1
+      do 3 i=k,kf
+      x(i)=x(j)
+    3 j=j+nd
+    4 kf=kf+nd
+c
+      endif
+c
+c     householder's reduction
+c
+      do 150 i=n,m2,ms1
+      i1=ms1+i
+      l=kk+neg
+      h=zero
+      g=x(kk)
+      if(i.eq.m2) go to 140
+      do 30 k=i,l,nd
+   30 h=x(k)*x(k)+h
+      s=h+g*g
+      if(s.lt.tol) h=zero
+      if(h.le.zero) go to 140
+      f=g
+      g=dsqrt(s)
+      if(f.gt.zero) g=-g
+      h=s-f*g
+      x(kk)=f-g
+      oneh=one/h
+      f=zero
+c
+      ji=kk+nd-i
+      ij=i
+      kj=m1
+      do 110 j=1,i1
+      ji=ji+m1
+      x(ji)=x(ij)*oneh
+      s=zero
+      ki=i
+      do 80 k=j,kj,nd
+      s=s+x(k)*x(ki)
+   80 ki=ki+nd
+      if(j.eq.i1) go to 100
+      kj=kj+m1
+      do 90 k=kj,ij+ms1
+      s=x(k)*x(ki)+s
+   90 ki=ki+nd
+      kj=kj+nd
+      ij=ij+nd
+  100 e(j)=s*oneh
+  110 f=s*x(ji)+f
+c
+      f=-f/(h+h)
+      ij=i
+      do 120 j=1,i1
+      e(j)=f*x(ij)+e(j)
+  120 ij=ij+nd
+      jd=i1
+      ij=i
+      do 130 j=1,i1
+      f=-x(ij)
+      s=-e(j)
+      jk=j
+      do 129 k=1,j
+      x(jk)=f*e(k)+s*x(jk+jd)+x(jk)
+  129 jk=jk+nd
+      jd=jd+ms1
+  130 ij=ij+nd
+c
+  140 d(i)=h
+      e(i1)=g
+  150 kk=kk+neg1
+c
+c     accumulation of transformation matrices
+c
+      d(1)=x(1)
+      x(1)=one
+      ist=np1
+      id=m1
+      do 220 i=2,n
+      if(d(i).le.zero) go to 200
+      kf=i+ms1
+      do 190 j=1,ist+neg,nd
+      s=zero
+      ik=i
+      do 180 kj=j,kf
+      s=x(ik)*x(kj)+s
+  180 ik=ik+nd
+      s=-s
+      ki=ist
+      do 189 kj=j,kf
+      x(kj)=s*x(ki)+x(kj)
+  189 ki=ki+m1
+  190 kf=kf+nd
+  200 id=id+np1
+      d(i)=x(id)
+      x(id)=one
+      ik=i
+      do 219 ki=ist,id+ms1
+      x(ki)=zero
+      x(ik)=zero
+  219 ik=ik+nd
+  220 ist=ist+nd
+c
+c     diagonalization of the tridiagonal matrix
+c
+      b=zero
+      f=zero
+      e(n)=zero
+c
+      do 340 l=1,n
+      h=eps*(dabs(d(l))+dabs(e(l)))
+      if (h.gt.b) b=h
+c
+c     test for splitting
+c
+      do 240 j=l,n
+      if (dabs(e(j)).le.b) goto 250
+  240 continue
+c
+c     test for convergence
+c
+  250 if(j.eq.l) go to 340
+c
+c     shift from upper 2*2 minor
+c
+  260 p=(d(l+1)-d(l))*0.50d+00/e(l)
+      r=dsqrt(p*p +one)
+      if(p.ge.zero) go to 280
+      p=p-r
+      go to 290
+  280 p=p+r
+  290 h=d(l)-e(l)/p
+      do 300 i=l,n
+  300 d(i)=d(i)-h
+      f=f+h
+c
+c     qr transformation
+c
+      p=d(j)
+      c=one
+      s=zero
+c
+      j1=j+ms1
+      ic=j1*nd+m1
+      do 330 i=j1,l,ms1
+      ei=e(i)
+      g=c*ei
+      h=c*p
+c
+c     protection against underflow of exponents
+c
+      if (dabs(p).lt.dabs(ei)) goto 310
+      c=ei/p
+      r=dsqrt(c*c+one)
+      e(i+1)=s*p*r
+      s=c/r
+      c=one/r
+      go to 320
+  310 c=p/ei
+      r=dsqrt(c*c+one)
+      e(i+1)=s*ei*r
+      s=one/r
+      c=c*s
+  320 p=c*d(i)-s*g
+      d(i+1)=h+s*(c*g+s*d(i))
+      ds=-s
+      ic=ic+neg
+      do 329 k=ic,ic+ni
+      k1=k+nd
+      h=x(k1)
+      x(k1)=h*c+s*x(k)
+  329 x(k)=h*ds+c*x(k)
+  330 continue
+c
+      e(l)=s*p
+      d(l)=c*p
+      if (dabs(e(l)).gt.b) go to 260
+c
+c     convergence
+c
+  340 d(l)=d(l)+f
+c
+c     ordering of eigenvalues
+c
+      ic=m1
+      do 380 i=1,ni
+      k=i
+      p=d(i)
+      j1=i+m1
+      do 360 j=j1,n
+      if(d(j).ge.p) goto 360
+      k=j
+      p=d(j)
+  360 continue
+      if (k.eq.i) goto 380
+      d(k) =d(i)
+      d(i)=p
+      jc=(k-i)*nd
+      do 370 j=ic,ic+ni
+      jx=j+jc
+      p=x(j+jc)
+      x(j+jc)=x(j)
+  370 x(j)=p
+  380 ic=ic+nd
+      return
+c
+c     special treatment of case n = 1
+c
+  400 d(1)=a(1)
+      x(1)=one
+      return
+      end
+c
+c.....
+c
+      Subroutine FulPr (A,Eig)
+      Implicit Double Precision (A-H,O-Z)
+      Parameter (NClDat=5)
+c
+c.... Print results of full diagonalization
+c
+*f2c  Include 'infcom.com'
+*f2c  Include 'ioscom.com'
+*unx  Include 'infcom.com'
+*unx  Include 'ioscom.com'
+*aix  Include (infcom.com)
+*aix  Include (ioscom.com)
+c
+      Dimension A (NMatx,*), Eig (*)
+      Dimension SumInt (NClDat), ParInt (NClDat) 
+c
+ 9000 Format (10x,5(7x,i4))
+ 9010 Format (1x,'Energies --',5f11.5)
+ 9011 Format (1x,'   Total --',5f11.5)
+ 9030 Format (5x,i4,3x,5f11.5)
+ 9040 Format (1h )
+c
+      Iout = Iw
+      NClMin = 0
+      NClMax = 0
+      NPass  = (NMatx-1)/NClDat+1
+c
+      Do 2000 IPass=1,NPass
+         NClMin = NClMax + 1
+         NClMax = NClMax + NClDat
+         NClMax = Min0 (NMatx,NClMax)
+c
+         Write (Iout,9000) (i,i=NClMin,NClMax)
+         Write (Iout,9010) (Eig(i),i=NClMin,NClMax)
+c        Write (Iout,9040)
+c
+         Mxx = 0
+         Call VClear (SumInt,NClDat)
+         Do 1000 IRow=1,NMatx,NConf
+            Mxx = Mxx + 1
+            Nxx = 0
+            Do 100 j=NClMin,NClMax
+               Nxx  = Nxx + 1
+               Term = A (IRow,j) * A (IRow,j)
+               ParInt (Nxx) = Term
+               SumInt (Nxx) = SumInt (Nxx) + Term
+  100       Continue
+            Write (Iout,9030) Mxx, (ParInt (i),i=1,Nxx)
+ 1000    Continue
+c        Write (iout,9040)
+         Write (iout,9011) (SumInt (i),i=1,Nxx)
+c        Write (iout,9040)
+ 2000 Continue
+      Write (Iout,9040)
+      Return
+      End

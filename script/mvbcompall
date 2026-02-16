@@ -1,0 +1,61 @@
+#!/bin/csh
+#
+# Stripped GUS-98 C-shell script to compile all of MULVIB
+#
+#  The legal values for TARGET are
+#      decaxpf77,decaxpf90,ibm6000,ibm9076,pcunix,sgi,sun
+#
+set MVBROOT=/e/CourseWork
+set TARGET=pcunix
+chdir $MVBROOT
+#
+set echo
+date
+#
+#  Compile a little bit of C to allow for runtime memory allocation
+#
+cc -c source/zunix.c
+#gcc -c -DLINUX64 -m64 source/zunix.c
+gcc -c -DWINDOWS64 -DWINDOWSAZURE -m64 source/zunix.c
+mv zunix.o object/zunix.o
+#
+#  ----- Some systems need special code, ugh!
+#
+#  On SGI systems, we must use special flags, so repeat ZUNIX compilation.
+#
+if ($TARGET == sgi) then
+   rm object/zunix.o
+   cc -c -64 -mips4 source/zunix.c
+   mv zunix.o object
+endif
+#
+#  ------ end of specific machine compilations
+#
+#  If we do not have the BLAS in a system library,
+#  compile a FORTRAN version of these supplied with GAMESS
+#
+if ($TARGET == decaxpf77) ./mvbcomp blas
+if ($TARGET == decaxpf90) ./mvbcomp blas
+if ($TARGET == pcunix)    ./mvbcomp blas
+if ($TARGET == sgi)       ./mvbcomp blas
+if ($TARGET == sun)       ./mvbcomp blas
+#
+#  Now we activate and compile the individual source files.
+#
+./mvbcomp clean
+./mvbcomp fuldg
+./mvbcomp initz
+./mvbcomp input
+./mvbcomp lacor
+./mvbcomp mtcor
+./mvbcomp mulvib
+./mvbcomp nstdo
+./mvbcomp splot
+./mvbcomp tridg
+./mvbcomp unport64
+./mvbcomp utlib
+#
+unset echo
+echo ------------------- done with all compilations --------------------
+date
+time

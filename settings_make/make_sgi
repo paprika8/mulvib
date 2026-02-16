@@ -1,0 +1,6 @@
+LDR := f77
+LDOPTS := -Wl,-M -64 -mips4
+LIBRARIES :=  
+BLAS := blas.o
+VECTOR :=  
+QUICHE := zunix.o

@@ -1,0 +1,13 @@
+      Subroutine NstDo (Ic,NDo,NMax)
+      Dimension Ic (NDo), NMax (NDo)
+      n = 1
+   10 Ic (n) = Ic (n) + 1
+      If (Ic(n) .Le. NMax(n)) then
+         Return
+      else
+         Ic (n) = 1
+         n = n + 1
+         If (n .Le. NDo) go to 10
+      EndIf
+      Return
+      End

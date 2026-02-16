@@ -1,0 +1,439 @@
+ ==================================================
+ =   Mulvib Version: 28 Feb 1999 (A. Trofimov)    =
+ =   Multistate Linear Vibronic Coupling Model    =
+ =   H. Koeppel, W. Domcke and L. S. Cederbaum    =
+ =   Advances in Chemical Physics 57 (1984) 59    =
+ =         SUN Microsystems inc. version          =
+ ==================================================
+ Execution of Mulvib begun Thu Mar 18 19:42:57 1999
+
+ Thiophene: # info #nosym                                                
+ Symmetry disabled.
+ The electronic  state No. 1 is the "parent" state.
+
+ Interacting electronic states :
+
+ No.   Symmetry     Energy
+  1      a           0.0000
+  2      a           8.7230
+  3      a           2.9300
+  4      a           2.9300
+
+ Modes and couplings :
+
+ Mode No.           1        2        3
+ Max  QN           30       30       30
+ Frequency       0.1290   0.1200   0.1190
+ Kapa   (1)      0.0000   0.0000   0.0000
+ Lambda (2-1)    0.5579   0.0000   0.0000
+ Kapa   (2)      0.0000   0.0000   0.0000
+ Lambda (3-1)    0.0000   0.3217   0.0000
+ Lambda (3-2)    0.0000   0.0000   0.0000
+ Kapa   (3)      0.0000   0.0000   0.0000
+ Lambda (4-1)    0.0000   0.0000   0.3507
+ Lambda (4-2)    0.0000   0.0000   0.0000
+ Lambda (4-3)    0.0000   0.0000   0.0000
+ Kapa   (4)      0.0000   0.0000   0.0000
+  
+ No. of harmonic oscillator basis states :     27000.
+ Number of Lanczos iterations to perform :       600.
+ Plot : lor-shape; FWHM = 0.0100 eV;  1000 points.
+ Accessible memory:   60 Mb =   7864320 double words.
+    7864320 Words of memory available
+ Dimension of vibronic Hamiltonian matrix :    108000.
+ End of input and initialization.
+ Step CPU time =     0.00 total CPU time =        0.0 (    0.0 min)
+ Total wall clock time =        0.0 seconds, CPU utilization is 100.00%
+ Starting Lanczos iterations.
+ End of Iteration No.     6 (absolute No.     6).
+ Step CPU time =     0.23 total CPU time =        1.4 (    0.0 min)
+ Total wall clock time =        1.0 seconds, CPU utilization is 135.94%
+ End of Iteration No.    12 (absolute No.    12).
+ Step CPU time =     0.23 total CPU time =        2.7 (    0.0 min)
+ Total wall clock time =        3.0 seconds, CPU utilization is  90.41%
+ End of Iteration No.    18 (absolute No.    18).
+ Step CPU time =     0.23 total CPU time =        4.1 (    0.1 min)
+ Total wall clock time =        4.0 seconds, CPU utilization is 101.58%
+ End of Iteration No.    24 (absolute No.    24).
+ Step CPU time =     0.21 total CPU time =        5.4 (    0.1 min)
+ Total wall clock time =        5.0 seconds, CPU utilization is 107.61%
+ End of Iteration No.    30 (absolute No.    30).
+ Step CPU time =     0.21 total CPU time =        6.6 (    0.1 min)
+ Total wall clock time =        7.0 seconds, CPU utilization is  94.96%
+ End of Iteration No.    36 (absolute No.    36).
+ Step CPU time =     0.22 total CPU time =        7.9 (    0.1 min)
+ Total wall clock time =        8.0 seconds, CPU utilization is  99.31%
+ End of Iteration No.    42 (absolute No.    42).
+ Step CPU time =     0.22 total CPU time =        9.3 (    0.2 min)
+ Total wall clock time =        9.0 seconds, CPU utilization is 103.32%
+ End of Iteration No.    48 (absolute No.    48).
+ Step CPU time =     0.21 total CPU time =       10.6 (    0.2 min)
+ Total wall clock time =       11.0 seconds, CPU utilization is  96.48%
+ End of Iteration No.    54 (absolute No.    54).
+ Step CPU time =     0.21 total CPU time =       12.0 (    0.2 min)
+ Total wall clock time =       12.0 seconds, CPU utilization is  99.85%
+ End of Iteration No.    60 (absolute No.    60).
+ Step CPU time =     0.22 total CPU time =       13.3 (    0.2 min)
+ Total wall clock time =       13.0 seconds, CPU utilization is 102.62%
+ End of Iteration No.    66 (absolute No.    66).
+ Step CPU time =     0.24 total CPU time =       14.7 (    0.2 min)
+ Total wall clock time =       15.0 seconds, CPU utilization is  98.04%
+ End of Iteration No.    72 (absolute No.    72).
+ Step CPU time =     0.21 total CPU time =       16.1 (    0.3 min)
+ Total wall clock time =       16.0 seconds, CPU utilization is 100.60%
+ End of Iteration No.    78 (absolute No.    78).
+ Step CPU time =     0.22 total CPU time =       17.5 (    0.3 min)
+ Total wall clock time =       17.0 seconds, CPU utilization is 102.79%
+ End of Iteration No.    84 (absolute No.    84).
+ Step CPU time =     0.22 total CPU time =       18.9 (    0.3 min)
+ Total wall clock time =       19.0 seconds, CPU utilization is  99.21%
+ End of Iteration No.    90 (absolute No.    90).
+ Step CPU time =     0.24 total CPU time =       20.2 (    0.3 min)
+ Total wall clock time =       20.0 seconds, CPU utilization is 101.15%
+ End of Iteration No.    96 (absolute No.    96).
+ Step CPU time =     0.21 total CPU time =       21.6 (    0.4 min)
+ Total wall clock time =       22.0 seconds, CPU utilization is  98.04%
+ End of Iteration No.   102 (absolute No.   102).
+ Step CPU time =     0.21 total CPU time =       22.9 (    0.4 min)
+ Total wall clock time =       23.0 seconds, CPU utilization is  99.70%
+ End of Iteration No.   108 (absolute No.   108).
+ Step CPU time =     0.24 total CPU time =       24.3 (    0.4 min)
+ Total wall clock time =       24.0 seconds, CPU utilization is 101.15%
+ End of Iteration No.   114 (absolute No.   114).
+ Step CPU time =     0.21 total CPU time =       25.7 (    0.4 min)
+ Total wall clock time =       26.0 seconds, CPU utilization is  98.69%
+ End of Iteration No.   120 (absolute No.   120).
+ Step CPU time =     0.21 total CPU time =       27.0 (    0.4 min)
+ Total wall clock time =       27.0 seconds, CPU utilization is  99.85%
+ End of Iteration No.   126 (absolute No.   126).
+ Step CPU time =     0.24 total CPU time =       28.3 (    0.5 min)
+ Total wall clock time =       28.0 seconds, CPU utilization is 101.13%
+ End of Iteration No.   132 (absolute No.   132).
+ Step CPU time =     0.22 total CPU time =       29.7 (    0.5 min)
+ Total wall clock time =       30.0 seconds, CPU utilization is  98.85%
+ End of Iteration No.   138 (absolute No.   138).
+ Step CPU time =     0.21 total CPU time =       31.0 (    0.5 min)
+ Total wall clock time =       31.0 seconds, CPU utilization is 100.00%
+ End of Iteration No.   144 (absolute No.   144).
+ Step CPU time =     0.21 total CPU time =       32.3 (    0.5 min)
+ Total wall clock time =       32.0 seconds, CPU utilization is 100.91%
+ End of Iteration No.   150 (absolute No.   150).
+ Step CPU time =     0.21 total CPU time =       33.6 (    0.6 min)
+ Total wall clock time =       34.0 seconds, CPU utilization is  98.75%
+ End of Iteration No.   156 (absolute No.   156).
+ Step CPU time =     0.24 total CPU time =       34.9 (    0.6 min)
+ Total wall clock time =       35.0 seconds, CPU utilization is  99.81%
+ End of Iteration No.   162 (absolute No.   162).
+ Step CPU time =     0.23 total CPU time =       36.3 (    0.6 min)
+ Total wall clock time =       36.0 seconds, CPU utilization is 100.81%
+ End of Iteration No.   168 (absolute No.   168).
+ Step CPU time =     0.24 total CPU time =       37.7 (    0.6 min)
+ Total wall clock time =       38.0 seconds, CPU utilization is  99.16%
+ End of Iteration No.   174 (absolute No.   174).
+ Step CPU time =     0.23 total CPU time =       39.1 (    0.7 min)
+ Total wall clock time =       39.0 seconds, CPU utilization is 100.16%
+ End of Iteration No.   180 (absolute No.   180).
+ Step CPU time =     0.21 total CPU time =       40.4 (    0.7 min)
+ Total wall clock time =       40.0 seconds, CPU utilization is 100.91%
+ End of Iteration No.   186 (absolute No.   186).
+ Step CPU time =     0.23 total CPU time =       41.7 (    0.7 min)
+ Total wall clock time =       42.0 seconds, CPU utilization is  99.31%
+ End of Iteration No.   192 (absolute No.   192).
+ Step CPU time =     0.22 total CPU time =       43.0 (    0.7 min)
+ Total wall clock time =       43.0 seconds, CPU utilization is 100.08%
+ End of Iteration No.   198 (absolute No.   198).
+ Step CPU time =     0.22 total CPU time =       44.4 (    0.7 min)
+ Total wall clock time =       44.0 seconds, CPU utilization is 100.87%
+ End of Iteration No.   204 (absolute No.   204).
+ Step CPU time =     0.23 total CPU time =       45.7 (    0.8 min)
+ Total wall clock time =       46.0 seconds, CPU utilization is  99.44%
+ End of Iteration No.   210 (absolute No.   210).
+ Step CPU time =     0.24 total CPU time =       47.1 (    0.8 min)
+ Total wall clock time =       47.0 seconds, CPU utilization is 100.24%
+ End of Iteration No.   216 (absolute No.   216).
+ Step CPU time =     0.23 total CPU time =       48.5 (    0.8 min)
+ Total wall clock time =       49.0 seconds, CPU utilization is  98.94%
+ End of Iteration No.   222 (absolute No.   222).
+ Step CPU time =     0.23 total CPU time =       49.8 (    0.8 min)
+ Total wall clock time =       50.0 seconds, CPU utilization is  99.64%
+ End of Iteration No.   228 (absolute No.   228).
+ Step CPU time =     0.22 total CPU time =       51.2 (    0.9 min)
+ Total wall clock time =       51.0 seconds, CPU utilization is 100.35%
+ End of Iteration No.   234 (absolute No.   234).
+ Step CPU time =     0.21 total CPU time =       52.5 (    0.9 min)
+ Total wall clock time =       53.0 seconds, CPU utilization is  99.03%
+ End of Iteration No.   240 (absolute No.   240).
+ Step CPU time =     0.21 total CPU time =       53.8 (    0.9 min)
+ Total wall clock time =       54.0 seconds, CPU utilization is  99.68%
+ End of Iteration No.   246 (absolute No.   246).
+ Step CPU time =     0.24 total CPU time =       55.2 (    0.9 min)
+ Total wall clock time =       55.0 seconds, CPU utilization is 100.34%
+ End of Iteration No.   252 (absolute No.   252).
+ Step CPU time =     0.23 total CPU time =       56.5 (    0.9 min)
+ Total wall clock time =       57.0 seconds, CPU utilization is  99.18%
+ End of Iteration No.   258 (absolute No.   258).
+ Step CPU time =     0.22 total CPU time =       57.8 (    1.0 min)
+ Total wall clock time =       58.0 seconds, CPU utilization is  99.72%
+ End of Iteration No.   264 (absolute No.   264).
+ Step CPU time =     0.21 total CPU time =       59.2 (    1.0 min)
+ Total wall clock time =       59.0 seconds, CPU utilization is 100.28%
+ End of Iteration No.   270 (absolute No.   270).
+ Step CPU time =     0.22 total CPU time =       60.5 (    1.0 min)
+ Total wall clock time =       61.0 seconds, CPU utilization is  99.15%
+ End of Iteration No.   276 (absolute No.   276).
+ Step CPU time =     0.23 total CPU time =       61.8 (    1.0 min)
+ Total wall clock time =       62.0 seconds, CPU utilization is  99.75%
+ End of Iteration No.   282 (absolute No.   282).
+ Step CPU time =     0.24 total CPU time =       63.2 (    1.1 min)
+ Total wall clock time =       63.0 seconds, CPU utilization is 100.38%
+ End of Iteration No.   288 (absolute No.   288).
+ Step CPU time =     0.22 total CPU time =       64.6 (    1.1 min)
+ Total wall clock time =       65.0 seconds, CPU utilization is  99.33%
+ End of Iteration No.   294 (absolute No.   294).
+ Step CPU time =     0.21 total CPU time =       65.9 (    1.1 min)
+ Total wall clock time =       66.0 seconds, CPU utilization is  99.83%
+ End of Iteration No.   300 (absolute No.   300).
+ Step CPU time =     0.21 total CPU time =       67.2 (    1.1 min)
+ Total wall clock time =       67.0 seconds, CPU utilization is 100.23%
+ End of Iteration No.   306 (absolute No.   306).
+ Step CPU time =     0.21 total CPU time =       68.5 (    1.1 min)
+ Total wall clock time =       69.0 seconds, CPU utilization is  99.22%
+ End of Iteration No.   312 (absolute No.   312).
+ Step CPU time =     0.21 total CPU time =       69.8 (    1.2 min)
+ Total wall clock time =       70.0 seconds, CPU utilization is  99.75%
+ End of Iteration No.   318 (absolute No.   318).
+ Step CPU time =     0.21 total CPU time =       71.2 (    1.2 min)
+ Total wall clock time =       71.0 seconds, CPU utilization is 100.26%
+ End of Iteration No.   324 (absolute No.   324).
+ Step CPU time =     0.21 total CPU time =       72.5 (    1.2 min)
+ Total wall clock time =       73.0 seconds, CPU utilization is  99.37%
+ End of Iteration No.   330 (absolute No.   330).
+ Step CPU time =     0.22 total CPU time =       73.8 (    1.2 min)
+ Total wall clock time =       74.0 seconds, CPU utilization is  99.77%
+ End of Iteration No.   336 (absolute No.   336).
+ Step CPU time =     0.21 total CPU time =       75.1 (    1.3 min)
+ Total wall clock time =       75.0 seconds, CPU utilization is 100.19%
+ End of Iteration No.   342 (absolute No.   342).
+ Step CPU time =     0.23 total CPU time =       76.5 (    1.3 min)
+ Total wall clock time =       77.0 seconds, CPU utilization is  99.37%
+ End of Iteration No.   348 (absolute No.   348).
+ Step CPU time =     0.22 total CPU time =       77.9 (    1.3 min)
+ Total wall clock time =       78.0 seconds, CPU utilization is  99.87%
+ End of Iteration No.   354 (absolute No.   354).
+ Step CPU time =     0.22 total CPU time =       79.2 (    1.3 min)
+ Total wall clock time =       79.0 seconds, CPU utilization is 100.32%
+ End of Iteration No.   360 (absolute No.   360).
+ Step CPU time =     0.24 total CPU time =       80.6 (    1.3 min)
+ Total wall clock time =       81.0 seconds, CPU utilization is  99.57%
+ End of Iteration No.   366 (absolute No.   366).
+ Step CPU time =     0.23 total CPU time =       82.0 (    1.4 min)
+ Total wall clock time =       82.0 seconds, CPU utilization is 100.00%
+ End of Iteration No.   372 (absolute No.   372).
+ Step CPU time =     0.21 total CPU time =       83.3 (    1.4 min)
+ Total wall clock time =       84.0 seconds, CPU utilization is  99.21%
+ End of Iteration No.   378 (absolute No.   378).
+ Step CPU time =     0.24 total CPU time =       84.7 (    1.4 min)
+ Total wall clock time =       85.0 seconds, CPU utilization is  99.66%
+ End of Iteration No.   384 (absolute No.   384).
+ Step CPU time =     0.23 total CPU time =       86.1 (    1.4 min)
+ Total wall clock time =       86.0 seconds, CPU utilization is 100.07%
+ End of Iteration No.   390 (absolute No.   390).
+ Step CPU time =     0.22 total CPU time =       87.4 (    1.5 min)
+ Total wall clock time =       88.0 seconds, CPU utilization is  99.32%
+ End of Iteration No.   396 (absolute No.   396).
+ Step CPU time =     0.22 total CPU time =       88.7 (    1.5 min)
+ Total wall clock time =       89.0 seconds, CPU utilization is  99.72%
+ End of Iteration No.   402 (absolute No.   402).
+ Step CPU time =     0.22 total CPU time =       90.1 (    1.5 min)
+ Total wall clock time =       90.0 seconds, CPU utilization is 100.11%
+ End of Iteration No.   408 (absolute No.   408).
+ Step CPU time =     0.21 total CPU time =       91.4 (    1.5 min)
+ Total wall clock time =       92.0 seconds, CPU utilization is  99.38%
+ End of Iteration No.   414 (absolute No.   414).
+ Step CPU time =     0.24 total CPU time =       92.8 (    1.5 min)
+ Total wall clock time =       93.0 seconds, CPU utilization is  99.78%
+ End of Iteration No.   420 (absolute No.   420).
+ Step CPU time =     0.23 total CPU time =       94.2 (    1.6 min)
+ Total wall clock time =       94.0 seconds, CPU utilization is 100.18%
+ End of Iteration No.   426 (absolute No.   426).
+ Step CPU time =     0.24 total CPU time =       95.5 (    1.6 min)
+ Total wall clock time =       96.0 seconds, CPU utilization is  99.52%
+ End of Iteration No.   432 (absolute No.   432).
+ Step CPU time =     0.23 total CPU time =       96.9 (    1.6 min)
+ Total wall clock time =       97.0 seconds, CPU utilization is  99.89%
+ End of Iteration No.   438 (absolute No.   438).
+ Step CPU time =     0.24 total CPU time =       98.2 (    1.6 min)
+ Total wall clock time =       98.0 seconds, CPU utilization is 100.22%
+ End of Iteration No.   444 (absolute No.   444).
+ Step CPU time =     0.22 total CPU time =       99.5 (    1.7 min)
+ Total wall clock time =      100.0 seconds, CPU utilization is  99.52%
+ End of Iteration No.   450 (absolute No.   450).
+ Step CPU time =     0.22 total CPU time =      100.9 (    1.7 min)
+ Total wall clock time =      101.0 seconds, CPU utilization is  99.93%
+ End of Iteration No.   456 (absolute No.   456).
+ Step CPU time =     0.21 total CPU time =      102.2 (    1.7 min)
+ Total wall clock time =      102.0 seconds, CPU utilization is 100.24%
+ End of Iteration No.   462 (absolute No.   462).
+ Step CPU time =     0.23 total CPU time =      103.6 (    1.7 min)
+ Total wall clock time =      104.0 seconds, CPU utilization is  99.63%
+ End of Iteration No.   468 (absolute No.   468).
+ Step CPU time =     0.24 total CPU time =      105.0 (    1.8 min)
+ Total wall clock time =      105.0 seconds, CPU utilization is 100.03%
+ End of Iteration No.   474 (absolute No.   474).
+ Step CPU time =     0.23 total CPU time =      106.4 (    1.8 min)
+ Total wall clock time =      107.0 seconds, CPU utilization is  99.41%
+ End of Iteration No.   480 (absolute No.   480).
+ Step CPU time =     0.24 total CPU time =      107.7 (    1.8 min)
+ Total wall clock time =      108.0 seconds, CPU utilization is  99.77%
+ End of Iteration No.   486 (absolute No.   486).
+ Step CPU time =     0.23 total CPU time =      109.1 (    1.8 min)
+ Total wall clock time =      109.0 seconds, CPU utilization is 100.07%
+ End of Iteration No.   492 (absolute No.   492).
+ Step CPU time =     0.24 total CPU time =      110.5 (    1.8 min)
+ Total wall clock time =      111.0 seconds, CPU utilization is  99.53%
+ End of Iteration No.   498 (absolute No.   498).
+ Step CPU time =     0.23 total CPU time =      111.8 (    1.9 min)
+ Total wall clock time =      112.0 seconds, CPU utilization is  99.86%
+ End of Iteration No.   504 (absolute No.   504).
+ Step CPU time =     0.22 total CPU time =      113.2 (    1.9 min)
+ Total wall clock time =      113.0 seconds, CPU utilization is 100.16%
+ End of Iteration No.   510 (absolute No.   510).
+ Step CPU time =     0.24 total CPU time =      114.5 (    1.9 min)
+ Total wall clock time =      115.0 seconds, CPU utilization is  99.59%
+ End of Iteration No.   516 (absolute No.   516).
+ Step CPU time =     0.23 total CPU time =      115.9 (    1.9 min)
+ Total wall clock time =      116.0 seconds, CPU utilization is  99.90%
+ End of Iteration No.   522 (absolute No.   522).
+ Step CPU time =     0.21 total CPU time =      117.3 (    2.0 min)
+ Total wall clock time =      118.0 seconds, CPU utilization is  99.37%
+ End of Iteration No.   528 (absolute No.   528).
+ Step CPU time =     0.22 total CPU time =      118.6 (    2.0 min)
+ Total wall clock time =      119.0 seconds, CPU utilization is  99.68%
+ End of Iteration No.   534 (absolute No.   534).
+ Step CPU time =     0.21 total CPU time =      119.9 (    2.0 min)
+ Total wall clock time =      120.0 seconds, CPU utilization is  99.95%
+ End of Iteration No.   540 (absolute No.   540).
+ Step CPU time =     0.21 total CPU time =      121.3 (    2.0 min)
+ Total wall clock time =      122.0 seconds, CPU utilization is  99.40%
+ End of Iteration No.   546 (absolute No.   546).
+ Step CPU time =     0.24 total CPU time =      122.6 (    2.0 min)
+ Total wall clock time =      123.0 seconds, CPU utilization is  99.69%
+ End of Iteration No.   552 (absolute No.   552).
+ Step CPU time =     0.23 total CPU time =      124.0 (    2.1 min)
+ Total wall clock time =      124.0 seconds, CPU utilization is  99.97%
+ End of Iteration No.   558 (absolute No.   558).
+ Step CPU time =     0.23 total CPU time =      125.3 (    2.1 min)
+ Total wall clock time =      126.0 seconds, CPU utilization is  99.48%
+ End of Iteration No.   564 (absolute No.   564).
+ Step CPU time =     0.22 total CPU time =      126.7 (    2.1 min)
+ Total wall clock time =      127.0 seconds, CPU utilization is  99.77%
+ End of Iteration No.   570 (absolute No.   570).
+ Step CPU time =     0.21 total CPU time =      128.0 (    2.1 min)
+ Total wall clock time =      128.0 seconds, CPU utilization is 100.03%
+ End of Iteration No.   576 (absolute No.   576).
+ Step CPU time =     0.21 total CPU time =      129.4 (    2.2 min)
+ Total wall clock time =      130.0 seconds, CPU utilization is  99.52%
+ End of Iteration No.   582 (absolute No.   582).
+ Step CPU time =     0.21 total CPU time =      130.7 (    2.2 min)
+ Total wall clock time =      131.0 seconds, CPU utilization is  99.78%
+ End of Iteration No.   588 (absolute No.   588).
+ Step CPU time =     0.24 total CPU time =      132.0 (    2.2 min)
+ Total wall clock time =      132.0 seconds, CPU utilization is 100.04%
+ End of Iteration No.   594 (absolute No.   594).
+ Step CPU time =     0.22 total CPU time =      133.4 (    2.2 min)
+ Total wall clock time =      134.0 seconds, CPU utilization is  99.53%
+ End of Iteration No.   600 (absolute No.   600).
+ Step CPU time =     0.22 total CPU time =      134.7 (    2.2 min)
+ Total wall clock time =      135.0 seconds, CPU utilization is  99.79%
+ Step CPU time =     0.00 total CPU time =      134.7 (    2.2 min)
+ Total wall clock time =      135.0 seconds, CPU utilization is  99.79%
+ Average performance is   0.04 sec per Lanczos iteration.
+ Restart information saved on unit  8.
+ Results of diagonalization.
+ Retaining lines with intensity 0.1D-04 of the strongest line No.   1.
+ Number of peaks with intensity greater than 0.2529705D-05 :    72.
+ Normalization :   0.9999834
+
+                 Energy           Intensity
+                --------          ---------
+
+          1    -0.1933575         0.2529705
+          2    -0.1441528         0.1757488
+          3    -0.1170414         0.0917185
+          4    -0.0965413         0.1964697
+          5    -0.0644834         0.0075257
+          6    -0.0520054         0.0294648
+          7    -0.0341616         0.0551241
+          8    -0.0248189         0.0208760
+          9    -0.0079913         0.0457321
+         10     0.0192645         0.0378693
+         11     0.0302334         0.0000204
+         12     0.0451173         0.0015943
+         13     0.0559999         0.0005227
+         14     0.0605373         0.0055563
+         15     0.0709006         0.0102234
+         16     0.0784441         0.0023710
+         17     0.0941085         0.0003470
+         18     0.0951654         0.0173181
+         19     0.1170620         0.0063707
+         20     0.1476089         0.0054703
+         21     0.1531682         0.0000085
+         22     0.1618627         0.0000658
+         23     0.1653515         0.0000468
+         24     0.1777148         0.0010685
+         25     0.1867888         0.0002198
+         26     0.1889071         0.0009986
+         27     0.1966245         0.0009832
+         28     0.2004368         0.0001243
+         29     0.2077665         0.0028039
+         30     0.2118496         0.0000082
+         31     0.2254905         0.0013431
+         32     0.2337791         0.0009524
+         33     0.2531065         0.0007426
+         34     0.2828885         0.0000138
+         35     0.2849007         0.0006836
+         36     0.3008237         0.0000517
+         37     0.3062653         0.0000926
+         38     0.3175493         0.0002981
+         39     0.3286325         0.0003891
+         40     0.3427140         0.0003720
+         41     0.3505937         0.0001612
+         42     0.3669951         0.0001408
+         43     0.3797437         0.0000977
+         44     0.3966500         0.0000830
+         45     0.4277384         0.0000332
+         46     0.4302352         0.0000549
+         47     0.4473887         0.0000402
+         48     0.4581738         0.0000516
+         49     0.4705782         0.0000849
+         50     0.4869887         0.0000345
+         51     0.4980635         0.0000230
+         52     0.5147163         0.0000155
+         53     0.5309837         0.0000104
+         54     0.5461008         0.0000090
+         55     0.5785708         0.0000104
+         56     0.5911222         0.0000080
+         57     0.6042826         0.0000117
+         58     0.6198636         0.0000108
+         59     0.6375907         0.0000040
+         60     0.6531104         0.0000026
+         61     3.0982736         0.0000400
+         62     3.1664399         0.0195241
+         63     3.3055347         0.0000034
+         64     3.4183098         0.0000133
+         65     3.4898732         0.0000647
+         66     3.5157153         0.0009641
+         67     3.5448843         0.0000261
+         68     3.8424757         0.0000095
+         69     3.8652457         0.0000234
+         70     8.9391868         0.0037005
+         71     9.3101014         0.0001615
+         72     9.6780920         0.0000053
+  
+ Step CPU time =     0.22 total CPU time =      134.9 (    2.2 min)
+ Total wall clock time =      136.0 seconds, CPU utilization is  99.23%
+ Plot data points evaluated.
+ Step CPU time =     0.04 total CPU time =      135.0 (    2.2 min)
+ Total wall clock time =      136.0 seconds, CPU utilization is  99.25%
+   326192 Words of dynamic memory used
+ Execution of Mulvib terminated normally Thu Mar 18 19:45:13 1999

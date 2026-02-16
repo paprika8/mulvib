@@ -1,0 +1,351 @@
+#!/bin/csh
+#
+#   Stripped GUS-98 C-shell script to compile one MODULE of MULVIB
+#
+#  The legal values for TARGET are
+#      decaxpf77,decaxpf90,hp9000,ibm6000,ibm9076,pcunix,sgi,sun
+#
+set MVBROOT=/e/CourseWork
+set TARGET=pcunix
+chdir $MVBROOT
+#
+#    ---- and now the script begins...
+#
+unset echo
+set MODULE=$1
+set ACTONLY=$2   # this argument is almost always omitted
+set SRCDIR=source
+echo ======================== $MODULE ==============================
+date
+#
+#   ----- Choose which version is to be activated -----
+#
+if ($TARGET == decaxpf77 || $TARGET == decaxpf90) then
+   setenv MACHIN '*unx'
+   if ($MODULE == unport) setenv MACHIN '*dec'
+endif
+if ($TARGET == hp9000) then
+   setenv MACHIN '*unx'
+   if ($MODULE == unport) setenv MACHIN '*hp '
+endif
+if ($TARGET == ibm6000) then
+   setenv MACHIN '*aix'
+   if ($MODULE == unport) setenv MACHIN '*aix'
+endif
+if ($TARGET == ibm9076) then
+   setenv MACHIN '*aix'
+   if ($MODULE == unport) setenv MACHIN '*aix'
+endif
+if ($TARGET == pcunix) then
+   setenv MACHIN '*unx'
+   if ($MODULE == unport) setenv MACHIN '*L64'
+   if ($MODULE == fuldg)  setenv MACHIN '*f2c'
+endif
+if ($TARGET == sgi) then
+   setenv MACHIN '*unx'
+   if ($MODULE == unport) setenv MACHIN '*sgi'
+endif
+if ($TARGET == sun) then
+   setenv MACHIN '*unx'
+   if ($MODULE == unport) setenv MACHIN '*sun'
+endif
+#
+#   ----- Activate the source code to produce FORTRAN -----
+#
+set echo
+if (-e $SRCDIR/$MODULE.f) rm $SRCDIR/$MODULE.f
+setenv   SRCIN $SRCDIR/$MODULE.src
+setenv CODEOUT $SRCDIR/$MODULE.f
+#
+tools/actvte.exe
+unset echo
+#
+#   ----- Now we are ready to compile on the target machine -----
+#
+cmp:
+#
+#   Optionally, save pure FORTRAN in temporary directory for 
+#   syntax scan by the nifty FORTRAN analysis program FTNCHEK.
+#
+if ($ACTONLY == true) then
+   mv $SRCDIR/$MODULE.f ~/scr
+   exit
+endif
+#
+if (-e object/$MODULE.o) rm -f object/$MODULE.o
+#
+#  Options for the DEC AXP FORTRAN 3.8 compiler are
+#     -O0 turns off all optimization
+#     -O1 does local optimizations
+#     -O2 also does global optimizations
+#     -O3 also does additional global optimizations
+#     -O4 also does routine inlining (default)
+#     -O5 also does software pipelining
+#     -fast implies less accurate but faster libraries, etc. and -O4.
+#     -c means compile only
+#     -v gives compiler phase information, and timings
+#     -automatic and -static use/avoid stack for local variables
+#     -col72 chops source lines past 72 columns
+#     -stand nosemantic means don't warn of nonANSI usage (default)
+#     -stand nosource_form means don't warn of tabs/lowercase (default)
+#     -stand nosyntax means don't warn of nonANSI syntax (default)
+#  Options for the DEC AXP FORTRAN-90 1.3 compiler are the same as f77
+#
+#  There is little to choose in performance between f77 and f90, and
+#  there is little performance difference between -O3, -O4, and -O5.
+#  -O5 doesn't optimize everything safely, and for some source files,
+#  it bombs the compiler, so we go with the safe -O4.
+#
+#  Note that we've tried f77 3.3, 3.7, and 3.8 but nothing in between.
+#  We've also tried f90 1.2 and 1.3.  Each of these should work at -O4.
+#  We have heard that MPCGRD should be compiled -O0 with f77 3.4
+#
+if ($TARGET == decaxpf77) then
+   set OPT = '-O4'
+   set echo
+   f77 -c -v -automatic -col72 -stand source_form $OPT $SRCDIR/$MODULE.f
+   unset echo
+endif
+#
+if ($TARGET == decaxpf90) then
+   set OPT='-O4'
+   set echo
+   f90 -c -v -automatic $OPT $SRCDIR/$MODULE.f
+   unset echo
+endif
+#
+#  Options for HP's HP-UX on HP 9000/7xx models
+#  The HP control language was changed Feb '97 for compiler version 10.20
+#    +On   selects optimization level; n=1,2,3
+#    +O[no]entrysched = instruction scheduling on entry/exit
+#    +DA2.0 selects chip instruction set, remove this for older chips
+#
+if ($TARGET == hp9000) then
+   set OPT='+Oentrysched'
+   if ($MODULE == cprohf) set OPT='+Onolimit +Oentrysched'
+   if ($MODULE == gradex) set OPT='+Onolimit +Oentrysched'
+   if ($MODULE == inputa) set OPT='+Onolimit +Oentrysched'
+   set echo
+   f77 -c $OPT +O2 +DA2.0 +U77 +Ofastaccess +Olibcalls +Onofltacc $SRCDIR/$MODULE.f
+   unset echo
+endif
+#
+#   For the IBM RS/6000 workstation, or SP1/SP2 parallel systems,
+#   the options for XL FORTRAN 4.1.0 and AIX 4.2.1 are
+#       -c means compile only
+#       -O2 and -O3 choose optimization levels (there is no -O1)
+#       -qarch=com,601,pwr,pwr2 (see also -qtune)
+#       -qflag requests I,L,W,E,S,Q (information, language, 
+#              warning, error, severe, quiet) messages
+#       -qflttrap=ov:zero:inv:inex:enable traps bad arithmetic
+#       -qhalt stops compiler after certain error level
+#       -qnosave forces non-static storage
+#       -qinitauto=ff initializes non-static storage
+#       -qextchk checks calling args and common lengths at link
+#       -qsource requests a printable .lst file.
+#       -qtune selects target chip
+#
+#   To profile code during development stages,
+#   1. "comp" desired modules with -pg added to the xlf flags
+#   2. "lked" after adding -p to the xlf flags.
+#   3. execute to completion, generating 'mon.out' file.
+#   4. profile by 'prof gamess.00.x mon.out'.
+#
+#   The following clause requires XL FORTRAN 3.2.x or 4.x.x
+#   If your compiler is older than this, you must instead use
+#   some of the clauses commented out below.
+#   The command to find your FORTRAN version level depends on your
+#   AIX version: v3 is "lslpp -h xlfcmp.obj, v4="lslpp -h xlfcmp".
+#
+if ($TARGET == ibm6000 || $TARGET == ibm9076) then
+   if ($TARGET == ibm6000) then
+      set FORT='xlf'
+      set ARCH='com'
+      set TUNE='604'   # PowerPC tuning makes even Power run faster
+   endif
+   if ($TARGET == ibm9076) then
+      set FORT='mpxlf -qnoxref'
+      set ARCH='pwr2'  # note we assume SP2 rather than SP1
+      set TUNE='pwr2'
+   endif
+   set  OPT='-O3'
+   if ($MODULE == grd2b) set OPT='-O3 -qspillsize=1500'
+   if ($MODULE == gugdm) set OPT='-O2'
+   if ($MODULE == gugem) set OPT='-O2'
+   if ($MODULE == trnstn) set OPT='-O2'
+   if ($MODULE == zheev) set ARCH='com'  # has problems with pwr2
+   set echo
+   $FORT -c $OPT -qarch=$ARCH -qtune=$TUNE \
+         -qflag=I:I -qhalt=W -qnosave $SRCDIR/$MODULE.f
+   unset echo
+endif
+#
+#   For xlf version 1.0, optimize all but HSS1B and STATPT.
+#   For xlf version 1.1, optimize all but HESS, INPUTB, INT2B, RYSPOL,
+#                                         GAMESS, SCFLIB, STATPT, TRNSTN
+#   For xlf version 2.1, optimize all but ECP and SYMORB.
+#   For xlf version 2.2, optimize all but ECP and IOLIB.
+#   ---Each of the compilers just mentioned had only -O optimization.
+#   For xlf version 2.3, optimize everything at -O3, except IOLIB at -O2.
+#   For xlf version 3.0, 3.1, 3.1.1, we never tried it, but the
+#   program probably works only with -O2, based on other's experience.
+#   For xlf version 3.1.2, you can optimize probably everything at -O2.
+#   For xlf version 3.2.x, you can optimize probably everything at -O3.
+#   We have heard that under xlf 5.1 that int2a must be compiled -qsave
+#
+#   For xlf versions prior to 3.x, the "flush_" call in unport.src
+#   will either be missing, or function incorrectly.  If you have
+#   an old compiler, modify FLSHBF in UNPORT.SRC before compiling.
+#
+#   Select the clause that seems closest to your xlf version:
+#
+#---if ($TARGET == ibm6000) then
+#---   set OPT='-O'
+#---   if ($MODULE == ecp)    set OPT=' '
+#---   if ($MODULE == iolib)  set OPT=' '
+#---   set echo
+#---   xlf -c $OPT $MODULE.f
+#---   unset echo
+#---endif
+#
+#   For xlf version 2.3:
+#
+#---if ($TARGET == ibm6000) then
+#---   set OPT='-O3'
+#---   if ($MODULE == bashz2) set OPT='-O3          -NT40000'
+#---   if ($MODULE == cprohf) set OPT='-O3 -NQ20000'
+#---   if ($MODULE == ecphw)  set OPT='-O3 -NQ30000 -NT60000'
+#---   if ($MODULE == grd2b)  set OPT='-O3 -NQ20000'
+#---   if ($MODULE == inputa) set OPT='-O3 -NQ20000 -qmaxmem=3096'
+#---   if ($MODULE == mcqdpt) set OPT='-O3 -NQ20000'
+#---   if ($MODULE == mpcdat) set OPT='-O3 -NQ30000 -NT60000'
+#---   if ($MODULE == rhfuhf) set OPT='-O3 -NQ20000'
+#---   if ($MODULE == symslc) set OPT='-O3 -NQ20000'
+#---   if ($MODULE == int2a)  set OPT='-O2'
+#---   xlf -qflag=I:I -qhalt=W -c $OPT $MODULE.f
+#---endif
+#
+#   For xlf version 3.1.x: (x=0, 1, or 2)
+#
+#---if ($TARGET == ibm6000) then
+#---   set FORT='xlf'
+#---   set ARCH='com'
+#---   set  OPT='-O2'
+#---   xlf -c $OPT -qarch=$ARCH -qflag=I:I -qhalt=W -qsave $MODULE.f
+#---endif
+#
+#   PC running Unix (Redhat or Slackware LINUX, FreeBSD, ...).
+#
+#   f2c/gcc is used as an approximation to a FORTRAN compiler.
+#   The options below are tested for RedHat Linux 4.2, using
+#   f2c version 19960205-8, gcc version 2.7.2.1-2.
+#      -w66 suppresses f66 compatibility warnings
+#      -a leads to use of automatic rather than static local variables
+#      -Nn802 doubles a default table size for name entries
+#      -O0, -O1, -O2, -O3 are the optimization levels, -O means -O1
+#      some trial and error reveals -O1 is almost as good as -O2 or -O3
+#      -malign-double helps the Pople integrals by 25%, is marginal otherwise.
+#      -ffast-math slowed the program down 5%
+#      -funroll-loops generated incorrect gradient and hessian.
+#   Conclusion is '-O3 -malign-double' is slightly better than '-O1'.
+#
+#   If you use g77 as your FORTRAN: "g77 -c -O3 -malign-double $MODULE.f"
+#
+#   We have heard that some versions of f2c do not support the
+#   DREAL complex function, so it is hacked to DBLE instead.
+#
+if ($TARGET == pcunix) then
+   set OPT = '-O2'
+   set echo
+   gfortran -c -fdefault-integer-8 $OPT $SRCDIR/$MODULE.f
+   rm -f $MODULE.f
+   unset echo
+endif
+#
+#  SGI R8000 or R10000 machines: Irix version 6.2 and f77 version 7.1
+#  You can learn your FORTRAN version number by "versions || grep ftn".
+#  You can learn your CPU type by "hinv -c processor".
+#
+#  Versions 6.0 and 6.0.1 of the FORTRAN compiler were totally pathetic,
+#  if you have one of them, upgrade your compiler before compiling GAMESS.
+#  In our experience, 6.0.2, 6.1, and 6.2 worked with all modules at -O3.
+#  However, we have heard in 1/97 that 6.2 requires guess,symslc at -O2,
+#  also, we have heard in 9/97 that 6.2 requires inputa,mcqdpt at -O1.
+#  Version 6.x compilers require ARCH be set to a blank space below.
+#
+#  Version 7.0 requires that grd2c,int2b be degraded to -O2 optimization.
+#  Version 7.1 requires that grd2c,int2b,mcqdpt be degraded to -O2.
+#  You should set the ARCH variable to either -r8000 or -r10000.
+#
+#  The O2 has some kind of R10000 which has had its 64 bit capability 
+#  omitted, and some of these seem to have R5000, the options below are
+#  for the true R10000 systems.  For the R5000, we suggest pretending
+#  it is a R4000 chip, see target 'sgiold'.
+#                                                      
+if ($TARGET == sgi) then              
+   set OPT='-O3'
+   if ($MODULE == grd2c)  set OPT='-O2'
+   if ($MODULE == int2b)  set OPT='-O2'
+   if ($MODULE == mcqdpt) set OPT='-O2 -Olimit 5000'
+   set ARCH='-r10000'
+   set FLAGS='-64 -mips4 -automatic -G0 -OPT:IEEE_arith=3:roundoff=3'
+   set echo                    
+   f77 -c -show $OPT $ARCH $FLAGS $SRCDIR/$MODULE.f
+   unset echo                                          
+endif
+#
+#  Options for UltraSPARC Sun f77 4.2 under Solaris 2.6.
+#     -c compile only
+#     -v print verbose information on compiler phases and options
+#     -fast     is a smorgasbord of all the below, if you wish to
+#               override one you must *follow* the -fast with it.
+#         -xtarget=native  (optimize for chip being compiled upon)
+#         -O4        (see below)
+#         -libmil    (inline some math routines)
+#         -fsimple=1 (0,1,2 control floating point simplifications)
+#         -dalign    (double word alignment and instructions)
+#         -xlibmopt  (link to optimized math library)
+#         -depend    (DO loop data dependency analysis)
+#         -fns       (fast underflow handling)
+#         -ftrap=%none  (floating point error handling)
+#     -O5 = aggressive optimizations
+#     -O4 = automatic inlining
+#     -O3 = loop unrolling and additional global optimizations
+#     -O2 = basic local, global optimizations (must turn off -depend)
+#     -O1 = minimal optimization
+#     -xtarget=generic doesn't tune for any particular chip
+#     -xtarget=native selects a -xarch,-xchip,-xcache for compile host
+#            you may want to set this a particular chip if you run
+#            more times on a different system than you compile on.
+#  On an UltraSPARC, the -xtarget=native in -fast implied -xarch=v8!
+#     -xarch=generic  no particular SPARC chip
+#     -xarch=v7     SPARC V7   (i.e. SPARCstn 1)
+#     -xarch=v8     SuperSPARC (i.e. SPARCstn 2 and SPARCstn 10)
+#     -xarch=v8a    microSPARC
+#     -xarch=v8plus UltraSPARC, using 32 bit instructions
+#
+#  If you have an older system, try OPT='-O2' or '-O3' while
+#  eliminating the -xarch flag, and you might also need -Nl30.
+#
+if ($TARGET == sun) then
+#
+#  To include (statically) native BLAS:
+#  set OPT='-fast -O4 -xarch=v8plus'
+#  set OPX='-Bstatic -xlic_lib=sunperf -Bdynamic'
+#
+   set OPT='-fast -O4 -xarch=v8plus'
+   set OPX=''
+#  if ($MODULE == grd2c)  set OPT='-fast -O4 -nodepend -xarch=v8plus'
+#  if ($MODULE == inputc) set OPT='-fast -O4 -xarch=v8'
+   set echo
+   f77 -c $OPT $SRCDIR/$MODULE.f $OPX
+   unset echo
+endif
+#
+#  Store the generated object code and quit
+#
+mv $MODULE.o object/$MODULE.o
+rm -f $SRCDIR/$MODULE.f
+unset echo
+date
+time

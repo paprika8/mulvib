@@ -1,0 +1,6 @@
+LDR := f77
+LDOPTS := +O2 +DA2.0 +FPD +U77 +Ofastaccess -Wl,-a,archive
+LIBRARIES := /opt/fortran/lib/pa1.1/libblas.a
+BLAS :=  
+VECTOR :=  
+QUICHE := zunix.o zhp9000.o

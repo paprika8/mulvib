@@ -1,0 +1,507 @@
+C
+C ABT 17.07.17 Modified 64 bit version of GUS2015.
+C ABT 17.07.17 UNPINT has been added to initialize controle variables.
+C
+C                      ABRT                                             
+C                      FLSHBF                                           
+C                      SETFM                                            
+C                      BIGFM                                            
+C                      VALFM                                            
+C                      GETFM                                            
+C                      RETFM                                            
+C                      GOTFM                                            
+C                      TIMIT                                            
+C                      TMDATE                                           
+C                      TSECND                                           
+C                      UNPINT
+C                      ENDING
+C
+C*MODULE UNPORT                                                         
+C-----------------------------------------------------------------------
+C     THIS IS THE NASTIEST, TOTALLY UNPORTABLE CODE IN GAMESS.          
+C-----------------------------------------------------------------------
+C                                                                       
+C*MODULE UNPORT  *DECK ABRT                                             
+      SUBROUTINE ABRT                                                   
+C                                                                       
+C     ----- GENERATE A CALLING SEQUENCE TRACE AND STOP EXECUTION -----  
+C                                                                       
+      IMPLICIT DOUBLE PRECISION(A-H,O-Z)                                
+      DIMENSION TIMSTR(3)                                               
+C                                                                       
+      LOGICAL GOPARR,DSKWRK,MASWRK                                      
+C                                                                       
+      COMMON /IOFILE/ IR,IW,IP,IJK,IJKT,IDAF,NAV,IODA(950)              
+      COMMON /PAR   / ME,MASTER,NPROC,IBTYP,IPTIM,GOPARR,DSKWRK,MASWRK  
+      COMMON /MACHIN/ NWDVAR,MAXFM,MAXSM,LIMFM,LIMSM                    
+      COMMON /MACHSW/ KDIAG,ICORFL,IXDR,modio,mem10,lpnt10,mem10m       
+C                                                                       
+C     ----- PRINT ACCOUNTING INFO AND GOODBYE MESSAGE -----             
+C                                                                       
+      CALL TMDATE(TIMSTR)                                               
+      IF (MASWRK) WRITE(IW,900) TIMSTR                                  
+  900 FORMAT(1X,'EXECUTION OF GAMESS TERMINATED -ABNORMALLY- AT ',3A8)  
+      CALL BIGFM(MAXFM)                                                 
+      CALL TIMIT(1)                                                     
+C                                                                       
+C     STALL FOR A SHORT WHILE TO ALLOW A CHANCE OF PRINTING             
+C     ANY ERROR MESSAGES, BEFORE DDIKICK.X BLOWS US AWAY.               
+C     MAINLY THIS IS IN CASE A NON-MASTER PROCESS ENTERS FIRST,         
+C     MOMENTS BEFORE THE MASTER, WHICH SHOULD BE GIVEN A CHANCE         
+C     TO PRINT THE ERROR MESSAGE BEFORE THE NON-MASTER EXITS.           
+C                                                                       
+      CALL FLSHBF(IW)                                                   
+C     CALL FLSHBF(IP)                                                   
+      IDELAY=1                                                          
+      IF(ME.GT.0) IDELAY=10                                             
+      CALL NAPTIME(IDELAY)                                              
+C                                                                       
+C     ----- DO A TRACEBACK AND/OR CORE DUMP -----                       
+C                                                                       
+      IF (MASWRK) THEN                                                  
+      IF (ICORFL.EQ.1) THEN                                             
+         WRITE(IW,1) 'GDB','BACKTRACE','QUIT'                           
+         CALL ABORT                                                     
+      ELSE                                                              
+         WRITE(IW,2)                                                    
+      END IF                                                            
+      END IF                                                            
+C                                                                       
+C        ----- GENERIC STOP, IN CASE YOU GET THIS FAR -----             
+C                                                                       
+      STOP 'IN ABRT'                                                    
+C                                                                       
+    1 FORMAT(1X,'TRACEBACK CAN BE OBTAINED BY LOCATING',                
+     *          ' THE ''CORE'' MEMORY DUMP FILE'/                       
+     *   1X,'AND TYPING THE FOLLOWING (IN LOWER CASE)'/                 
+     *   1X,A,' /U.../GAMESS/GAMESS.01.X CORE (INVOKES DEBUGGER)'/      
+     *   1X,'   ',A,'                         (PRINTS TRACEBACK)'/      
+     *   1X,'   ',A,'                         (QUITS DEBUGGER)')        
+    2 FORMAT(1X,'IF YOU WANT A CORE FILE, SET COREFL=.TRUE.',           
+     *          ' IN $SYSTEM.')                                         
+      END                                                               
+C*MODULE UNPORT  *DECK FLSHBF                                           
+      SUBROUTINE FLSHBF(LUNIT)                                          
+C                                                                       
+      LOGICAL GOPARR,DSKWRK,MASWRK                                      
+C                                                                       
+      COMMON /MACHSW/ KDIAG,ICORFL,IXDR,modio,mem10,lpnt10,mem10m       
+      COMMON /PAR   / ME,MASTER,NPROC,IBTYP,IPTIM,GOPARR,DSKWRK,MASWRK  
+C                                                                       
+C        ----- FLUSH THE BUFFER FOR LOGICAL UNIT LUNIT -----            
+C        THIS ROUTINE IS MOST IMPORTANT FOR UNIX SYSTEMS,               
+C        WHERE OUTPUT OTHERWISE STAYS IN BUFFERS FOREVER.               
+C                                                                       
+C     NOTE: ON AIX SYSTEMS WITH XLF VERSION 2, THE FLUSH CALL DOES      
+C           NOT WORK WELL, AND SHOULD BE COMMENTED OUT.  THE MOST       
+C           PROMINENT SIGN OF A BAD "FLUSH_" IS GARBAGE CHARACTERS      
+C           IN THE PUNCH FILE.  E.G., CHANGE TO "C---*AIX ..."          
+C                                                                       
+      if(iand(modio,1).ne.0) return                                     
+      IF (MASWRK) THEN                                                  
+      CALL FLUSH(LUNIT)                                                 
+      END IF                                                            
+      RETURN                                                            
+      END                                                               
+C                                                                       
+C*MODULE UNPORT  *DECK SETFM                                            
+      SUBROUTINE SETFM(IPAR)                                            
+C-----------------------------------------------------------------------
+C     ----- FAST MEMORY (FM) MANAGEMENT ROUTINES -----                  
+C     NOTE THAT THERE ARE SIX ROUTINES, NAMELY                          
+C        SETFM AND BIGFM ARE CALLED ONLY ONCE EACH,                     
+C             TO OBTAIN AND RELEASE THE TOTAL MEMORY POOL.  IN UNIX,    
+C             THESE NORMALLY WIND UP CALLING 'MALLOC' AND 'FREE'.       
+C        VALFM, GETFM, RETFM ARE USED TOGETHER, AS TRIPLETS OF CALLS:   
+C           VALFM TELLS THE LOCATION OF THE AVAILABLE MEMORY            
+C           GETFM ASKS TO USE SOME OF THAT MEMORY                       
+C           RETFM GIVES THE MEMORY BACK WHEN FINISHED                   
+C              THESE TRIPLETS CAN BE NESTED, SO LONG AS THE CALLS       
+C              TO RETFM ARE IN REVERSE ORDER OF THE CALLS TO GETFM,     
+C              THAT IS TO SAY, THE IMPLEMENTATION IS A STACK.           
+C        GOTFM MAY BE USED TO LEARN THE TOTAL AMOUNT OF AVAILABLE       
+C              MEMORY, E.G. NOT YET COMMITTED BY GETFM'S.               
+C                                                                       
+C     ALL MEMORY CALCULATIONS HERE ARE TO BE BASED ON -WORDS-,          
+C     WHERE A WORD IS DEFINED AS BEING A 64 BIT QUANTITY.               
+C                                                                       
+C     SETFM(IPAR) - ON ENTRY, IPAR IS MAXIMUM MEMORY DESIRED BY USER.   
+C                   ON EXIT, IPAR IS MAXIMUM MEMORY ACTUALLY AVAILABLE. 
+C                   ALLOCATES THE MEMORY POOL FROM THE SYSTEM.          
+C                                                                       
+C     BIGFM(IPAR) - ON EXIT, IPAR IS MAXIMUM MEMORY EVER USED.          
+C                   FREES THE ENTIRE MEMORY POOL TO THE SYSTEM.         
+C                                                                       
+C     VALFM(IPAR) - ON EXIT, IPAR IS AN OFFSET (LTOP) TO THE HIGHEST    
+C                   POSITION IN MEMORY CURRENTLY USED.                  
+C                                                                       
+C     GETFM(IPAR) - ON ENTRY, IPAR IS THE MEMORY PIECE REQUESTED.       
+C                   IT IS ALLOCATED AT LTOP+1, AFTER WHICH THE          
+C                   LTOP POINTER IS AUTOMATICALLY ADJUSTED UPWARDS.     
+C                                                                       
+C     RETFM(IPAR) - ON ENTRY, IPAR IS THE MEMORY PIECE TO BE FREED.     
+C                   THE LTOP POINTER IS AUTOMATICALLY ADJUSTED DOWN.    
+C                                                                       
+C     GOTFM(IPAR) - ON EXIT, IPAR IS THE CURRENTLY UNUSED MEMORY.       
+C                                                                       
+C--------------------------------------------------------------------   
+C                                                                       
+C     A TYPICAL MEMORY REQUEST SEQUENCE IS VALFM,GETFM,...,RETFM.       
+C     IT IS CRUCIAL THAT RETFM'S BE IN INVERSE ORDER OF GETFM CALLS.    
+C     THE DYNAMIC POOL DURING THE MIDDLE ELLIPSIS OF THE SEQUENCE       
+C                                                                       
+C         CALL VALFM,GETFM,...VALFM,GETFM,...RETFM,...RETFM             
+C     WITH ARG=      NEED1          NEED2    NEED2    NEED1             
+C                                                                       
+C     LOOKS LIKE THIS                                                   
+C                                                                       
+C            .....RESERVED........      AVAILABLE                       
+C            <-------><----------><---------------------->              
+C            X  NEED1    NEED2   Y                       Z              
+C                                                                       
+C     WHERE X=LOFFS, Y=LTOP, Z=MEMLIM                                   
+C                                                                       
+C     THERE ARE TWO IMPLEMENTATION STRATEGIES BELOW.                    
+C                                                                       
+C     ONE APPROACH IS TO DECLARE A LARGE FIXED LENGTH ARRAY             
+C     X(MEMSIZ) JUST BELOW.  THE USER REQUESTED MEMORY -MEMLIM-         
+C     CANNOT EXCEED THE "STATIC" SIZE -MEMSIZ- UNLESS -MEMSIZ-          
+C     IS INCREASED HERE IN THE SOURCE, AND THE CODE RECOMPILED.         
+C                                                                       
+C     THE OTHER ALLOCATES ONLY A SINGLE WORD X(1), AND ACTUALLY         
+C     ALLOCATES THE POOL ELSEWHERE.  -LOFFS- MUST BE THE DISTANCE       
+C     IN WORDS FROM X(1) TO WHEREVER THIS POOL IS ALLOCATED.            
+C     THIS STRATEGY IS TRULY "DYNAMIC", THE CALL TO SETFM CAN REQUEST   
+C     ANY AMOUNT UP TO WHATEVER LIMITS THE OPERATING SYSTEM IMPOSES.    
+C     IN THIS CASE, -MEMSIZ- IS JUST A DEFAULT, NOT AN UPPER BOUND.     
+C                                                                       
+C-----------------------------------------------------------------------
+C                                                                       
+      IMPLICIT DOUBLE PRECISION(A-H,O-Z)                                
+C                                                                       
+      LOGICAL GOPARR,DSKWRK,MASWRK                                      
+C                                                                       
+      COMMON /FMPARM/ LTOP,LOFFS,LENHI,LOCMEM,MEMLIM,MEMOK              
+      COMMON /IOFILE/ IR,IW,IP,IJK,IJKT,IDAF,NAV,IODA(950)              
+      COMMON /MACHIN/ NWDVAR,MAXFM,MAXSM,LIMFM,LIMSM                    
+      COMMON /PAR   / ME,MASTER,NPROC,IBTYP,IPTIM,GOPARR,DSKWRK,MASWRK  
+C                                                                       
+      PARAMETER (MEMSIZ= 1 000 000)                                     
+      COMMON /FMCOM / X(1)                                              
+C                                                                       
+C     ----- INITIALIZE FAST MEMORY (FM) MANAGEMENT -----                
+C     -LOCX- IS THE ADDRESS OF THE FIRST ELEMENT OF X.                  
+C     FOR STATIC IMPLEMENTATIONS, THIS SHOULD BE JUST 1.                
+C                                                                       
+      LOCX = 1                                                          
+      LOCX = LOC(X)                                                     
+C                                                                       
+C     -MEMLIM- IS THE DESIRED MAXIMUM SIZE OF THE MEMORY POOL.          
+C                                                                       
+      MEMLIM = IPAR                                                     
+      IF (MEMLIM .LE. 0) MEMLIM = MEMSIZ                                
+C                                                                       
+C     ----- CHECK FOR AVAILABILITY OF MEMORY -----                      
+C     -MEMSIZ- IS AN ABSOLUTE BOUND FOR STATIC IMPLEMENTATIONS          
+C                                                                       
+      MEMAVL = MEMLIM                                                   
+C                                                                       
+      IF (MEMLIM .GT. MEMAVL) THEN                                      
+         IF (MASWRK)                                                    
+     *   WRITE(IW,FMT='('' REQUESTED AMOUNT OF MEMORY ('',I10,          
+     *      '' WORDS) EXCEEDS THE AMOUNT AVAILABLE ('',I10,'')'')')     
+     *               MEMLIM,MEMAVL                                      
+         CALL ABRT                                                      
+      END IF                                                            
+C                                                                       
+C     ----- ALLOCATE THE DYNAMIC MEMORY POOL -----                      
+C     -LOCMEM- IS THE STARTING ADDRESS OF THE DYNAMIC POOL.             
+C     FOR STATIC IMPLEMENTATIONS, THIS SHOULD JUST BE 1.                
+C                                                                       
+      LOCMEM = 1                                                        
+      LOCMEM = MEMGET(MEMLIM)                                           
+C                                                                       
+      IF (LOCMEM .EQ. 0) THEN                                           
+         IF (MASWRK) WRITE(IW,*) MEMLIM,' WORDS OF MEMORY UNAVAILABLE'  
+         CALL ABRT                                                      
+      END IF                                                            
+C                                                                       
+C         COMPUTE THE OFFSET -LOFFS- FROM X(1) TO THE BEGINNING         
+C         OF THE DYNAMIC POOL (E.G. BYTE TO WORD CONVERSION).           
+C         -LOFFS- WILL BE ZERO FOR STATIC IMPLEMENTATIONS.              
+C                                                                       
+      LOFFS = LOCMEM - LOCX                                             
+      LOFFS = (LOFFS+7)/8 + 1                                           
+C                                                                       
+      LTOP  = 0                                                         
+      LENHI = 0                                                         
+      MEMOK = 99                                                        
+C                                                                       
+C     ----- REPORT MEMORY AVAILABILITY -----                            
+C                                                                       
+      MEMEXT = MEMAVL - MEMLIM                                          
+      IF (MASWRK) THEN                                                  
+      IF (MEMEXT .NE. 0) THEN                                           
+         WRITE(IW,*) MEMLIM,' WORDS REQUESTED ',                        
+     *               MEMAVL,' WORDS AVAILABLE ',                        
+     *               MEMEXT,' WORDS REMAIN FREE'                        
+      ELSE                                                              
+         WRITE(IW,FMT='(1X,I10,'' WORDS OF MEMORY AVAILABLE'')') MEMLIM 
+      END IF                                                            
+      END IF                                                            
+C                                                                       
+C     SET /MACHIN/ VALUES.                                              
+C        MAXFM/SM  = TOTAL FAST/SLOW MEMORY IN DYNAMIC POOL.            
+C        LIMFM/SM  = TOP ADDRESS OF THE FAST/SLOW DYNAMIC POOL.         
+C     GAMESS DOES NOT CURRENTLY USE SLOW MEMORY.                        
+C                                                                       
+      MAXFM = MEMLIM                                                    
+      LIMFM = MEMLIM + LOFFS                                            
+      MAXSM = 0                                                         
+      LIMSM = 0                                                         
+C                                                                       
+      IPAR = MEMAVL                                                     
+      RETURN                                                            
+      END                                                               
+C*MODULE UNPORT  *DECK BIGFM                                            
+      SUBROUTINE BIGFM(IPAR)                                            
+      IMPLICIT DOUBLE PRECISION(A-H,O-Z)                                
+      LOGICAL GOPARR,DSKWRK,MASWRK                                      
+      COMMON /FMPARM/ LTOP,LOFFS,LENHI,LOCMEM,MEMLIM,MEMOK              
+      COMMON /PAR   / ME,MASTER,NPROC,IBTYP,IPTIM,GOPARR,DSKWRK,MASWRK  
+      COMMON /IOFILE/ IR,IW,IP,IJK,IJKT,IDAF,NAV,IODA(950)              
+C                                                                       
+C     ----- RETURN MAXIMUM MEMORY USED -----                            
+C                                                                       
+      IF (MEMOK .NE. 99) RETURN                                         
+      MEMOK = 0                                                         
+      IPAR = LENHI                                                      
+      IF (MASWRK) WRITE(IW,*) IPAR,' WORDS OF DYNAMIC MEMORY USED'      
+      CALL FLSHBF(IW)                                                   
+C     CALL FLSHBF(IP)                                                   
+C                                                                       
+C        ----- RELEASE MEMORY TO SYSTEM -----                           
+C     STATIC IMPLEMENTATIONS SHOULDN'T DO ANYTHING HERE.                
+C                                                                       
+CDEC  CALL MEMREL(LOCMEM)    NOTE: ALPHA CORE DUMPS IF CALLED           
+      CALL MEMREL(LOCMEM)                                               
+      RETURN                                                            
+      END                                                               
+C*MODULE UNPORT  *DECK VALFM                                            
+      SUBROUTINE VALFM(IPAR)                                            
+      IMPLICIT DOUBLE PRECISION(A-H,O-Z)                                
+      COMMON /FMPARM/ LTOP,LOFFS,LENHI,LOCMEM,MEMLIM,MEMOK              
+C                                                                       
+C     ----- RETURN THE CURRENT TOP OF FM ARRAY -----                    
+C                                                                       
+      IPAR = LTOP + LOFFS                                               
+      RETURN                                                            
+      END                                                               
+C*MODULE UNPORT  *DECK GETFM                                            
+      SUBROUTINE GETFM(IPAR)                                            
+      IMPLICIT DOUBLE PRECISION(A-H,O-Z)                                
+      LOGICAL GOPARR,DSKWRK,MASWRK                                      
+      COMMON /FMPARM/ LTOP,LOFFS,LENHI,LOCMEM,MEMLIM,MEMOK              
+      COMMON /IOFILE/ IR,IW,IP,IJK,IJKT,IDAF,NAV,IODA(950)              
+      COMMON /PAR   / ME,MASTER,NPROC,IBTYP,IPTIM,GOPARR,DSKWRK,MASWRK  
+C                                                                       
+C         UNCOMMENT NEXT LINE AND ALSO IN -RETFM- FOR PLUMBING JOBS.    
+CLEAK IF(MASWRK) WRITE(IW,*) 'GETFM: ALLOCATING',IPAR                   
+C                                                                       
+C     ----- RESERVE IPAR WORDS OF FM -----                              
+C                                                                       
+      LTOP = LTOP + IPAR                                                
+      IF (LTOP .LE. MEMLIM ) THEN                                       
+         LENHI = MAX(LENHI,LTOP)                                        
+      ELSE                                                              
+         WRITE(IW,9000) ME,LTOP,MEMLIM                                  
+         CALL ABRT                                                      
+      END IF                                                            
+      RETURN                                                            
+C                                                                       
+ 9000 FORMAT(1X,'***** ERROR: MEMORY REQUEST EXCEEDS AVAILABLE MEMORY'/ 
+     *    1X,'PROCESS NO.',I5,' WORDS REQUIRED=',I20,' AVAILABLE=',I20) 
+      END                                                               
+C*MODULE UNPORT  *DECK RETFM                                            
+      SUBROUTINE RETFM(IPAR)                                            
+      IMPLICIT DOUBLE PRECISION(A-H,O-Z)                                
+      COMMON /FMPARM/ LTOP,LOFFS,LENHI,LOCMEM,MEMLIM,MEMOK              
+C                                                                       
+C         UNCOMMENT NEXT LINES AND ALSO IN -GETFM- FOR PLUMBING JOBS.   
+CLEAK LOGICAL GOPARR,DSKWRK,MASWRK                                      
+CLEAK COMMON /IOFILE/ IR,IW,IP,IJK,IJKT,IDAF,NAV,IODA(950)              
+CLEAK COMMON /PAR   / ME,MASTER,NPROC,IBTYP,IPTIM,GOPARR,DSKWRK,MASWRK  
+CLEAK IF(MASWRK) WRITE(IW,*) 'RETFM:  RETURNING',IPAR                   
+C                                                                       
+C     ----- RETURN IPAR WORDS OF FM -----                               
+C                                                                       
+      LTOP = LTOP - IPAR                                                
+      RETURN                                                            
+      END                                                               
+C*MODULE UNPORT  *DECK GOTFM                                            
+      SUBROUTINE GOTFM(IPAR)                                            
+      IMPLICIT DOUBLE PRECISION(A-H,O-Z)                                
+      COMMON /FMPARM/ LTOP,LOFFS,LENHI,LOCMEM,MEMLIM,MEMOK              
+C                                                                       
+C     ----- RETURN NUMBER OF FREE WORDS IN FM -----                     
+C                                                                       
+      IPAR = MEMLIM - LTOP                                              
+      RETURN                                                            
+      END                                                               
+C*MODULE UNPORT  *DECK TIMIT                                            
+      SUBROUTINE TIMIT(INDEX)                                           
+      IMPLICIT DOUBLE PRECISION(A-H,O-Z)                                
+C                                                                       
+      LOGICAL GOPARR,DSKWRK,MASWRK                                      
+C                                                                       
+      COMMON /IOFILE/ IR,IW,IP,IJK,IJKT,IDAF,NAV,IODA(950)              
+      COMMON /PAR   / ME,MASTER,NPROC,IBTYP,IPTIM,GOPARR,DSKWRK,MASWRK  
+      COMMON /TMVALS/ TI,TX,TIM                                         
+      COMMON /TIMING/ CPU,WALL                                          
+      COMMON /SIMDAT/ NACC,NREJ,IGOMIN,NRPA,IBWM,NACCT,NREJT,NRPAT,     
+     *                NPRTGO,IDPUNC,IGOFLG                              
+C                                                                       
+C        COMPUTE AND PRINT INTERVAL CPU TIME                            
+C        THIS IS CALLED WITH INDEX=0 ONLY FROM THE MAIN PROGRAM         
+C        ALL OTHER CALLS SHOULD PRINT THE INTERVAL TIME.                
+C                                                                       
+      CALL TSECND(TIM)                                                  
+      TX = TIM-TI                                                       
+      TI = TIM                                                          
+      IF (INDEX .EQ. 0) RETURN                                          
+C                                                                       
+      RATIO=100.0D+00                                                   
+      IF(WALL.GT.0.0D+00) RATIO = 100.0D+00*TIM/WALL                    
+      TMINUT = TIM/60.0D+00                                             
+      IF((IPTIM.GT.0.OR.MASWRK).AND.NPRTGO.NE.2) THEN                   
+         IF(GOPARR) THEN                                                
+            WRITE(IW,9010) ME,TX,TIM,TMINUT,WALL,RATIO                  
+         ELSE                                                           
+            WRITE(IW,9000) TX,TIM,TMINUT,WALL,RATIO                     
+         END IF                                                         
+      END IF                                                            
+      CALL FLSHBF(IW)                                                   
+C     CALL FLSHBF(IP)                                                   
+      RETURN                                                            
+C                                                                       
+ 9000 FORMAT(1X,'STEP CPU TIME =',F9.2,                                 
+     *          ' TOTAL CPU TIME =',F11.1,' (',F7.1,' MIN)'/            
+     *       1X,'TOTAL WALL CLOCK TIME=',F11.1,                         
+     *          ' SECONDS, CPU UTILIZATION IS',F7.2,'%')                
+ 9010 FORMAT(1X,'CPU',I6,': STEP CPU TIME=',F9.2,                       
+     *          ' TOTAL CPU TIME=',F11.1,' (',F7.1,' MIN)'/             
+     *       1X,'TOTAL WALL CLOCK TIME=',F11.1,                         
+     *          ' SECONDS, CPU UTILIZATION IS',F7.2,'%')                
+      END                                                               
+C*MODULE UNPORT  *DECK TMDATE                                           
+      SUBROUTINE TMDATE(TIMSTR)                                         
+C-----------------------------------------------------------------------
+C     ----- RETURN REAL ARRAY CONTAINING 24 CHARACTER TIME STAMP -----  
+C           ANY FORMAT RESEMBLING "HH:MM:SS DD-MMM-YYYY" WILL DO.       
+C-----------------------------------------------------------------------
+      DOUBLE PRECISION TIMSTR(3)                                        
+      CHARACTER*24 STAMP                                                
+      CALL FDATE(STAMP)                                                 
+      READ(UNIT=STAMP,FMT='(3A8)') TIMSTR                               
+      RETURN                                                            
+      END                                                               
+C*MODULE UNPORT  *DECK TSECND                                           
+C>                                                                      
+C>    @brief   do CPU and wall clock timings                            
+C>                                                                      
+C>    @details do CPU and wall clock timings through a name TSECND      
+C>             that is not used on any operating system, in order       
+C>             to call whatever name each kind of computer uses.        
+C>                                                                      
+C>    @param   TIM   return value is CPU time since job start           
+C>    @param   CPU   CPU time,   since job start (in /TIMING/)          
+C>    @param   WALL  wall clock, since job start (in /TIMING/)          
+C>                                                                      
+C>    @author  Mike Schmidt, many moons ago                             
+C>                                                                      
+      SUBROUTINE TSECND(TIM)                                            
+C-----------------------------------------------------------------------
+C       ----- THIS ROUTINE PERFORMS CPU AND WALL CLOCK TIMING -----     
+C                                                                       
+C       THIS ROUTINE SHOULD SET 'CPU' AND 'WALL' VARIABLES              
+C       TO THE TOTAL ELAPSED CPU AND WALL CLOCK TIMES,                  
+C       MEASURED IN SECONDS.  IN ADDITION, THE CALLING                  
+C       ARGUMENT 'TIM' SHOULD BE SET EQUAL TO 'CPU'.                    
+C                                                                       
+C       ON THE FIRST ENTRY, 'CPU0' AND 'WALL0' SHOULD BE SET            
+C       TO THE APPROPRIATE BASE VALUE ON JOB START.                     
+C                                                                       
+C-----------------------------------------------------------------------
+C                                                                       
+C                       >>>>> UNIX NOTE <<<<<                           
+C                                                                       
+C     DEPENDING ON JUST WHAT UNIX YOU ARE USING, ETIME IS EITHER        
+C     SINGLE OR DOUBLE PRECISION (DOUBLE ON THE CELERITY AND ALLIANT).  
+C     SOME SYSTEMS ALSO DON'T RETURN THE SUM OF USER AND SYSTEM         
+C     TIME AS THE FUNCTION VALUE.  THEREFORE, THE MOST PORTABLE         
+C     WAY OF DOING THIS TIMING IS TO ADD THE USER AND SYSTEM TIMES      
+C     RETURNED IN TARRAY, WHICH SEEMS TO BE SINGLE PRECISION ON         
+C     ALL UNIX SYSTEMS THUS FAR TESTED.                                 
+C                                                                       
+C-----------------------------------------------------------------------
+C                                                                       
+C       ----- OBTAIN ELAPSED TIMES SINCE JOB STARTED -----              
+C                                                                       
+      DOUBLE PRECISION CPU0,WALL0,CPU,WALL,TIM                          
+      DOUBLE PRECISION XQTIME                                           
+      REAL*4 TARRAY(2)                                                  
+      LOGICAL FIRST                                                     
+      COMMON /TIMING/ CPU,WALL                                          
+      SAVE FIRST,CPU0,WALL0                                             
+      DATA FIRST/.TRUE./                                                
+C                                                                       
+      IF(FIRST) THEN                                                    
+         TARRAY(1)=0.0E+00                                              
+         FIRST=.FALSE.                                                  
+         WALL0 = XQTIME(TARRAY)                                         
+         CPU0 = TARRAY(1)+TARRAY(2)                                     
+      END IF                                                            
+C                                                                       
+      WALL = XQTIME(TARRAY)                                             
+      CPU = TARRAY(1)+TARRAY(2)                                         
+      CPU = CPU - CPU0                                                  
+      WALL = WALL - WALL0                                               
+      TIM = CPU                                                         
+      RETURN                                                            
+      END                                                               
+C*MODULE UNPORT  *DECK ENDING                                           
+      SUBROUTINE ENDING                                                 
+      IMPLICIT DOUBLE PRECISION(A-H,O-Z)                                
+      COMMON /IOFILE/ IR,IW,IP,IJK,IJKT,IDAF,NAV,IODA(950)              
+C                                                                       
+C     ----- TERMINATE EXECUTION SMOOTHLY -----                          
+C     THE TIME DELAY IS TO TRY TO ALLOW ALL BUFFERS TO FLUSH PROPERLY   
+C                                                                       
+      CALL FLSHBF(IW)                                                   
+      IDELAY=2                                                          
+      CALL NAPTIME(IDELAY)                                              
+      RETURN                                                            
+      END                                                               
+C*MODULE UNPORT  *DECK UNPINT
+      SUBROUTINE UNPINT
+C
+C     ----- INITIALIZE VARIABLES USED IN THE RREST OF UMPORT ROUTINES.
+C
+      IMPLICIT DOUBLE PRECISION(A-H,O-Z)
+C
+      LOGICAL GOPARR,DSKWRK,MASWRK
+C
+      COMMON /IOFILE/ IR,IW,IP,IJK,IJKT,IDAF,NAV,IODA(950)
+      COMMON /PAR   / ME,MASTER,NPROC,IBTYP,IPTIM,GOPARR,DSKWRK,MASWRK
+      COMMON /MACHIN/ NWDVAR,MAXFM,MAXSM,LIMFM,LIMSM
+      COMMON /MACHSW/ KDIAG,ICORFL,IXDR,modio,mem10,lpnt10,mem10m
+C
+      IW = 6
+      MASWRK = .FALSE.
+      GOPARR = .FALSE.
+      ICORFL = 0 
+      MODIO  = 0
+      IPTIM  = 1
+      NPRTGO = 1
+      RETURN
+      END

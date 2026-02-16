@@ -1,0 +1,486 @@
+      Subroutine Input
+      Implicit Double Precision (A-H,O-Z)
+      Parameter (Zero=0.0d+00)
+c
+*unx  Include 'infcom.com'
+*unx  Include 'ioscom.com'
+*unx  Include 'pltcom.com'
+*aix  Include (infcom.com)
+*aix  Include (ioscom.com)
+*aix  Include (pltcom.com)
+c
+c.... Standard Abbelian symmetry stuff
+c
+      Character*4 Groups (8), IRReps (8,8)
+      Dimension   IRRLen (8), MulTXX (8,8)
+c
+      Data Groups /'d2h ','d2  ','c2h ','c2v ', 
+     #             'c2  ','s2  ','cs  ','c1  '/
+      Data IRReps /
+     1   'a1g ','a1u ','b1g ','b1u ','b2g ','b2u ','b3g ','b3u ',
+     2   'a1  ','b1  ','b2  ','b3  ','    ','    ','    ','    ',
+     3   'ag  ','au  ','bg  ','bu  ','    ','    ','    ','    ',
+     4   'a1  ','a2  ','b1  ','b2  ','    ','    ','    ','    ',
+     5   'a   ','b   ','    ','    ','    ','    ','    ','    ',
+     6   'ag  ','au  ','    ','    ','    ','    ','    ','    ',
+     7   4ha'  ,4ha"  ,'    ','    ','    ','    ','    ','    ',
+     8   'a   ','    ','    ','    ','    ','    ','    ','    ' /
+      Data IRRLen / 8, 4, 4, 4, 2, 2, 2, 1 /
+      Data MulTXX /
+     1             1, 2, 3, 4, 5, 6, 7, 8,
+     2             2, 1, 4, 3, 6, 5, 8, 7,
+     3             3, 4, 1, 2, 7, 8, 5, 6,
+     4             4, 3, 2, 1, 8, 7, 6, 5,
+     5             5, 6, 7, 8, 1, 2, 3, 4,
+     6             6, 5, 8, 7, 2, 1, 4, 3,
+     7             7, 8, 5, 6, 3, 4, 1, 2,
+     8             8, 7, 6, 5, 4, 3, 2, 1 /
+c
+      Character*72 LinBuf
+      Character* 4 SmLab
+      Character* 3 Gau, Lor
+      Data         Gau, Lor / 3hgau, 3hlor /
+c 
+      Dimension IntMap (8,8), Ko (8), Lo (8)
+      Logical   IDeb
+c
+ 1000 Format (a70)
+ 1100 Format (a4)
+ 1200 Format (a4,f20.10)
+ 1300 Format (a4,i20)
+ 1400 format (a3)
+ 2000 Format (1x,'>>> Point group ',a4,' is not supported ! <<<')
+ 2100 Format (1x,'>>> IRREP ',a4,' is not in this point group ! <<<')
+ 2200 Format (1x,'>>> No. of electronic states is out of range ! <<<')
+ 2300 Format (1x,'>>> Only one state per IRREP is allowed in this ',
+     #        'implementation',/,1x,'and at least two states are  ',
+     #        'needed. <<<')
+ 2400 Format (1x,'>>> There was already state of ',a4,' symmetry! <<<')
+ 2500 Format (1x,'>>> None of the electronic states matchs total ',
+     #        '(vibronic) symmetry ! <<<')
+ 2600 Format (1x,'>>> No. of mode symmetries exceeds dimension of ',
+     #        'point group ! <<<')
+ 2750 format (1x,'>>> Too many modes ! <<<')
+ 2700 Format (1x,'>>> Invalid number of modes in symmetry ',a4,' .<<<')
+ 2800 Format (1x,'>>> There were already modes of ',a4,' symmetry!<<<')
+ 2900 Format (1x,'>>> Number of state pairs for mode block ',a4,
+     #        ' is out of range ! <<<')
+ 3000 Format (1x,'>>> Troubles with state pair :',2i4,' .<<<')
+ 3100 Format (1x,'>>> There was already input for this pair ! <<<')
+ 3200 Format (1x,'>>> Warning: state No.',i2,' is NOT coupled to ',
+     #        'any other state ! <<<')
+ 4000 Format (1x,a70,/)
+ 4100 Format (1x,'Point group: ',a4,'; Total (vibronic) symmtetry: ',
+     #        a4)
+ 4200 Format (1x,'Interacting electronic states :',/,
+     #        1x,'No.   Symmetry     Energy')
+ 4300 Format (1x,i2,6x,a4,6x,f8.4)
+ 4400 Format (1x,/,1x,'Modes and couplings :',/)
+ 4500 Format (1x,'Sym. Block --- ',a4)
+ 4600 Format (1x,'No. of symmetry-unadapted basis states:',i10,'.')
+ 4700 Format (1x,'Negative ?! -- use 64 bit integer !')
+ 4800 Format (1x,'Number of Lanczos iterations to perform :',i6,'.')
+ 5000 Format (1x,'Plot : ',a3,'-shape; FWHM =',f6.4,' eV;',i6,
+     #        1x,'points.')
+ 5100 Format (1x,'>>> Line shape ',a3,' is not supported ! <<<')
+ 5200 Format (1x,'>>> Parameter FWHM is out of range ! <<<')
+ 5300 Format (1x,'>>> Unreasonable number of plot points ! <<<')
+ 5400 Format (1x,'Accessible memory:',i5,' Mb =',i10,' double words).')
+c
+c.... Initialization
+c
+      n = 0
+      Do 20 i=1,8
+         Do 10 j=1,8
+            If (j .Le. i) then
+               n = n + 1
+               ILTr (i,j) = n
+               ILTr (j,i) = n
+            End If
+            MulTab (i,j) = MulTXX (i,j)
+            IntMap (i,j) = 0
+   10    Continue
+         NelSy  (i) = 0
+         NModSy (i) = 0
+   20 Continue
+      Call VClear (VibCon,MxMod*36)
+c
+c.... Title
+c
+      Read (Ir,1000) LinBuf
+      Title = LinBuf
+      Call ToSma (Title,72)
+c
+c.... Core
+c
+      Read (Ir,*) MemMb
+      MemWd = MemMb*1024*1024/8
+c
+c.... Point group
+c
+      Read (Ir,1100) SmLab
+      Call ToSma (SmLab,4)
+      NGroup = IDSym (SmLab,Groups,8)
+      If (NGroup .Eq. 0) then
+         Write (Iw,2000) SmLab
+         Stop
+      EndIf
+      NSym = IRRLen (NGroup)
+c
+c.... Total symmetry
+c
+      Read (Ir,1100) SmLab
+      Call ToSma (SmLab,4)
+      IToSym = IDSym (SmLab,IRReps (1,NGroup),NSym)
+      If (IToSym .Eq. 0) then
+         Write (Iw,2100) SmLab
+         Stop
+      EndIf
+c
+c.... No. of electronic states
+c
+      Read (Ir,*) Nel
+      If (Nel .Gt. NSym .Or. Nel .Le. 1) then
+         Write (Iw,2200)
+         Write (Iw,2300)
+         Stop
+      EndIf
+      MxLt = Nel*(Nel+1)/2
+c
+c.... Electronic states symmetries and energies
+c
+      IFlag = 0
+      Do 30 i=1,Nel
+         Read (Ir,1200) SmLab, EnEl (i)
+         Call ToSma (SmLab,4)
+         Is = IDSym (SmLab,IRReps (1,NGroup),NSym)
+         If (Is .Eq. 0) then
+            Write (Iw,2100) SmLab
+            Stop
+         EndIf
+         If (NelSy (Is) .Ne. 0) then
+            Write (Iw,2400) SmLab
+            Write (Iw,2300)
+            Stop
+         EndIf
+         ISyEl (i ) = Is
+         NelSy (Is) = i
+         If (Is .Eq. IToSym) IFlag = 1
+   30 Continue
+      If (IFlag .Eq. 0) then
+         Write (Iw,2500)
+         Stop
+      EndIf
+c
+c.... Number of mode symmetry blocks
+c      
+      Read (Ir,*) NVibS
+      If (NVibS .Gt. NSym) then
+         Write (Iw,2600)
+         Stop
+      EndIf
+c
+      NMod = 0
+      Do 50 i=1,NVibS
+c
+c....... Block symmetry and number of modes in the block
+c
+         Read (Ir,1300) SmLab, NRMod
+         Call ToSma (SmLab,4)
+         Is = IDSym (SmLab,IRReps (1,NGroup),NSym)
+         If (Is .Eq. 0) then
+            Write (Iw,2100) SmLab
+            Stop
+         EndIf
+         If (NRMod .Le. 0 .Or. NRMod .Gt. MxMod) then
+            Write (Iw,2700) SmLab
+            Stop
+         EndIf
+         If ((NMod+NRMod) .Gt. MxMod) then
+            Write (Iw,2750)
+            Stop
+         EndIf
+         If (NModSy (Is) .Ne. 0) then
+            Write (Iw,2800) SmLab
+            Stop
+         EndIf
+c
+         NModSy (Is) = NRMod
+         ModBlo (Is) = NMod + 1
+         ISyMod (i ) = Is
+c
+c....... Frequencies and max quanta
+c
+         Read (Ir,*) (Freqs (NMod+j),j=1,NRMod)
+         Read (Ir,*) (LimQN (NMod+j),j=1,NRMod)
+c
+c....... No. of state pairs interacting via modes of this symmetry
+c
+         Read (Ir,*) NPairs
+         If (NPairs .Le. 0 .Or. Npairs .Gt. MxLT) then
+            Write (Iw,2900) SmLab
+            Stop
+         EndIf
+c
+c....... Coupling constants for this pair
+c
+         Do 40 j=1,NPairs
+            Read (Ir,*) NA, NB
+            NAxNB = MulTab (ISyEl (NA),ISyEl (NB))
+            If (NA .Gt. Nel .Or. NB .Gt. Nel .Or. NAxNB .Ne. Is) then
+               Write (Iw,3000) NA, NB
+               Stop
+            End If
+            If (IntMap (NA,NB) .Ne. 0) then
+               Write (Iw,3000) NA, NB
+               Write (Iw,3100)
+               Stop
+            End If
+            IntMap (NA,NB) = 1
+            IntMap (NB,NA) = 1
+            Nab = ILTr (NA,NB)
+            Read (Ir,*) (VibCon (Nab,NMod+mx),mx=1,NRMod)
+   40    Continue
+         NMod = NMod + NRMod
+   50 Continue
+c
+c.... Set up interaction table
+c
+      Do 70 i=1,NEl
+         ISum = 0
+         Do 60 j=1,Nel
+            If (IntMap (i,j) .Ne. 0) then
+               ISum = ISum + 1
+               IntEl (i,ISum) = j
+            End If
+   60    Continue
+         If (ISum .Eq. 0) Write (Iw,3200) i
+         NInt (i) = ISum
+   70 Continue
+c
+c.... Count (UNadapted) basis states, etc.
+c
+      NConf = 1
+      NQMax = 0
+      Kx = 1
+      Do 80 i=1,NMod
+         IQuax = LimQN (i)
+         NConf = NConf * IQuax
+         If (NQMax .Lt. Iquax) NQMax = IQuax
+         Indxx (i) = Kx
+         Kx = Kx * IQuax
+   80 Continue
+c
+c.... Number of Lanczos iterations and plot Info
+c
+      Read (Ir, *  ) NLanc
+      Read (Ir,1400) Shape
+      Read (Ir, *  ) FWHM, NPont
+      Call ToSma (Shape,3)
+c
+c.... Output level
+c
+      ITs1 = Index (Title,'#debug')
+      ITs2 = Index (Title,'#input')
+      IDeb = ITs1 .Ne. 0 .Or. ITs2 .Ne. 0
+c
+c.... Print Input Information ...
+c
+      If (IDeb) Call InDmp
+      write (Iw,4000) LinBuf
+      Write (Iw,4100) Groups (NGroup), IRReps (IToSym,NGroup)
+c
+      Write (Iw,4200)
+      Do 90 i=1,Nel
+         Write (Iw,4300) i, IRReps (ISyEl (i),NGroup), EnEl (i)
+   90 Continue
+c
+      Write (Iw,4400)
+c.... Loop over vibrational symmeties
+      Do 110 i=1,NVibS
+         ISym = ISyMod (i)
+         Write (Iw,4500) IRReps (ISym,NGroup)
+c....... Get all state pairs coupled via this symmetry
+         Np = 0
+         Do 100 k=1,NEl
+         Do 100 l=1,k
+            kxl = MulTab (ISyEl (k), ISyEl (l))
+            If (kxl .Eq. ISym) then
+               Np = Np + 1
+               Ko (Np) = k
+               Lo (Np) = l
+            End If
+  100    Continue
+         INbs = NModSy (ISym)
+         ISta = ModBlo (ISym)
+         Call ModPr (LimQN (ISta), Freqs (ISta), VibCon (1,ISta),
+     #               Ko, Lo, ILTr, Np, ISta, INbs)
+  110 Continue
+c
+      Write (Iw,4600) NConf
+      If (NConf .Le. 0) then
+         write (Iw,4700)
+         Stop
+      EndIf
+c
+      Write (Iw,4800) NLanc
+      Write (Iw,5000) Shape, FWHM, NPont
+      If (Shape .Ne. Gau .and. Shape .Ne. Lor) then
+         Write (Iw,5100) Shape
+         Stop
+      EndIf
+      If (fwhm .Le. Zero) then
+         Write (Iw,5200) 
+         Stop
+      EndIf
+      If (NPont .Le. 10) then
+         Write (Iw,5300)
+         Stop
+      EndIf
+c
+      Write (Iw,5400) MemMb, MemWd
+      Return
+      End
+c
+c.....
+c
+      Integer Function IDSym (SmLab,IRRep,NSym)
+      Character*4 SmLab, IRRep (*)
+      ID = 0
+      Do 10 i=1,NSym
+         If (SmLab .Eq. IRRep (i)) then
+            ID = i
+            go to 20
+         EndIf
+   10 Continue
+   20 IDSym = ID
+      Return
+      End
+c
+c.....
+c
+      Subroutine IVcPr (IV,N)
+      Parameter (Iw=6)
+      Dimension IV (N)
+      Write (Iw,1000) IV
+      Return
+ 1000 Format ((1x,5i12))
+      End
+c
+c.....
+c
+      Subroutine IMtPr (Mt,Nx,N)
+      Parameter (Iw=6)
+      Dimension Mt (Nx,*)
+      Do 10 i=1,N
+         Write (Iw,1000) (Mt (i,j),j=1,N)
+   10 Continue
+      Return
+ 1000 Format ((1x,5i12))
+      End
+c
+c.....
+c
+c  LimQN (ISta), Freqs (ISta), VibCon (1,ISta), Ko, Lo, ILTr, 
+c  Np, ISta, INbs)
+c
+      Subroutine ModPr (LQN,Frq,Con,Ko,Lo,LTr,Np,Ns,Nm)
+      Implicit Double Precision (A-H,O-Z)
+      Parameter (Iw=6)
+      Dimension LQN (Nm), FRq (Nm), Con (36,*), 
+     #          Ko  (Np), Lo  (Np), LTr (8,8)
+ 1000 Format (1x,'Mode No.',3x,6i9)
+ 1100 Format (1x,'Max QN',5x,6i9)
+ 1200 Format (1x,'Frequency',4x,6f9.4)
+ 1300 Format (1x,'Kapa (',i1,')',5x,6f9.4)
+ 1400 Format (1x,'Lambda (',i1,'-',i1,')',1x,6f9.4)
+ 5000 Format (1x,1h )
+      Je = 0
+      Do 20 i=1,Nm,6
+         Js = Je + 1
+         Je = Je + 6
+         If (Je .Gt. Nm) Je = Nm
+         Write (Iw,1000) (Ns+j-1 ,j=Js,Je)
+         Write (Iw,1100) (LQN (j),j=Js,Je)
+         Write (Iw,1200) (Frq (j),j=Js,Je)
+         Do 10 m=1,Np
+            Kom = Ko (m)
+            Lom = Lo (m)
+            KLm = LTr (Kom,Lom)
+            If (Kom .Eq. Lom) then
+               Write (Iw,1300) Kom, (Con (KLm,j),j=Js,Je)
+            else
+               Write (Iw,1400) Kom, Lom, (Con (KLm,j),j=Js,Je)
+            End If
+   10    Continue
+         Write (Iw,5000)
+   20 Continue
+      Return
+      End
+c
+c.....
+c
+      Subroutine VClear (V,N)
+      Implicit Double Precision (A-H,O-Z)
+      Parameter (Zero=0.0d+00)
+      Dimension V (*)
+      Do 10 i=1,N
+         V (i) = Zero
+   10 Continue
+      Return
+      End
+c
+c......
+c
+      Subroutine InDmp
+      Implicit Double Precision (A-H,O-Z)
+      Parameter (Iw=6)
+c.... Full dump of the input information
+      Include 'infcom.com'
+      Include 'pltcom.com'
+ 1000 Format (1x,a72)
+ 1100 Format (1x,'NGroup=',i2,' NSym=',i2,' IToSym=',i2,' NVibS=',i2,/,
+     #        1x,'NEl   =',i2,' MxLT=',i2,' NLanc=',i8,/,
+     #        1x,' MemWd=',i10,' NMod=',i2,/,
+     #        1x,'NQMax =',i3,' NConf=',i12)
+ 1200 Format (1x,8f7.3) 
+ 1300 Format (1x,'fwhm=',f12.6,' npont=',i6,' shape=',a4)
+      Write (Iw,*) ' Common Infcom.'
+      Write (Iw,*) ' Title :'
+      Write (Iw,1000) Title
+      Write (Iw,1100) NGroup, NSym,  IToSym, NVibS, NEl, MxLT,
+     #               NLanc, MemWd, NMod, NQMax, NConf
+      Write (Iw,*) ' LimQN :'
+      Call IVcPr (LimQN,NMod)
+      Write (Iw,*) ' Indxx :'
+      Call IVcPr (Indxx,NMod)
+      Write (Iw,*) ' ISyEl :'
+      Call IVcPr (ISyEl,Nel)
+      Write (Iw,*) ' NelSy:'
+      Call IVcPr (NelSy,NSym)
+      Write (Iw,*) ' ISyMod:'
+      Call IVcPr (ISyMod,NVibS)
+      Write (Iw,*) ' NModSy:'
+      Call IVcPr (NModSy,NSym)
+      Write (Iw,*) ' ModBlo:'
+      Call IVcPr (ModBlo,NSym)
+      Write (Iw,*) ' MulTab:'
+      Call IMtPr (MulTab,8,NSym)
+      Write (Iw,*) ' ILTr:'
+      Call IMtPr (ILTr,8,Nel)
+      Write (Iw,*) ' IntEl:'
+      Call IMtPr (IntEl,8,Nel)
+      Write (Iw,*) ' NInt:'
+      Call IVcPr (NInt,NEl)
+      Write (Iw,*) ' EnEl:'
+      Write (Iw,1200) (EnEl (i),i=1,Nel)
+      Write (Iw,*) ' VibCon (T):'
+      Do 10 j=1,NMod
+         Write (Iw,1200) (VibCon (i,j),i=1,MxLt)
+   10 Continue
+      Write (Iw,*) ' Freqs:'
+      Write (Iw,1200) (Freqs (i),i=1,NMod)
+      Write (Iw,*) ' Common PltCom.'
+      Write (Iw,1300) fwhm, npont, shape
+      Return
+      End

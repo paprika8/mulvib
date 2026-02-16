@@ -1,0 +1,77 @@
+      Subroutine Clean (A,B,n,nout)
+      Implicit Double Precision (A-H,O-Z)
+c
+c.... On input -A(n)- contains eigenvalues and -B(n)- contains
+c.... the first row of eigenvector matrix.
+c.... On output -A(nout)- contains eigenvalues with intensities
+c.... larger than 1/10^5 of the intensity of the strongest line
+c.... in the spectrum. -B(nout)- contains intensities.
+c.... All those eigenpairs are printed out.
+c
+*unx  Include 'ioscom.com'
+*aix  Include (ioscom.com)
+c
+      Dimension a (n), b (n)
+      Data zero   , ten20  , ten05  , ten08 
+     #   / 0.0d+00, 1.0d+20, 1.0d-05, 1.0d-08 /
+c
+ 1000 Format (1x,'Results of diagonalization.',/,
+     #        1x,'Retaining lines with intensity ',d7.1,
+     #        1x,'of the strongest line No.',i4,'.',/,
+     #        1x,'Number of peaks with intensity greater than',
+     #        d14.7,' : ',i5,'.',/,1x,'Normalization :',f12.7,/)
+ 1500 Format (17x,'Energy',11x,'Intensity',/,16x,8(1h-),10x,9(1h-),/)
+ 2000 Format ((7x,i4,f14.7,4x,f14.7))
+ 5000 Format (1x,1h )
+c
+c.... Compute intensities
+c
+      do 10 i=1,n
+         b (i) = b (i) * b (i)
+   10 continue
+c
+c.... Substitute close multiple lines with single 
+c.... ones of summed intensity
+c
+      i = 0
+   20 continue
+         i = i + 1
+         if (i .gt. n) go to 50 
+         do 30 j=1,n
+            ij = i + j
+            if (ij .gt. n) go to 20
+            if (dabs (a (i) - a (ij)) .gt. ten08) go to 40
+            b (i)  = b (i) + b (ij)
+            b (ij) = zero
+   30    continue
+   40    i = i + j - 1
+      goto 20
+c
+c.... Delete lines with zero and small intensities
+c
+   50 continue
+      IMax = IDAMax (n,B,1)
+      BMax = B (IMax)
+      Thre = BMax * Ten05
+      Sum  = Zero
+      k = 0
+      do 60 i=1,n
+         bi = b (i)
+         if (bi .ge. thre) then
+            k = k + 1
+            a (k) = a (i)
+            b (k) = bi
+            sum = sum + bi
+         endif
+   60 continue
+      nout = k
+c
+c.... Print out retained eigenpairs
+c
+      Write (Iw,1000) Ten05, IMax, thre, nout, Sum
+      Write (Iw,1500)
+      Write (Iw,2000) (i, a (i), b (i), i=1,nout)
+      Write (Iw,5000)
+      Call Timit (1)
+      Return
+      End

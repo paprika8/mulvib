@@ -1,0 +1,80 @@
+      Subroutine Splot (e,f,n)
+      Implicit Double Precision (A-H,O-Z)
+c
+*unx  Include 'ioscom.com'
+*unx  Include 'pltcom.com'
+*aix  Include (ioscom.com)
+*aix  Include (pltcom.com)
+c
+      character*3 gau, lor
+      dimension e (n), f (n)
+c
+      data zero, two, four / 0.0d+00, 2.0d+00, 4.0d+00 /
+      data t3, thr  / 0.00010d+00, 0.00020d+00 /
+c     data t3, thr  / 0.00010d+00, 0.00050d+00 /
+      data gau, lor / 3hgau, 3hlor /
+c
+ 1100 format (1x,e12.7e1,2x,',',2x,e12.7e1)
+ 1200 format (1x,'Plot data points evaluated.')
+c
+      if (shape .eq. gau) then
+         aterm = four * dlog (two) / (fwhm * fwhm)
+      else
+         aterm = fwhm / two
+         aterm = aterm * aterm
+      endif
+c
+c.... Get increment, lower and upper bounds
+c
+      step = (e(n) - e(1)) / dfloat (npont-1)
+      if (step .eq. zero) step = t3
+c
+      emin = e (1)
+   40 continue
+         emin = emin - step
+         fx   = shaper (emin,e,f,n,aterm,shape)
+      if (fx .gt. thr) go to 40
+c
+      emax = e (n)
+   50 continue
+         emax = emax + step
+         fx   = shaper (emax,e,f,n,aterm,shape)
+      if (fx .gt. thr) go to 50
+      step = (emax - emin) / dfloat (npont-1)
+c
+c.... Compute points
+c
+      x = emin
+      do 60 i=1, npont
+         fx = shaper (x,e,f,n,aterm,shape)
+         write (Ip,1100) x, fx
+         x  = x + step
+   60 continue
+      Write (Iw,1200)
+      Call Timit (1)
+      Return
+      End
+c
+c....
+c
+      Double Precision Function Shaper (x,e,f,n,aterm,shape)
+      Implicit Double Precision (a-h,o-z)
+      character*3 gau,lor,shape
+      dimension e (n), f (n)
+      data gau, lor / 3hgau, 3hlor /
+      data zero / 0.0d+00 /
+      term = zero
+      if (shape .eq. gau) then
+         do 10 i=1,n
+            diff  = e(i) - x
+            term  = term + f(i) * dexp (- aterm * diff * diff)
+   10    continue
+      else
+         do 20 i=1,n
+            diff  = e(i) - x
+            term  = term + f(i) * aterm / ((diff * diff) + aterm)
+   20    continue
+      endif
+      shaper = term
+      return
+      end

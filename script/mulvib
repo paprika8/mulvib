@@ -1,0 +1,76 @@
+#!/usr/bin/csh
+#
+# ----- Mulvib execution script -----
+#
+#       Usage: mulvib name [ver]
+#              name --> input/name.inp
+#              ver      version to execute
+#
+# --- IWR ---
+#
+#set MVBRT=$HOME/mulvib
+#set scr=$HOME/work/$1
+#mkdir $scr
+#
+# --- PCI ---
+#
+#set MVBRT=/u/pci/d77/mulvib
+#set scr=/tmpa/$USER/$1
+#mkdir $scr
+#
+# --- INFO ---
+#
+#set MVBRT=/home/lkx/mulvib
+#set scr=/disk5/homes/tmp/$USER/$1
+#mkdir $scr
+#
+#
+# --- PCLINUX ---
+#
+set MVBRT=/e/CourseWork
+set scr=/tmp/$USER/$1
+mkdir $scr
+#
+# set echo
+if (null$2 == null) then
+   set VERNO=00
+else
+   set VERNO=$2
+endif
+#
+set MVB=$HOME/mulvib
+set job=$1
+#
+date
+echo ----- Mulvib execution script -----
+#
+#   Grab a copy of the input file
+#
+cp $MVB/input/$job.inp $scr/$job.f05
+#
+setenv input  $scr/$job.f05
+setenv output $scr/$job.f06
+setenv punch  $scr/$job.f07
+setenv resta  $scr/$job.f08
+#
+#   ----- execute Mulvib -----
+#
+cp $MVBRT/mulvib.$VERNO.exe $scr
+cd $scr
+$scr/mulvib.$VERNO.exe
+#
+echo ------ accounting info ------
+echo program version :  mulvib.$VERNO.exe
+echo executed on :  `hostname`
+echo executed at :  `date`
+echo executed by :  $USER
+echo -----------------------------
+#
+ls -lF $scr/$job.*
+#
+cp $scr/$job.f06 $MVB/output/$job.out
+if (-e $scr/$job.f07) cp $scr/$job.f07 $MVB/output/$job.dat
+#
+rm $scr/mulvib.$VERNO.exe
+cd $HOME/mulvib
+time

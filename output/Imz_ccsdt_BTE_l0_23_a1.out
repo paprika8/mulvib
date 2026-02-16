@@ -1,0 +1,1683 @@
+ ==================================================
+ =   Mulvib written: 28 Feb 1999 (A. Trofimov)    =
+ =   Multistate Linear Vibronic Coupling Model    =
+ =   H. Koeppel, W. Domcke and L. S. Cederbaum    =
+ =   Advances in Chemical Physics 57 (1984) 59    =
+ =   LINIX 64 bit version ABT 17/07/2017          =
+ ==================================================
+ Execution of Mulvib begun Thu Dec  2 14:28:01 2021
+
+ Imidazole EOM-IP-CCSD/ATZ//CCSD(T) # info                               
+ Point group: cs  ; Total (vibronic) symmtetry: a'  
+
+ Interacting electronic states :
+
+ No.   Symmetry     Energy
+  1      a'         10.3000
+  2      a"         10.5100
+
+ Modes and couplings :
+
+ Sym. Block -- a'  
+ Mode No.           1        2        3        4        5        6
+ Max  QN           20        4        3        5        6        4
+ Frequency       0.1116   0.1160   0.1334   0.1424   0.1431   0.1797
+ Kapa   (1)     -0.1980   0.0594   0.0354   0.0785  -0.0233  -0.0495
+ Kapa   (2)     -0.0276   0.0643   0.0028   0.0990   0.1068   0.0728
+  
+ Mode No.           7        8
+ Max  QN            3        4
+ Frequency       0.1877   0.1930
+ Kapa   (1)     -0.0467   0.0120
+ Kapa   (2)     -0.0134  -0.0757
+  
+ Sym. Block -- a"  
+ Mode No.           9       10       11
+ Max  QN            6        3       16
+ Frequency       0.0611   0.0793   0.0837
+ Lambda (2-1)    0.0000   0.0000   0.0000
+  
+ No. of harmonic oscillator basis states :  99532800.
+ Number of Lanczos iterations to perform :     10000.
+ Plot : lor-shape; FWHM = 0.0100 eV;  5000 points.
+ Accessible memory:               30000 Mb =          3932160000 double words.
+ Dimension of vibronic Hamiltonian matrix :  99532800.
+ End of input and initialization.
+ STEP CPU TIME =     1.18 TOTAL CPU TIME =        1.2 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        1.2 SECONDS, CPU UTILIZATION IS  99.16%
+ Starting Lanczos iterations.
+ STEP CPU TIME =     0.21 TOTAL CPU TIME =        1.4 (    0.0 MIN)
+ TOTAL WALL CLOCK TIME=        1.4 SECONDS, CPU UTILIZATION IS  99.29%
+  Starting Lanczos iterations.
+ End of Iteration No.   100 (absolute No.   100).
+ STEP CPU TIME =   557.33 TOTAL CPU TIME =      558.7 (    9.3 MIN)
+ TOTAL WALL CLOCK TIME=      558.7 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.   200 (absolute No.   200).
+ STEP CPU TIME =   557.06 TOTAL CPU TIME =     1115.8 (   18.6 MIN)
+ TOTAL WALL CLOCK TIME=     1115.8 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.   300 (absolute No.   300).
+ STEP CPU TIME =   557.02 TOTAL CPU TIME =     1672.8 (   27.9 MIN)
+ TOTAL WALL CLOCK TIME=     1672.8 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.   400 (absolute No.   400).
+ STEP CPU TIME =   557.08 TOTAL CPU TIME =     2229.9 (   37.2 MIN)
+ TOTAL WALL CLOCK TIME=     2229.9 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.   500 (absolute No.   500).
+ STEP CPU TIME =   557.05 TOTAL CPU TIME =     2786.9 (   46.4 MIN)
+ TOTAL WALL CLOCK TIME=     2786.9 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.   600 (absolute No.   600).
+ STEP CPU TIME =   557.08 TOTAL CPU TIME =     3344.0 (   55.7 MIN)
+ TOTAL WALL CLOCK TIME=     3344.0 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.   700 (absolute No.   700).
+ STEP CPU TIME =   557.05 TOTAL CPU TIME =     3901.1 (   65.0 MIN)
+ TOTAL WALL CLOCK TIME=     3901.1 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.   800 (absolute No.   800).
+ STEP CPU TIME =   557.13 TOTAL CPU TIME =     4458.2 (   74.3 MIN)
+ TOTAL WALL CLOCK TIME=     4458.2 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.   900 (absolute No.   900).
+ STEP CPU TIME =   557.06 TOTAL CPU TIME =     5015.2 (   83.6 MIN)
+ TOTAL WALL CLOCK TIME=     5015.3 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  1000 (absolute No.  1000).
+ STEP CPU TIME =   557.00 TOTAL CPU TIME =     5572.2 (   92.9 MIN)
+ TOTAL WALL CLOCK TIME=     5572.3 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  1100 (absolute No.  1100).
+ STEP CPU TIME =   556.92 TOTAL CPU TIME =     6129.2 (  102.2 MIN)
+ TOTAL WALL CLOCK TIME=     6129.2 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  1200 (absolute No.  1200).
+ STEP CPU TIME =   557.05 TOTAL CPU TIME =     6686.2 (  111.4 MIN)
+ TOTAL WALL CLOCK TIME=     6686.2 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  1300 (absolute No.  1300).
+ STEP CPU TIME =   557.03 TOTAL CPU TIME =     7243.2 (  120.7 MIN)
+ TOTAL WALL CLOCK TIME=     7243.3 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  1400 (absolute No.  1400).
+ STEP CPU TIME =   557.01 TOTAL CPU TIME =     7800.3 (  130.0 MIN)
+ TOTAL WALL CLOCK TIME=     7800.3 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  1500 (absolute No.  1500).
+ STEP CPU TIME =   557.02 TOTAL CPU TIME =     8357.3 (  139.3 MIN)
+ TOTAL WALL CLOCK TIME=     8357.3 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  1600 (absolute No.  1600).
+ STEP CPU TIME =   557.08 TOTAL CPU TIME =     8914.4 (  148.6 MIN)
+ TOTAL WALL CLOCK TIME=     8914.4 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  1700 (absolute No.  1700).
+ STEP CPU TIME =   557.01 TOTAL CPU TIME =     9471.4 (  157.9 MIN)
+ TOTAL WALL CLOCK TIME=     9471.4 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  1800 (absolute No.  1800).
+ STEP CPU TIME =   557.15 TOTAL CPU TIME =    10028.5 (  167.1 MIN)
+ TOTAL WALL CLOCK TIME=    10028.5 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  1900 (absolute No.  1900).
+ STEP CPU TIME =   557.06 TOTAL CPU TIME =    10585.6 (  176.4 MIN)
+ TOTAL WALL CLOCK TIME=    10585.6 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  2000 (absolute No.  2000).
+ STEP CPU TIME =   557.06 TOTAL CPU TIME =    11142.6 (  185.7 MIN)
+ TOTAL WALL CLOCK TIME=    11142.7 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  2100 (absolute No.  2100).
+ STEP CPU TIME =   557.07 TOTAL CPU TIME =    11699.7 (  195.0 MIN)
+ TOTAL WALL CLOCK TIME=    11699.7 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  2200 (absolute No.  2200).
+ STEP CPU TIME =   557.03 TOTAL CPU TIME =    12256.7 (  204.3 MIN)
+ TOTAL WALL CLOCK TIME=    12256.8 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  2300 (absolute No.  2300).
+ STEP CPU TIME =   557.11 TOTAL CPU TIME =    12813.9 (  213.6 MIN)
+ TOTAL WALL CLOCK TIME=    12813.9 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  2400 (absolute No.  2400).
+ STEP CPU TIME =   557.00 TOTAL CPU TIME =    13370.8 (  222.8 MIN)
+ TOTAL WALL CLOCK TIME=    13370.9 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  2500 (absolute No.  2500).
+ STEP CPU TIME =   557.02 TOTAL CPU TIME =    13927.9 (  232.1 MIN)
+ TOTAL WALL CLOCK TIME=    13927.9 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  2600 (absolute No.  2600).
+ STEP CPU TIME =   557.07 TOTAL CPU TIME =    14484.9 (  241.4 MIN)
+ TOTAL WALL CLOCK TIME=    14485.0 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  2700 (absolute No.  2700).
+ STEP CPU TIME =   557.04 TOTAL CPU TIME =    15042.0 (  250.7 MIN)
+ TOTAL WALL CLOCK TIME=    15042.0 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  2800 (absolute No.  2800).
+ STEP CPU TIME =   556.96 TOTAL CPU TIME =    15598.9 (  260.0 MIN)
+ TOTAL WALL CLOCK TIME=    15599.0 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  2900 (absolute No.  2900).
+ STEP CPU TIME =   557.03 TOTAL CPU TIME =    16156.0 (  269.3 MIN)
+ TOTAL WALL CLOCK TIME=    16156.0 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  3000 (absolute No.  3000).
+ STEP CPU TIME =   557.05 TOTAL CPU TIME =    16713.0 (  278.6 MIN)
+ TOTAL WALL CLOCK TIME=    16713.0 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  3100 (absolute No.  3100).
+ STEP CPU TIME =   557.07 TOTAL CPU TIME =    17270.1 (  287.8 MIN)
+ TOTAL WALL CLOCK TIME=    17270.1 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  3200 (absolute No.  3200).
+ STEP CPU TIME =   557.07 TOTAL CPU TIME =    17827.2 (  297.1 MIN)
+ TOTAL WALL CLOCK TIME=    17827.2 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  3300 (absolute No.  3300).
+ STEP CPU TIME =   557.01 TOTAL CPU TIME =    18384.2 (  306.4 MIN)
+ TOTAL WALL CLOCK TIME=    18384.2 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  3400 (absolute No.  3400).
+ STEP CPU TIME =   557.07 TOTAL CPU TIME =    18941.2 (  315.7 MIN)
+ TOTAL WALL CLOCK TIME=    18941.3 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  3500 (absolute No.  3500).
+ STEP CPU TIME =   557.00 TOTAL CPU TIME =    19498.2 (  325.0 MIN)
+ TOTAL WALL CLOCK TIME=    19498.3 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  3600 (absolute No.  3600).
+ STEP CPU TIME =   557.07 TOTAL CPU TIME =    20055.3 (  334.3 MIN)
+ TOTAL WALL CLOCK TIME=    20055.3 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  3700 (absolute No.  3700).
+ STEP CPU TIME =   557.07 TOTAL CPU TIME =    20612.4 (  343.5 MIN)
+ TOTAL WALL CLOCK TIME=    20612.4 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  3800 (absolute No.  3800).
+ STEP CPU TIME =   557.14 TOTAL CPU TIME =    21169.5 (  352.8 MIN)
+ TOTAL WALL CLOCK TIME=    21169.6 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  3900 (absolute No.  3900).
+ STEP CPU TIME =   557.07 TOTAL CPU TIME =    21726.6 (  362.1 MIN)
+ TOTAL WALL CLOCK TIME=    21726.6 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  4000 (absolute No.  4000).
+ STEP CPU TIME =   557.04 TOTAL CPU TIME =    22283.6 (  371.4 MIN)
+ TOTAL WALL CLOCK TIME=    22283.7 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  4100 (absolute No.  4100).
+ STEP CPU TIME =   557.15 TOTAL CPU TIME =    22840.8 (  380.7 MIN)
+ TOTAL WALL CLOCK TIME=    22840.8 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  4200 (absolute No.  4200).
+ STEP CPU TIME =   557.07 TOTAL CPU TIME =    23397.8 (  390.0 MIN)
+ TOTAL WALL CLOCK TIME=    23397.9 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  4300 (absolute No.  4300).
+ STEP CPU TIME =   557.10 TOTAL CPU TIME =    23954.9 (  399.2 MIN)
+ TOTAL WALL CLOCK TIME=    23955.0 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  4400 (absolute No.  4400).
+ STEP CPU TIME =   557.03 TOTAL CPU TIME =    24512.0 (  408.5 MIN)
+ TOTAL WALL CLOCK TIME=    24512.0 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  4500 (absolute No.  4500).
+ STEP CPU TIME =   557.02 TOTAL CPU TIME =    25069.0 (  417.8 MIN)
+ TOTAL WALL CLOCK TIME=    25069.0 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  4600 (absolute No.  4600).
+ STEP CPU TIME =   557.06 TOTAL CPU TIME =    25626.1 (  427.1 MIN)
+ TOTAL WALL CLOCK TIME=    25626.1 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  4700 (absolute No.  4700).
+ STEP CPU TIME =   557.01 TOTAL CPU TIME =    26183.1 (  436.4 MIN)
+ TOTAL WALL CLOCK TIME=    26183.1 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  4800 (absolute No.  4800).
+ STEP CPU TIME =   557.06 TOTAL CPU TIME =    26740.1 (  445.7 MIN)
+ TOTAL WALL CLOCK TIME=    26740.2 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  4900 (absolute No.  4900).
+ STEP CPU TIME =   557.07 TOTAL CPU TIME =    27297.2 (  455.0 MIN)
+ TOTAL WALL CLOCK TIME=    27297.2 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  5000 (absolute No.  5000).
+ STEP CPU TIME =   557.00 TOTAL CPU TIME =    27854.2 (  464.2 MIN)
+ TOTAL WALL CLOCK TIME=    27854.3 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  5100 (absolute No.  5100).
+ STEP CPU TIME =   557.03 TOTAL CPU TIME =    28411.2 (  473.5 MIN)
+ TOTAL WALL CLOCK TIME=    28411.3 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  5200 (absolute No.  5200).
+ STEP CPU TIME =   557.10 TOTAL CPU TIME =    28968.3 (  482.8 MIN)
+ TOTAL WALL CLOCK TIME=    28968.4 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  5300 (absolute No.  5300).
+ STEP CPU TIME =   557.04 TOTAL CPU TIME =    29525.4 (  492.1 MIN)
+ TOTAL WALL CLOCK TIME=    29525.4 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  5400 (absolute No.  5400).
+ STEP CPU TIME =   557.07 TOTAL CPU TIME =    30082.4 (  501.4 MIN)
+ TOTAL WALL CLOCK TIME=    30082.5 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  5500 (absolute No.  5500).
+ STEP CPU TIME =   557.12 TOTAL CPU TIME =    30639.6 (  510.7 MIN)
+ TOTAL WALL CLOCK TIME=    30639.6 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  5600 (absolute No.  5600).
+ STEP CPU TIME =   557.19 TOTAL CPU TIME =    31196.8 (  519.9 MIN)
+ TOTAL WALL CLOCK TIME=    31196.8 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  5700 (absolute No.  5700).
+ STEP CPU TIME =   557.00 TOTAL CPU TIME =    31753.8 (  529.2 MIN)
+ TOTAL WALL CLOCK TIME=    31753.8 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  5800 (absolute No.  5800).
+ STEP CPU TIME =   557.08 TOTAL CPU TIME =    32310.8 (  538.5 MIN)
+ TOTAL WALL CLOCK TIME=    32310.9 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  5900 (absolute No.  5900).
+ STEP CPU TIME =   557.07 TOTAL CPU TIME =    32867.9 (  547.8 MIN)
+ TOTAL WALL CLOCK TIME=    32867.9 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  6000 (absolute No.  6000).
+ STEP CPU TIME =   557.11 TOTAL CPU TIME =    33425.0 (  557.1 MIN)
+ TOTAL WALL CLOCK TIME=    33425.1 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  6100 (absolute No.  6100).
+ STEP CPU TIME =   556.99 TOTAL CPU TIME =    33982.0 (  566.4 MIN)
+ TOTAL WALL CLOCK TIME=    33982.1 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  6200 (absolute No.  6200).
+ STEP CPU TIME =   557.08 TOTAL CPU TIME =    34539.1 (  575.7 MIN)
+ TOTAL WALL CLOCK TIME=    34539.1 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  6300 (absolute No.  6300).
+ STEP CPU TIME =   557.13 TOTAL CPU TIME =    35096.2 (  584.9 MIN)
+ TOTAL WALL CLOCK TIME=    35096.3 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  6400 (absolute No.  6400).
+ STEP CPU TIME =   557.03 TOTAL CPU TIME =    35653.2 (  594.2 MIN)
+ TOTAL WALL CLOCK TIME=    35653.3 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  6500 (absolute No.  6500).
+ STEP CPU TIME =   557.03 TOTAL CPU TIME =    36210.3 (  603.5 MIN)
+ TOTAL WALL CLOCK TIME=    36210.3 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  6600 (absolute No.  6600).
+ STEP CPU TIME =   557.05 TOTAL CPU TIME =    36767.3 (  612.8 MIN)
+ TOTAL WALL CLOCK TIME=    36767.4 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  6700 (absolute No.  6700).
+ STEP CPU TIME =   557.03 TOTAL CPU TIME =    37324.4 (  622.1 MIN)
+ TOTAL WALL CLOCK TIME=    37324.4 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  6800 (absolute No.  6800).
+ STEP CPU TIME =   557.07 TOTAL CPU TIME =    37881.4 (  631.4 MIN)
+ TOTAL WALL CLOCK TIME=    37881.5 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  6900 (absolute No.  6900).
+ STEP CPU TIME =   557.01 TOTAL CPU TIME =    38438.4 (  640.6 MIN)
+ TOTAL WALL CLOCK TIME=    38438.5 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  7000 (absolute No.  7000).
+ STEP CPU TIME =   557.07 TOTAL CPU TIME =    38995.5 (  649.9 MIN)
+ TOTAL WALL CLOCK TIME=    38995.6 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  7100 (absolute No.  7100).
+ STEP CPU TIME =   557.02 TOTAL CPU TIME =    39552.5 (  659.2 MIN)
+ TOTAL WALL CLOCK TIME=    39552.6 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  7200 (absolute No.  7200).
+ STEP CPU TIME =   557.00 TOTAL CPU TIME =    40109.5 (  668.5 MIN)
+ TOTAL WALL CLOCK TIME=    40109.6 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  7300 (absolute No.  7300).
+ STEP CPU TIME =   557.03 TOTAL CPU TIME =    40666.6 (  677.8 MIN)
+ TOTAL WALL CLOCK TIME=    40666.6 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  7400 (absolute No.  7400).
+ STEP CPU TIME =   557.00 TOTAL CPU TIME =    41223.6 (  687.1 MIN)
+ TOTAL WALL CLOCK TIME=    41223.6 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  7500 (absolute No.  7500).
+ STEP CPU TIME =   557.00 TOTAL CPU TIME =    41780.6 (  696.3 MIN)
+ TOTAL WALL CLOCK TIME=    41780.6 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  7600 (absolute No.  7600).
+ STEP CPU TIME =   557.08 TOTAL CPU TIME =    42337.6 (  705.6 MIN)
+ TOTAL WALL CLOCK TIME=    42337.7 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  7700 (absolute No.  7700).
+ STEP CPU TIME =   557.04 TOTAL CPU TIME =    42894.7 (  714.9 MIN)
+ TOTAL WALL CLOCK TIME=    42894.7 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  7800 (absolute No.  7800).
+ STEP CPU TIME =   557.02 TOTAL CPU TIME =    43451.7 (  724.2 MIN)
+ TOTAL WALL CLOCK TIME=    43451.8 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  7900 (absolute No.  7900).
+ STEP CPU TIME =   557.11 TOTAL CPU TIME =    44008.8 (  733.5 MIN)
+ TOTAL WALL CLOCK TIME=    44008.9 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  8000 (absolute No.  8000).
+ STEP CPU TIME =   557.02 TOTAL CPU TIME =    44565.8 (  742.8 MIN)
+ TOTAL WALL CLOCK TIME=    44565.9 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  8100 (absolute No.  8100).
+ STEP CPU TIME =   557.06 TOTAL CPU TIME =    45122.9 (  752.0 MIN)
+ TOTAL WALL CLOCK TIME=    45122.9 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  8200 (absolute No.  8200).
+ STEP CPU TIME =   557.01 TOTAL CPU TIME =    45679.9 (  761.3 MIN)
+ TOTAL WALL CLOCK TIME=    45680.0 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  8300 (absolute No.  8300).
+ STEP CPU TIME =   557.11 TOTAL CPU TIME =    46237.0 (  770.6 MIN)
+ TOTAL WALL CLOCK TIME=    46237.1 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  8400 (absolute No.  8400).
+ STEP CPU TIME =   557.08 TOTAL CPU TIME =    46794.1 (  779.9 MIN)
+ TOTAL WALL CLOCK TIME=    46794.1 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  8500 (absolute No.  8500).
+ STEP CPU TIME =   557.02 TOTAL CPU TIME =    47351.1 (  789.2 MIN)
+ TOTAL WALL CLOCK TIME=    47351.2 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  8600 (absolute No.  8600).
+ STEP CPU TIME =   557.11 TOTAL CPU TIME =    47908.2 (  798.5 MIN)
+ TOTAL WALL CLOCK TIME=    47908.3 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  8700 (absolute No.  8700).
+ STEP CPU TIME =   556.99 TOTAL CPU TIME =    48465.2 (  807.8 MIN)
+ TOTAL WALL CLOCK TIME=    48465.3 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  8800 (absolute No.  8800).
+ STEP CPU TIME =   557.03 TOTAL CPU TIME =    49022.2 (  817.0 MIN)
+ TOTAL WALL CLOCK TIME=    49022.3 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  8900 (absolute No.  8900).
+ STEP CPU TIME =   556.99 TOTAL CPU TIME =    49579.2 (  826.3 MIN)
+ TOTAL WALL CLOCK TIME=    49579.3 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  9000 (absolute No.  9000).
+ STEP CPU TIME =   557.01 TOTAL CPU TIME =    50136.2 (  835.6 MIN)
+ TOTAL WALL CLOCK TIME=    50136.3 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  9100 (absolute No.  9100).
+ STEP CPU TIME =   557.10 TOTAL CPU TIME =    50693.3 (  844.9 MIN)
+ TOTAL WALL CLOCK TIME=    50693.4 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  9200 (absolute No.  9200).
+ STEP CPU TIME =   557.06 TOTAL CPU TIME =    51250.4 (  854.2 MIN)
+ TOTAL WALL CLOCK TIME=    51250.5 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  9300 (absolute No.  9300).
+ STEP CPU TIME =   557.09 TOTAL CPU TIME =    51807.5 (  863.5 MIN)
+ TOTAL WALL CLOCK TIME=    51807.6 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  9400 (absolute No.  9400).
+ STEP CPU TIME =   557.07 TOTAL CPU TIME =    52364.6 (  872.7 MIN)
+ TOTAL WALL CLOCK TIME=    52364.6 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  9500 (absolute No.  9500).
+ STEP CPU TIME =   557.11 TOTAL CPU TIME =    52921.7 (  882.0 MIN)
+ TOTAL WALL CLOCK TIME=    52921.7 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  9600 (absolute No.  9600).
+ STEP CPU TIME =   557.06 TOTAL CPU TIME =    53478.7 (  891.3 MIN)
+ TOTAL WALL CLOCK TIME=    53478.8 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  9700 (absolute No.  9700).
+ STEP CPU TIME =   556.95 TOTAL CPU TIME =    54035.7 (  900.6 MIN)
+ TOTAL WALL CLOCK TIME=    54035.8 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  9800 (absolute No.  9800).
+ STEP CPU TIME =   557.05 TOTAL CPU TIME =    54592.7 (  909.9 MIN)
+ TOTAL WALL CLOCK TIME=    54592.8 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No.  9900 (absolute No.  9900).
+ STEP CPU TIME =   557.06 TOTAL CPU TIME =    55149.8 (  919.2 MIN)
+ TOTAL WALL CLOCK TIME=    55149.9 SECONDS, CPU UTILIZATION IS 100.00%
+ End of Iteration No. 10000 (absolute No. 10000).
+ STEP CPU TIME =   557.02 TOTAL CPU TIME =    55706.8 (  928.4 MIN)
+ TOTAL WALL CLOCK TIME=    55706.9 SECONDS, CPU UTILIZATION IS 100.00%
+  Finished with Lanczos iterations.
+ STEP CPU TIME =     0.00 TOTAL CPU TIME =    55706.8 (  928.4 MIN)
+ TOTAL WALL CLOCK TIME=    55706.9 SECONDS, CPU UTILIZATION IS 100.00%
+ Restart information saved on unit  8.
+ Results of diagonalization.
+ Retaining lines with intensity 0.1D-04 of the strongest line No. 910.
+ Number of peaks with intensity greater than 0.1002004D-05 :  1313.
+ Normalization :   0.9997913
+
+                 Energy           Intensity
+                --------          ---------
+
+          1     9.8358802         0.0192476
+          2     9.9474602         0.0606086
+          3     9.9541408         0.0051353
+          4     9.9708759         0.0013601
+          5     9.9788107         0.0058868
+          6     9.9789702         0.0005104
+          7    10.0157511         0.0014611
+          8    10.0253083         0.0011956
+          9    10.0288902         0.0000744
+         10    10.0590411         0.0954274
+         11    10.0657208         0.0161705
+         12    10.0824559         0.0042827
+         13    10.0891364         0.0003629
+         14    10.0899133         0.0005704
+         15    10.0903907         0.0185368
+         16    10.0905502         0.0016070
+         17    10.0970712         0.0015706
+         18    10.0972308         0.0001362
+         19    10.1138064         0.0004160
+         20    10.1139659         0.0000361
+         21    10.1219007         0.0001561
+         22    10.1220604         0.0000068
+         23    10.1273311         0.0046008
+         24    10.1288507         0.0008841
+         25    10.1292037         0.0000336
+         26    10.1340116         0.0003898
+         27    10.1368883         0.0037648
+         28    10.1404703         0.0002343
+         29    10.1435688         0.0003190
+         30    10.1471508         0.0000199
+         31    10.1507468         0.0001032
+         32    10.1586815         0.0004469
+         33    10.1588411         0.0000387
+         34    10.1603040         0.0000845
+         35    10.1638859         0.0000053
+         36    10.1682388         0.0003657
+         37    10.1683983         0.0000317
+         38    10.1706372         0.1002004
+         39    10.1718207         0.0000228
+         40    10.1719802         0.0000020
+         41    10.1773016         0.0254602
+         42    10.1940368         0.0067431
+         43    10.1999775         0.0000544
+         44    10.2007165         0.0011426
+         45    10.2014934         0.0017961
+         46    10.2019715         0.0291859
+         47    10.2021311         0.0025303
+         48    10.2051792         0.0000908
+         49    10.2086512         0.0049456
+         50    10.2087611         0.0000056
+         51    10.2088108         0.0004288
+         52    10.2183183         0.0000046
+         53    10.2249090         0.0000403
+         54    10.2253864         0.0013099
+         55    10.2255459         0.0001136
+         56    10.2320669         0.0001110
+         57    10.2322264         0.0000096
+         58    10.2328438         0.0001745
+         59    10.2330033         0.0000151
+         60    10.2334807         0.0004915
+         61    10.2336404         0.0000213
+         62    10.2389119         0.0072440
+         63    10.2401612         0.0000416
+         64    10.2403209         0.0000018
+         65    10.2404308         0.0027840
+         66    10.2407838         0.0001059
+         67    10.2442076         0.0000270
+         68    10.2455916         0.0012275
+         69    10.2471113         0.0002359
+         70    10.2474643         0.0000090
+         71    10.2484692         0.0059276
+         72    10.2520511         0.0003689
+         73    10.2551489         0.0010044
+         74    10.2568964         0.0000110
+         75    10.2587308         0.0000625
+         76    10.2623268         0.0003251
+         77    10.2638464         0.0000625
+         78    10.2649908         0.0000021
+         79    10.2690073         0.0000275
+         80    10.2697842         0.0000433
+         81    10.2702616         0.0014071
+         82    10.2704211         0.0001220
+         83    10.2718840         0.0002660
+         84    10.2719407         0.0000234
+         85    10.2721342         0.0000103
+         86    10.2754659         0.0000166
+         87    10.2769421         0.0001192
+         88    10.2771016         0.0000103
+         89    10.2785645         0.0000225
+         90    10.2793414         0.0000354
+         91    10.2798188         0.0011514
+         92    10.2799783         0.0000998
+         93    10.2810480         0.0000124
+         94    10.2821465         0.0000014
+         95    10.2823995         0.0791112
+         96    10.2829233         0.0000022
+         97    10.2834007         0.0000717
+         98    10.2835603         0.0000062
+         99    10.2864993         0.0000976
+        100    10.2866588         0.0000085
+        101    10.2888977         0.0267336
+        102    10.2900812         0.0000061
+        103    10.2936772         0.0000316
+        104    10.2938368         0.0000027
+        105    10.3017715         0.0000118
+        106    10.3032344         0.0000258
+        107    10.3033940         0.0000022
+        108    10.3056328         0.0070804
+        109    10.3068164         0.0000016
+        110    10.3087216         0.0000671
+        111    10.3090746         0.0000026
+        112    10.3103019         0.0000579
+        113    10.3113288         0.0000097
+        114    10.3115575         0.0001712
+        115    10.3122973         0.0017991
+        116    10.3130742         0.0028279
+        117    10.3135676         0.0306457
+        118    10.3137272         0.0026568
+        119    10.3167592         0.0002858
+        120    10.3182380         0.0000145
+        121    10.3182788         0.0000549
+        122    10.3186318         0.0000021
+        123    10.3202321         0.0077868
+        124    10.3203411         0.0000178
+        125    10.3203916         0.0006751
+        126    10.3218607         0.0000034
+        127    10.3234397         0.0000242
+        128    10.3270216         0.0000015
+        129    10.3298983         0.0000146
+        130    10.3349732         0.0000038
+        131    10.3364890         0.0001269
+        132    10.3365789         0.0000012
+        133    10.3369672         0.0020623
+        134    10.3371268         0.0001788
+        135    10.3401748         0.0000064
+        136    10.3429080         0.0000166
+        137    10.3430675         0.0000014
+        138    10.3436469         0.0003495
+        139    10.3438065         0.0000303
+        140    10.3444238         0.0005493
+        141    10.3445833         0.0000476
+        142    10.3450615         0.0007739
+        143    10.3452212         0.0000335
+        144    10.3481096         0.0000278
+        145    10.3482692         0.0000024
+        146    10.3505080         0.0076063
+        147    10.3516916         0.0000017
+        148    10.3517412         0.0001311
+        149    10.3519009         0.0000057
+        150    10.3520116         0.0043834
+        151    10.3523646         0.0001668
+        152    10.3557876         0.0000849
+        153    10.3571725         0.0019327
+        154    10.3586913         0.0007428
+        155    10.3590443         0.0000283
+        156    10.3600652         0.0062240
+        157    10.3612488         0.0000014
+        158    10.3624681         0.0000072
+        159    10.3636472         0.0003873
+        160    10.3667297         0.0015815
+        161    10.3678395         0.0000123
+        162    10.3679990         0.0000011
+        163    10.3684764         0.0000347
+        164    10.3686361         0.0000015
+        165    10.3703116         0.0000984
+        166    10.3739076         0.0005119
+        167    10.3751569         0.0000029
+        168    10.3754264         0.0001967
+        169    10.3759338         0.0000046
+        170    10.3765709         0.0000065
+        171    10.3792033         0.0000019
+        172    10.3805873         0.0000867
+        173    10.3813642         0.0001363
+        174    10.3818424         0.0022155
+        175    10.3820019         0.0001921
+        176    10.3821069         0.0000167
+        177    10.3828838         0.0000262
+        178    10.3834648         0.0004189
+        179    10.3835208         0.0000738
+        180    10.3837142         0.0000324
+        181    10.3838738         0.0000028
+        182    10.3870468         0.0000261
+        183    10.3871381         0.0000082
+        184    10.3885221         0.0003754
+        185    10.3886816         0.0000325
+        186    10.3894056         0.0000034
+        187    10.3901445         0.0000710
+        188    10.3902013         0.0000063
+        189    10.3903948         0.0000027
+        190    10.3909214         0.0001116
+        191    10.3913996         0.0018129
+        192    10.3915592         0.0001572
+        193    10.3926280         0.0000390
+        194    10.3937265         0.0000044
+        195    10.3945034         0.0000069
+        196    10.3949816         0.0001128
+        197    10.3951411         0.0000098
+        198    10.3952292         0.0504152
+        199    10.3980793         0.0003072
+        200    10.3982389         0.0000266
+        201    10.4006601         0.0211070
+        202    10.4016613         0.0000191
+        203    10.4018208         0.0000017
+        204    10.4047799         0.0000031
+        205    10.4052572         0.0000994
+        206    10.4054168         0.0000086
+        207    10.4069364         0.0000017
+        208    10.4119378         0.0000084
+        209    10.4127147         0.0000132
+        210    10.4128742         0.0000011
+        211    10.4133516         0.0000373
+        212    10.4135113         0.0000016
+        213    10.4143371         0.0000025
+        214    10.4148145         0.0000814
+        215    10.4149740         0.0000071
+        216    10.4173952         0.0055902
+        217    10.4183964         0.0000051
+        218    10.4200321         0.0000032
+        219    10.4203016         0.0002113
+        220    10.4206546         0.0000080
+        221    10.4214952         0.0000069
+        222    10.4218821         0.0001822
+        223    10.4222540         0.0000113
+        224    10.4223946         0.0000019
+        225    10.4229095         0.0000308
+        226    10.4231382         0.0002706
+        227    10.4238934         0.0018884
+        228    10.4239938         0.0000059
+        229    10.4246703         0.0029696
+        230    10.4253300         0.0241965
+        231    10.4254896         0.0020969
+        232    10.4264884         0.0000019
+        233    10.4269821         0.0000179
+        234    10.4283400         0.0004500
+        235    10.4285624         0.0000154
+        236    10.4295896         0.0000025
+        237    10.4298187         0.0000454
+        238    10.4298589         0.0001725
+        239    10.4302119         0.0000066
+        240    10.4318282         0.0081763
+        241    10.4319220         0.0000280
+        242    10.4319877         0.0007088
+        243    10.4334408         0.0000108
+        244    10.4350197         0.0000762
+        245    10.4365394         0.0000147
+        246    10.4386017         0.0000047
+        247    10.4414792         0.0000229
+        248    10.4437173         0.0000047
+        249    10.4452976         0.0000041
+        250    10.4465532         0.0000121
+        251    10.4480699         0.0001998
+        252    10.4481589         0.0000039
+        253    10.4485633         0.0021655
+        254    10.4487228         0.0001877
+        255    10.4517549         0.0000203
+        256    10.4518116         0.0000018
+        257    10.4532537         0.0000037
+        258    10.4533199         0.0000018
+        259    10.4534067         0.0000010
+        260    10.4540112         0.0000016
+        261    10.4544879         0.0000525
+        262    10.4546489         0.0000045
+        263    10.4552278         0.0005507
+        264    10.4553870         0.0000485
+        265    10.4560047         0.0008651
+        266    10.4561644         0.0000748
+        267    10.4566576         0.0008127
+        268    10.4568178         0.0000354
+        269    10.4584354         0.0000017
+        270    10.4592123         0.0000027
+        271    10.4596896         0.0000874
+        272    10.4598492         0.0000076
+        273    10.4611746         0.0000047
+        274    10.4614092         0.0000019
+        275    10.4622704         0.0060054
+        276    10.4633160         0.0001895
+        277    10.4633804         0.0000291
+        278    10.4636076         0.0046055
+        279    10.4639607         0.0001752
+        280    10.4648966         0.0000011
+        281    10.4663702         0.0000074
+        282    10.4673685         0.0001337
+        283    10.4687686         0.0020294
+        284    10.4702721         0.0011694
+        285    10.4706251         0.0000446
+        286    10.4718276         0.0049141
+        287    10.4728287         0.0000044
+        288    10.4740482         0.0000227
+        289    10.4754096         0.0003058
+        290    10.4779036         0.0000012
+        291    10.4783258         0.0016606
+        292    10.4794195         0.0000388
+        293    10.4795431         0.0000011
+        294    10.4795868         0.0000026
+        295    10.4800572         0.0000547
+        296    10.4802169         0.0000024
+        297    10.4819077         0.0001033
+        298    10.4831053         0.0000020
+        299    10.4855037         0.0005375
+        300    10.4867371         0.0000095
+        301    10.4870072         0.0003100
+        302    10.4875126         0.0000144
+        303    10.4881516         0.0000103
+        304    10.4901728         0.0000044
+        305    10.4907833         0.0000060
+        306    10.4921682         0.0001366
+        307    10.4929450         0.0002171
+        308    10.4934348         0.0020219
+        309    10.4934765         0.0003692
+        310    10.4936414         0.0001895
+        311    10.4944636         0.0000826
+        312    10.4949567         0.0000391
+        313    10.4950782         0.0005327
+        314    10.4953330         0.0000445
+        315    10.4981598         0.0000049
+        316    10.4986552         0.0000417
+        317    10.4987780         0.0000142
+        318    10.4997086         0.0000032
+        319    10.5001020         0.0005867
+        320    10.5002561         0.0000561
+        321    10.5009848         0.0000107
+        322    10.5017301         0.0001284
+        323    10.5019505         0.0000124
+        324    10.5025016         0.0001758
+        325    10.5029956         0.0019032
+        326    10.5031554         0.0001658
+        327    10.5042087         0.0000614
+        328    10.5052917         0.0000054
+        329    10.5053886         0.0000039
+        330    10.5060833         0.0000109
+        331    10.5065774         0.0001183
+        332    10.5067360         0.0000105
+        333    10.5096603         0.0004833
+        334    10.5098192         0.0000427
+        335    10.5119815         0.0268853
+        336    10.5132420         0.0000301
+        337    10.5133958         0.0000025
+        338    10.5134898         0.0134510
+        339    10.5163602         0.0000097
+        340    10.5168373         0.0001548
+        341    10.5169745         0.0000129
+        342    10.5170489         0.0000024
+        343    10.5178816         0.0000019
+        344    10.5185150         0.0000052
+        345    10.5234878         0.0000128
+        346    10.5235612         0.0000159
+        347    10.5242946         0.0000429
+        348    10.5245632         0.0000038
+        349    10.5249429         0.0000604
+        350    10.5259671         0.0000091
+        351    10.5264034         0.0001348
+        352    10.5266752         0.0000053
+        353    10.5276206         0.0000027
+        354    10.5299820         0.0000083
+        355    10.5302249         0.0035630
+        356    10.5316148         0.0000103
+        357    10.5318827         0.0003332
+        358    10.5322500         0.0000134
+        359    10.5330818         0.0000233
+        360    10.5334637         0.0002892
+        361    10.5338607         0.0000400
+        362    10.5344976         0.0000519
+        363    10.5347358         0.0002816
+        364    10.5356548         0.0015089
+        365    10.5359757         0.0000027
+        366    10.5364329         0.0023472
+        367    10.5372518         0.0000028
+        368    10.5380639         0.0002372
+        369    10.5381637         0.0156137
+        370    10.5383590         0.0009557
+        371    10.5387562         0.0000119
+        372    10.5399363         0.0004736
+        373    10.5401472         0.0000479
+        374    10.5411481         0.0000078
+        375    10.5414298         0.0003432
+        376    10.5417683         0.0000121
+        377    10.5432967         0.0000012
+        378    10.5435901         0.0064737
+        379    10.5437491         0.0005697
+        380    10.5450213         0.0000170
+        381    10.5466006         0.0001201
+        382    10.5481230         0.0000464
+        383    10.5484269         0.0000037
+        384    10.5501825         0.0000075
+        385    10.5517013         0.0000029
+        386    10.5530753         0.0000241
+        387    10.5552978         0.0000150
+        388    10.5568755         0.0000133
+        389    10.5579626         0.0000034
+        390    10.5581410         0.0000179
+        391    10.5596678         0.0002157
+        392    10.5603254         0.0017057
+        393    10.5604834         0.0001526
+        394    10.5619638         0.0000013
+        395    10.5627394         0.0000019
+        396    10.5633313         0.0000345
+        397    10.5635214         0.0000070
+        398    10.5643264         0.0000019
+        399    10.5648674         0.0000199
+        400    10.5654939         0.0000050
+        401    10.5660610         0.0000861
+        402    10.5664854         0.0000147
+        403    10.5668376         0.0006163
+        404    10.5675750         0.0006201
+        405    10.5676719         0.0003713
+        406    10.5684194         0.0006417
+        407    10.5685796         0.0000292
+        408    10.5700181         0.0000059
+        409    10.5707332         0.0000063
+        410    10.5711621         0.0000315
+        411    10.5713091         0.0001214
+        412    10.5721198         0.0000016
+        413    10.5726665         0.0000151
+        414    10.5729785         0.0000102
+        415    10.5747056         0.0000201
+        416    10.5750722         0.0034126
+        417    10.5752958         0.0025268
+        418    10.5754208         0.0017819
+        419    10.5757604         0.0000945
+        420    10.5765273         0.0000018
+        421    10.5779484         0.0000228
+        422    10.5780909         0.0000026
+        423    10.5789645         0.0001404
+        424    10.5805310         0.0016023
+        425    10.5815515         0.0000018
+        426    10.5818684         0.0012291
+        427    10.5822194         0.0000478
+        428    10.5844013         0.0000068
+        429    10.5846573         0.0031324
+        430    10.5856291         0.0000358
+        431    10.5882385         0.0001938
+        432    10.5883298         0.0000015
+        433    10.5895073         0.0000038
+        434    10.5900882         0.0013111
+        435    10.5910036         0.0000639
+        436    10.5912229         0.0000041
+        437    10.5916566         0.0000582
+        438    10.5918480         0.0000014
+        439    10.5936701         0.0000816
+        440    10.5946892         0.0000065
+        441    10.5972648         0.0004210
+        442    10.5974262         0.0000052
+        443    10.5983068         0.0000146
+        444    10.5986030         0.0003265
+        445    10.5991010         0.0000238
+        446    10.5997455         0.0000109
+        447    10.6017594         0.0000140
+        448    10.6023509         0.0000101
+        449    10.6027823         0.0000025
+        450    10.6037643         0.0001438
+        451    10.6045402         0.0002331
+        452    10.6051997         0.0018348
+        453    10.6053341         0.0002440
+        454    10.6060444         0.0001317
+        455    10.6066582         0.0001113
+        456    10.6068347         0.0004221
+        457    10.6073849         0.0000010
+        458    10.6083456         0.0000012
+        459    10.6089860         0.0000017
+        460    10.6097235         0.0000151
+        461    10.6102806         0.0000431
+        462    10.6104406         0.0000247
+        463    10.6114426         0.0000328
+        464    10.6117161         0.0006504
+        465    10.6124327         0.0000150
+        466    10.6128975         0.0000092
+        467    10.6133521         0.0001573
+        468    10.6140922         0.0001855
+        469    10.6147553         0.0014635
+        470    10.6148997         0.0001720
+        471    10.6158056         0.0000650
+        472    10.6163454         0.0000020
+        473    10.6169466         0.0000146
+        474    10.6176775         0.0000118
+        475    10.6183214         0.0000752
+        476    10.6184304         0.0000272
+        477    10.6192442         0.0000029
+        478    10.6212560         0.0005067
+        479    10.6214111         0.0000470
+        480    10.6225419         0.0000012
+        481    10.6248393         0.0000322
+        482    10.6250363         0.0000025
+        483    10.6279426         0.0000157
+        484    10.6284357         0.0001672
+        485    10.6286136         0.0000115
+        486    10.6294676         0.0000060
+        487    10.6301687         0.0000323
+        488    10.6302422         0.0071491
+        489    10.6336920         0.0000018
+        490    10.6350249         0.0000120
+        491    10.6351395         0.0000338
+        492    10.6358853         0.0000712
+        493    10.6365264         0.0000646
+        494    10.6371639         0.0117033
+        495    10.6374201         0.0000247
+        496    10.6379947         0.0001429
+        497    10.6382669         0.0000076
+        498    10.6392073         0.0000044
+        499    10.6414806         0.0000049
+        500    10.6416783         0.0000055
+        501    10.6431297         0.0000098
+        502    10.6434718         0.0003506
+        503    10.6438033         0.0000221
+        504    10.6446736         0.0000414
+        505    10.6450733         0.0003153
+        506    10.6455337         0.0000555
+        507    10.6462658         0.0001130
+        508    10.6466089         0.0002001
+        509    10.6469845         0.0018857
+        510    10.6479227         0.0000050
+        511    10.6484856         0.0009553
+        512    10.6492603         0.0014873
+        513    10.6494822         0.0000152
+        514    10.6501478         0.0000900
+        515    10.6506016         0.0000024
+        516    10.6517029         0.0004500
+        517    10.6523749         0.0000027
+        518    10.6529998         0.0003185
+        519    10.6531692         0.0000645
+        520    10.6538148         0.0000029
+        521    10.6549122         0.0082597
+        522    10.6550812         0.0006939
+        523    10.6554284         0.0000063
+        524    10.6564206         0.0041320
+        525    10.6565862         0.0003575
+        526    10.6581967         0.0001261
+        527    10.6593072         0.0000034
+        528    10.6597046         0.0000744
+        529    10.6600487         0.0000054
+        530    10.6617782         0.0000079
+        531    10.6632820         0.0000045
+        532    10.6648376         0.0000190
+        533    10.6668540         0.0000212
+        534    10.6670474         0.0000037
+        535    10.6684442         0.0000207
+        536    10.6688301         0.0000033
+        537    10.6696044         0.0000105
+        538    10.6697750         0.0000131
+        539    10.6706596         0.0000014
+        540    10.6714249         0.0001719
+        541    10.6731545         0.0010813
+        542    10.6733152         0.0001061
+        543    10.6740352         0.0000030
+        544    10.6745466         0.0000080
+        545    10.6749875         0.0000464
+        546    10.6758723         0.0000059
+        547    10.6764462         0.0000321
+        548    10.6771336         0.0000109
+        549    10.6776722         0.0000946
+        550    10.6785818         0.0004552
+        551    10.6787810         0.0000505
+        552    10.6793732         0.0007641
+        553    10.6797178         0.0000129
+        554    10.6812466         0.0003988
+        555    10.6814331         0.0000368
+        556    10.6821724         0.0000088
+        557    10.6827499         0.0000582
+        558    10.6829358         0.0001100
+        559    10.6839866         0.0000118
+        560    10.6844083         0.0000308
+        561    10.6849354         0.0000031
+        562    10.6857170         0.0000026
+        563    10.6865639         0.0000410
+        564    10.6867066         0.0001477
+        565    10.6879688         0.0000040
+        566    10.6882003         0.0023179
+        567    10.6885599         0.0000847
+        568    10.6895424         0.0000395
+        569    10.6907286         0.0001110
+        570    10.6913749         0.0000017
+        571    10.6918524         0.0020409
+        572    10.6933572         0.0009980
+        573    10.6936240         0.0009862
+        574    10.6939407         0.0000492
+        575    10.6960131         0.0000080
+        576    10.6972258         0.0000377
+        577    10.7009976         0.0000050
+        578    10.7014094         0.0016715
+        579    10.7021816         0.0000011
+        580    10.7026228         0.0000762
+        581    10.7029197         0.0008319
+        582    10.7034299         0.0000456
+        583    10.7049912         0.0001038
+        584    10.7061605         0.0000060
+        585    10.7064874         0.0000571
+        586    10.7077852         0.0000016
+        587    10.7085407         0.0000018
+        588    10.7092115         0.0000026
+        589    10.7100699         0.0002571
+        590    10.7103474         0.0002823
+        591    10.7106855         0.0000294
+        592    10.7115158         0.0000088
+        593    10.7129212         0.0000015
+        594    10.7133339         0.0000225
+        595    10.7139014         0.0000119
+        596    10.7143433         0.0000046
+        597    10.7155236         0.0001142
+        598    10.7162383         0.0001286
+        599    10.7164379         0.0000762
+        600    10.7169233         0.0000792
+        601    10.7177247         0.0002102
+        602    10.7180591         0.0012203
+        603    10.7185670         0.0001232
+        604    10.7196489         0.0002200
+        605    10.7199788         0.0000068
+        606    10.7208075         0.0000036
+        607    10.7213556         0.0000256
+        608    10.7219162         0.0000459
+        609    10.7229233         0.0000254
+        610    10.7234663         0.0005326
+        611    10.7240025         0.0000227
+        612    10.7246261         0.0000091
+        613    10.7250729         0.0001365
+        614    10.7258594         0.0001463
+        615    10.7264721         0.0000014
+        616    10.7275872         0.0010193
+        617    10.7277718         0.0000771
+        618    10.7285900         0.0000176
+        619    10.7292191         0.0000019
+        620    10.7295013         0.0000106
+        621    10.7308465         0.0000054
+        622    10.7311821         0.0000631
+        623    10.7330158         0.0003906
+        624    10.7331552         0.0000472
+        625    10.7340134         0.0000013
+        626    10.7343780         0.0000018
+        627    10.7366000         0.0000249
+        628    10.7367590         0.0000033
+        629    10.7395123         0.0000129
+        630    10.7396649         0.0000050
+        631    10.7402082         0.0001390
+        632    10.7409037         0.0000065
+        633    10.7412206         0.0000048
+        634    10.7417233         0.0000081
+        635    10.7448677         0.0000016
+        636    10.7453472         0.0000029
+        637    10.7465412         0.0000078
+        638    10.7467338         0.0000412
+        639    10.7474855         0.0000756
+        640    10.7482926         0.0000529
+        641    10.7490487         0.0000149
+        642    10.7495162         0.0000138
+        643    10.7497852         0.0001086
+        644    10.7507893         0.0000047
+        645    10.7528330         0.0000024
+        646    10.7533731         0.0000081
+        647    10.7546865         0.0000105
+        648    10.7551988         0.0002179
+        649    10.7554236         0.0032052
+        650    10.7562566         0.0000412
+        651    10.7568402         0.0002775
+        652    10.7571595         0.0000309
+        653    10.7578684         0.0000407
+        654    10.7587895         0.0000331
+        655    10.7593351         0.0001450
+        656    10.7600729         0.0000060
+        657    10.7605654         0.0000072
+        658    10.7617118         0.0000839
+        659    10.7619308         0.0000163
+        660    10.7630174         0.0000018
+        661    10.7633301         0.0000807
+        662    10.7644937         0.0002145
+        663    10.7647704         0.0003211
+        664    10.7652371         0.0005200
+        665    10.7660147         0.0007980
+        666    10.7668142         0.0000010
+        667    10.7681383         0.0000192
+        668    10.7684402         0.0000107
+        669    10.7699584         0.0000994
+        670    10.7705612         0.0000011
+        671    10.7711493         0.0000261
+        672    10.7713628         0.0000612
+        673    10.7721596         0.0008287
+        674    10.7731730         0.0022130
+        675    10.7733495         0.0001772
+        676    10.7742794         0.0039153
+        677    10.7748633         0.0000049
+        678    10.7776596         0.0000117
+        679    10.7780716         0.0000017
+        680    10.7784851         0.0000254
+        681    10.7791338         0.0000018
+        682    10.7800947         0.0036269
+        683    10.7802654         0.0002918
+        684    10.7812382         0.0000077
+        685    10.7815532         0.0000125
+        686    10.7822647         0.0000018
+        687    10.7831091         0.0000053
+        688    10.7842553         0.0001055
+        689    10.7847386         0.0000016
+        690    10.7852045         0.0000059
+        691    10.7859618         0.0000110
+        692    10.7866820         0.0000449
+        693    10.7875077         0.0000101
+        694    10.7880623         0.0000340
+        695    10.7888194         0.0000147
+        696    10.7894779         0.0000863
+        697    10.7899260         0.0006204
+        698    10.7905607         0.0000049
+        699    10.7914247         0.0003146
+        700    10.7921854         0.0004481
+        701    10.7923616         0.0000528
+        702    10.7932550         0.0000123
+        703    10.7940130         0.0000156
+        704    10.7946492         0.0001293
+        705    10.7955388         0.0000153
+        706    10.7960081         0.0000336
+        707    10.7966722         0.0000035
+        708    10.7973887         0.0000041
+        709    10.7980107         0.0002305
+        710    10.7983829         0.0000047
+        711    10.7995102         0.0001111
+        712    10.7997670         0.0000051
+        713    10.8011259         0.0000386
+        714    10.8012947         0.0000034
+        715    10.8027586         0.0000021
+        716    10.8031123         0.0000013
+        717    10.8035577         0.0000705
+        718    10.8049500         0.0012240
+        719    10.8052234         0.0000548
+        720    10.8054478         0.0000101
+        721    10.8064609         0.0006204
+        722    10.8068389         0.0000222
+        723    10.8077796         0.0000063
+        724    10.8089794         0.0000284
+        725    10.8091659         0.0000019
+        726    10.8101127         0.0005451
+        727    10.8126772         0.0000066
+        728    10.8143555         0.0000530
+        729    10.8145298         0.0000043
+        730    10.8162481         0.0000298
+        731    10.8169703         0.0000337
+        732    10.8170377         0.0008568
+        733    10.8178768         0.0000115
+        734    10.8196620         0.0004177
+        735    10.8197826         0.0000325
+        736    10.8206902         0.0000030
+        737    10.8216466         0.0000126
+        738    10.8222800         0.0000070
+        739    10.8225410         0.0000147
+        740    10.8232052         0.0001905
+        741    10.8243952         0.0000083
+        742    10.8249561         0.0000257
+        743    10.8256910         0.0000124
+        744    10.8265862         0.0007046
+        745    10.8268323         0.0001713
+        746    10.8277350         0.0000163
+        747    10.8284411         0.0001188
+        748    10.8290268         0.0001066
+        749    10.8293904         0.0001399
+        750    10.8301648         0.0000479
+        751    10.8313024         0.0000737
+        752    10.8315919         0.0000248
+        753    10.8326342         0.0000084
+        754    10.8330155         0.0000228
+        755    10.8337014         0.0000365
+        756    10.8347043         0.0002630
+        757    10.8348369         0.0004369
+        758    10.8361275         0.0000806
+        759    10.8363629         0.0004009
+        760    10.8368537         0.0000303
+        761    10.8379156         0.0000605
+        762    10.8386904         0.0000933
+        763    10.8396192         0.0000087
+        764    10.8402308         0.0000369
+        765    10.8405522         0.0000147
+        766    10.8413580         0.0000071
+        767    10.8423075         0.0000098
+        768    10.8427447         0.0000011
+        769    10.8438742         0.0000011
+        770    10.8443458         0.0005366
+        771    10.8445988         0.0000196
+        772    10.8458509         0.0002682
+        773    10.8460927         0.0000132
+        774    10.8479313         0.0000342
+        775    10.8483623         0.0000021
+        776    10.8494341         0.0000172
+        777    10.8512992         0.0000131
+        778    10.8526448         0.0000107
+        779    10.8530381         0.0000886
+        780    10.8534669         0.0000078
+        781    10.8561919         0.0000019
+        782    10.8567953         0.0000037
+        783    10.8574082         0.0000011
+        784    10.8583803         0.0000231
+        785    10.8586053         0.0000174
+        786    10.8592552         0.0000596
+        787    10.8600967         0.0000028
+        788    10.8609504         0.0000323
+        789    10.8612745         0.0000171
+        790    10.8624275         0.0000098
+        791    10.8626158         0.0000683
+        792    10.8636233         0.0000014
+        793    10.8644229         0.0000031
+        794    10.8651158         0.0000015
+        795    10.8661190         0.0000055
+        796    10.8665868         0.0000152
+        797    10.8672019         0.0000055
+        798    10.8680682         0.0002102
+        799    10.8687667         0.0000573
+        800    10.8696402         0.0001488
+        801    10.8700284         0.0000069
+        802    10.8706330         0.0000496
+        803    10.8715293         0.0000067
+        804    10.8720968         0.0000076
+        805    10.8728048         0.0000014
+        806    10.8735117         0.0000761
+        807    10.8741391         0.0000032
+        808    10.8750848         0.0000658
+        809    10.8760793         0.0000871
+        810    10.8765919         0.0000013
+        811    10.8774849         0.0000347
+        812    10.8776526         0.0001549
+        813    10.8784150         0.0000026
+        814    10.8812737         0.0001342
+        815    10.8815039         0.0000020
+        816    10.8826644         0.0000340
+        817    10.8829603         0.0000854
+        818    10.8832766         0.0000157
+        819    10.8848619         0.0000080
+        820    10.8863806         0.0000043
+        821    10.8866696         0.0000035
+        822    10.8897266         0.0000011
+        823    10.8903298         0.0000877
+        824    10.8904533         0.0001564
+        825    10.8912002         0.0003480
+        826    10.8918966         0.0000204
+        827    10.8925408         0.0010464
+        828    10.8934892         0.0000017
+        829    10.8942685         0.0000124
+        830    10.8945225         0.0000056
+        831    10.8958192         0.0000033
+        832    10.8966220         0.0000059
+        833    10.8973094         0.0000079
+        834    10.8979537         0.0000185
+        835    10.8983697         0.0010381
+        836    10.8991068         0.0000186
+        837    10.8997416         0.0000393
+        838    10.9005016         0.0000134
+        839    10.9010258         0.0000564
+        840    10.9021297         0.0000259
+        841    10.9023856         0.0000276
+        842    10.9032639         0.0000025
+        843    10.9049547         0.0000108
+        844    10.9057573         0.0000127
+        845    10.9064515         0.0000081
+        846    10.9074068         0.0000843
+        847    10.9079015         0.0000731
+        848    10.9082511         0.0001385
+        849    10.9089732         0.0002769
+        850    10.9092851         0.0002630
+        851    10.9108783         0.0000029
+        852    10.9112093         0.0000031
+        853    10.9129007         0.0000333
+        854    10.9146709         0.0000063
+        855    10.9151055         0.0002709
+        856    10.9162106         0.0000439
+        857    10.9164347         0.0000219
+        858    10.9172150         0.0012585
+        859    10.9174526         0.0000443
+        860    10.9203221         0.0000398
+        861    10.9208174         0.0000028
+        862    10.9218123         0.0000195
+        863    10.9228643         0.0000038
+        864    10.9232119         0.0004308
+        865    10.9237079         0.0000094
+        866    10.9246720         0.0000358
+        867    10.9247771         0.0009252
+        868    10.9260479         0.0000018
+        869    10.9271950         0.0000344
+        870    10.9288519         0.0000011
+        871    10.9295832         0.0000084
+        872    10.9301348         0.0005419
+        873    10.9305472         0.0000205
+        874    10.9314744         0.0000028
+        875    10.9320943         0.0000020
+        876    10.9329152         0.0000116
+        877    10.9331251         0.0000064
+        878    10.9345092         0.0000081
+        879    10.9352952         0.0002499
+        880    10.9361757         0.0000037
+        881    10.9367402         0.0000223
+        882    10.9376464         0.0000034
+        883    10.9384995         0.0000070
+        884    10.9392071         0.0000058
+        885    10.9398414         0.0000503
+        886    10.9400294         0.0000450
+        887    10.9414118         0.0000433
+        888    10.9420197         0.0000207
+        889    10.9423040         0.0000561
+        890    10.9432096         0.0000073
+        891    10.9443120         0.0000076
+        892    10.9448633         0.0002351
+        893    10.9454107         0.0000217
+        894    10.9459661         0.0000671
+        895    10.9464931         0.0000282
+        896    10.9480746         0.0000455
+        897    10.9485019         0.0000244
+        898    10.9492600         0.0000071
+        899    10.9496840         0.0000208
+        900    10.9511208         0.0000055
+        901    10.9519139         0.0000299
+        902    10.9520945         0.0000457
+        903    10.9530479         0.0001829
+        904    10.9540040         0.0000453
+        905    10.9541822         0.0002656
+        906    10.9547522         0.0000249
+        907    10.9554517         0.0000488
+        908    10.9570218         0.0000068
+        909    10.9572640         0.0000133
+        910    10.9581092         0.0000028
+        911    10.9590095         0.0000034
+        912    10.9599644         0.0002747
+        913    10.9601414         0.0000231
+        914    10.9615826         0.0000511
+        915    10.9622356         0.0000033
+        916    10.9626185         0.0001464
+        917    10.9637062         0.0002436
+        918    10.9642373         0.0000150
+        919    10.9649558         0.0000035
+        920    10.9655575         0.0000016
+        921    10.9662451         0.0000135
+        922    10.9672943         0.0000161
+        923    10.9680169         0.0000028
+        924    10.9688146         0.0000036
+        925    10.9695385         0.0002513
+        926    10.9698443         0.0000397
+        927    10.9712556         0.0000236
+        928    10.9719101         0.0000215
+        929    10.9722201         0.0000234
+        930    10.9731074         0.0000163
+        931    10.9737229         0.0000067
+        932    10.9746103         0.0000023
+        933    10.9754063         0.0000040
+        934    10.9761118         0.0000024
+        935    10.9770005         0.0000021
+        936    10.9778668         0.0000182
+        937    10.9786992         0.0000039
+        938    10.9793346         0.0000476
+        939    10.9797404         0.0000029
+        940    10.9808556         0.0000198
+        941    10.9816176         0.0000347
+        942    10.9824669         0.0000013
+        943    10.9832726         0.0000153
+        944    10.9837039         0.0000094
+        945    10.9847840         0.0000810
+        946    10.9850425         0.0000221
+        947    10.9863154         0.0000629
+        948    10.9864435         0.0000681
+        949    10.9874129         0.0000149
+        950    10.9879104         0.0000411
+        951    10.9889248         0.0000094
+        952    10.9897128         0.0000010
+        953    10.9902523         0.0000016
+        954    10.9943438         0.0000808
+        955    10.9944769         0.0000230
+        956    10.9958983         0.0000405
+        957    10.9963477         0.0000021
+        958    10.9979554         0.0000047
+        959    10.9995294         0.0000348
+        960    10.9996923         0.0000018
+        961    11.0012467         0.0000285
+        962    11.0013827         0.0000056
+        963    11.0022649         0.0000020
+        964    11.0030737         0.0000146
+        965    11.0038166         0.0000037
+        966    11.0046395         0.0000109
+        967    11.0055790         0.0000035
+        968    11.0064271         0.0000333
+        969    11.0065169         0.0000229
+        970    11.0085059         0.0000054
+        971    11.0092771         0.0000095
+        972    11.0100640         0.0000085
+        973    11.0109603         0.0000152
+        974    11.0113894         0.0000059
+        975    11.0123351         0.0000074
+        976    11.0127243         0.0000158
+        977    11.0134938         0.0000073
+        978    11.0143664         0.0000028
+        979    11.0162822         0.0000108
+        980    11.0168382         0.0000027
+        981    11.0178570         0.0000083
+        982    11.0184932         0.0000113
+        983    11.0190040         0.0000319
+        984    11.0198073         0.0000046
+        985    11.0205412         0.0000204
+        986    11.0210333         0.0000032
+        987    11.0241052         0.0000074
+        988    11.0242465         0.0000354
+        989    11.0257175         0.0000203
+        990    11.0261834         0.0000277
+        991    11.0275420         0.0000757
+        992    11.0283110         0.0001166
+        993    11.0292627         0.0000016
+        994    11.0297926         0.0000024
+        995    11.0333597         0.0000733
+        996    11.0341275         0.0001119
+        997    11.0344218         0.0000052
+        998    11.0354737         0.0003323
+        999    11.0356858         0.0000159
+       1000    11.0372029         0.0000038
+       1001    11.0374687         0.0000022
+       1002    11.0385848         0.0000108
+       1003    11.0411049         0.0000025
+       1004    11.0414756         0.0000255
+       1005    11.0424940         0.0000081
+       1006    11.0430371         0.0002567
+       1007    11.0439272         0.0000194
+       1008    11.0454817         0.0000177
+       1009    11.0477551         0.0000012
+       1010    11.0483779         0.0001307
+       1011    11.0485930         0.0000234
+       1012    11.0495133         0.0000120
+       1013    11.0504099         0.0000039
+       1014    11.0511784         0.0000048
+       1015    11.0520347         0.0000184
+       1016    11.0522436         0.0000887
+       1017    11.0550280         0.0000069
+       1018    11.0556624         0.0000018
+       1019    11.0566812         0.0000015
+       1020    11.0575212         0.0000151
+       1021    11.0581870         0.0000319
+       1022    11.0590007         0.0000468
+       1023    11.0597563         0.0000687
+       1024    11.0602916         0.0000348
+       1025    11.0610237         0.0000013
+       1026    11.0629678         0.0000075
+       1027    11.0633049         0.0000105
+       1028    11.0646424         0.0000102
+       1029    11.0651566         0.0000415
+       1030    11.0661389         0.0000091
+       1031    11.0666893         0.0000122
+       1032    11.0672769         0.0001938
+       1033    11.0677277         0.0003082
+       1034    11.0702784         0.0000170
+       1035    11.0708270         0.0000063
+       1036    11.0711222         0.0000224
+       1037    11.0723960         0.0000766
+       1038    11.0727716         0.0000059
+       1039    11.0733274         0.0000189
+       1040    11.0743598         0.0000014
+       1041    11.0772253         0.0000049
+       1042    11.0782272         0.0000760
+       1043    11.0785182         0.0000040
+       1044    11.0797802         0.0000137
+       1045    11.0803160         0.0000078
+       1046    11.0807439         0.0000218
+       1047    11.0819144         0.0000538
+       1048    11.0821962         0.0000212
+       1049    11.0831218         0.0000035
+       1050    11.0840386         0.0000021
+       1051    11.0846939         0.0000016
+       1052    11.0855203         0.0000066
+       1053    11.0865198         0.0000012
+       1054    11.0875216         0.0000087
+       1055    11.0878564         0.0000706
+       1056    11.0887954         0.0000227
+       1057    11.0891505         0.0001869
+       1058    11.0903524         0.0000040
+       1059    11.0912609         0.0000043
+       1060    11.0917298         0.0000047
+       1061    11.0924946         0.0000011
+       1062    11.0949833         0.0000209
+       1063    11.0961803         0.0000062
+       1064    11.0970557         0.0000896
+       1065    11.0974045         0.0000217
+       1066    11.0982936         0.0000168
+       1067    11.0986863         0.0000208
+       1068    11.1000538         0.0000088
+       1069    11.1006069         0.0000021
+       1070    11.1014663         0.0000024
+       1071    11.1021114         0.0000039
+       1072    11.1030786         0.0000333
+       1073    11.1038673         0.0000011
+       1074    11.1046319         0.0001103
+       1075    11.1055544         0.0000034
+       1076    11.1063014         0.0000047
+       1077    11.1066688         0.0000786
+       1078    11.1073524         0.0000015
+       1079    11.1097245         0.0000026
+       1080    11.1100421         0.0000440
+       1081    11.1105779         0.0000014
+       1082    11.1115875         0.0000354
+       1083    11.1126431         0.0000278
+       1084    11.1131774         0.0000012
+       1085    11.1142028         0.0000602
+       1086    11.1150851         0.0000011
+       1087    11.1160804         0.0000012
+       1088    11.1165713         0.0000028
+       1089    11.1177622         0.0000036
+       1090    11.1183627         0.0000016
+       1091    11.1195170         0.0000330
+       1092    11.1197392         0.0000176
+       1093    11.1207416         0.0000011
+       1094    11.1213779         0.0000096
+       1095    11.1221688         0.0000063
+       1096    11.1229762         0.0000052
+       1097    11.1237007         0.0000054
+       1098    11.1247261         0.0000167
+       1099    11.1252276         0.0000014
+       1100    11.1262644         0.0000033
+       1101    11.1270847         0.0000011
+       1102    11.1279632         0.0000041
+       1103    11.1285747         0.0000013
+       1104    11.1294055         0.0000109
+       1105    11.1301564         0.0000030
+       1106    11.1309033         0.0000042
+       1107    11.1316944         0.0000052
+       1108    11.1333512         0.0000018
+       1109    11.1345195         0.0000026
+       1110    11.1353063         0.0000043
+       1111    11.1362225         0.0000024
+       1112    11.1370899         0.0000041
+       1113    11.1374436         0.0000075
+       1114    11.1383452         0.0000112
+       1115    11.1388879         0.0000019
+       1116    11.1414840         0.0000036
+       1117    11.1424846         0.0000113
+       1118    11.1435755         0.0000184
+       1119    11.1442007         0.0000116
+       1120    11.1459409         0.0000013
+       1121    11.1465550         0.0000015
+       1122    11.1472421         0.0000015
+       1123    11.1494113         0.0000182
+       1124    11.1530847         0.0000014
+       1125    11.1539257         0.0000027
+       1126    11.1555457         0.0000022
+       1127    11.1562876         0.0000017
+       1128    11.1567884         0.0000010
+       1129    11.1591752         0.0000024
+       1130    11.1607061         0.0000015
+       1131    11.1614740         0.0000029
+       1132    11.1622133         0.0000015
+       1133    11.1631268         0.0000054
+       1134    11.1635378         0.0000086
+       1135    11.1640459         0.0000014
+       1136    11.1662745         0.0000062
+       1137    11.1672117         0.0000011
+       1138    11.1677693         0.0000035
+       1139    11.1689331         0.0000033
+       1140    11.1691588         0.0000092
+       1141    11.1704768         0.0000260
+       1142    11.1712284         0.0000353
+       1143    11.1714462         0.0000042
+       1144    11.1736189         0.0000011
+       1145    11.1742845         0.0000071
+       1146    11.1757417         0.0000060
+       1147    11.1760912         0.0000034
+       1148    11.1770152         0.0000036
+       1149    11.1776764         0.0000073
+       1150    11.1781692         0.0000178
+       1151    11.1787930         0.0000336
+       1152    11.1805473         0.0000014
+       1153    11.1815157         0.0000034
+       1154    11.1826125         0.0000056
+       1155    11.1834186         0.0000111
+       1156    11.1841785         0.0000176
+       1157    11.1851576         0.0000038
+       1158    11.1855607         0.0000519
+       1159    11.1859941         0.0000799
+       1160    11.1872196         0.0000013
+       1161    11.1883936         0.0000046
+       1162    11.1886378         0.0000011
+       1163    11.1907221         0.0000027
+       1164    11.1915541         0.0000056
+       1165    11.1924377         0.0000016
+       1166    11.1939847         0.0000035
+       1167    11.1953319         0.0000026
+       1168    11.1982831         0.0000014
+       1169    11.2005569         0.0000020
+       1170    11.2014545         0.0000011
+       1171    11.2022495         0.0000156
+       1172    11.2027297         0.0000219
+       1173    11.2059509         0.0000012
+       1174    11.2062166         0.0000013
+       1175    11.2074078         0.0000499
+       1176    11.2082074         0.0000111
+       1177    11.2099551         0.0000020
+       1178    11.2104784         0.0000078
+       1179    11.2108443         0.0000067
+       1180    11.2132475         0.0000074
+       1181    11.2140113         0.0000089
+       1182    11.2150590         0.0000035
+       1183    11.2153917         0.0000252
+       1184    11.2166368         0.0000023
+       1185    11.2171407         0.0000048
+       1186    11.2177573         0.0000517
+       1187    11.2184907         0.0000012
+       1188    11.2194346         0.0000028
+       1189    11.2213333         0.0000025
+       1190    11.2228616         0.0000222
+       1191    11.2233704         0.0000075
+       1192    11.2240061         0.0000138
+       1193    11.2247782         0.0000154
+       1194    11.2251303         0.0000118
+       1195    11.2282600         0.0000108
+       1196    11.2285313         0.0000019
+       1197    11.2298476         0.0000095
+       1198    11.2309008         0.0000020
+       1199    11.2320422         0.0000476
+       1200    11.2323120         0.0000288
+       1201    11.2328013         0.0000030
+       1202    11.2336186         0.0000012
+       1203    11.2376149         0.0000027
+       1204    11.2379367         0.0000095
+       1205    11.2388985         0.0000040
+       1206    11.2396806         0.0000075
+       1207    11.2403751         0.0000045
+       1208    11.2415719         0.0000060
+       1209    11.2418410         0.0000022
+       1210    11.2431785         0.0000016
+       1211    11.2449715         0.0000037
+       1212    11.2466923         0.0000057
+       1213    11.2473276         0.0000235
+       1214    11.2477385         0.0000158
+       1215    11.2487189         0.0000147
+       1216    11.2494235         0.0000042
+       1217    11.2500863         0.0000016
+       1218    11.2531383         0.0000018
+       1219    11.2543770         0.0000012
+       1220    11.2546931         0.0000031
+       1221    11.2555949         0.0000015
+       1222    11.2566593         0.0000142
+       1223    11.2571427         0.0000206
+       1224    11.2598589         0.0000016
+       1225    11.2605833         0.0000032
+       1226    11.2617760         0.0000045
+       1227    11.2623188         0.0000038
+       1228    11.2627816         0.0000020
+       1229    11.2676732         0.0000064
+       1230    11.2679036         0.0000186
+       1231    11.2690178         0.0000126
+       1232    11.2732578         0.0000014
+       1233    11.2777494         0.0000011
+       1234    11.2785451         0.0000125
+       1235    11.2791920         0.0000011
+       1236    11.2811569         0.0000023
+       1237    11.2814853         0.0000021
+       1238    11.2844725         0.0000030
+       1239    11.2864932         0.0000057
+       1240    11.2888622         0.0000027
+       1241    11.2914432         0.0000029
+       1242    11.2925567         0.0000018
+       1243    11.2940805         0.0000064
+       1244    11.2943107         0.0000011
+       1245    11.2995115         0.0000031
+       1246    11.3009088         0.0000030
+       1247    11.3011920         0.0000011
+       1248    11.3060987         0.0000019
+       1249    11.3065341         0.0000026
+       1250    11.3091727         0.0000011
+       1251    11.3136080         0.0000022
+       1252    11.3141501         0.0000017
+       1253    11.3205501         0.0000045
+       1254    11.3211289         0.0000097
+       1255    11.3217334         0.0000104
+       1256    11.3255631         0.0000020
+       1257    11.3287560         0.0000023
+       1258    11.3291235         0.0000016
+       1259    11.3360014         0.0000118
+       1260    11.3423819         0.0000032
+       1261    11.3431478         0.0000052
+       1262    11.3503412         0.0000164
+       1263    11.3509387         0.0000022
+       1264    11.3513041         0.0000014
+       1265    11.3527046         0.0000036
+       1266    11.3578593         0.0000015
+       1267    11.3585978         0.0000035
+       1268    11.3597498         0.0000012
+       1269    11.3603223         0.0000022
+       1270    11.3608703         0.0000036
+       1271    11.3636679         0.0000012
+       1272    11.3644012         0.0000012
+       1273    11.3654054         0.0000051
+       1274    11.3658781         0.0000067
+       1275    11.3670376         0.0000080
+       1276    11.3678047         0.0000016
+       1277    11.3683361         0.0000020
+       1278    11.3737166         0.0000012
+       1279    11.3749744         0.0000041
+       1280    11.3753970         0.0000064
+       1281    11.3821137         0.0000088
+       1282    11.3825906         0.0000020
+       1283    11.3836326         0.0000011
+       1284    11.3861497         0.0000053
+       1285    11.3872767         0.0000034
+       1286    11.3917522         0.0000018
+       1287    11.3922769         0.0000014
+       1288    11.3968773         0.0000032
+       1289    11.3976525         0.0000043
+       1290    11.3993339         0.0000036
+       1291    11.4001362         0.0000011
+       1292    11.4030310         0.0000014
+       1293    11.4038860         0.0000011
+       1294    11.4047685         0.0000018
+       1295    11.4071780         0.0000035
+       1296    11.4108288         0.0000068
+       1297    11.4119564         0.0000043
+       1298    11.4124201         0.0000016
+       1299    11.4215153         0.0000040
+       1300    11.4285841         0.0000012
+       1301    11.4365968         0.0000012
+       1302    11.4370655         0.0000014
+       1303    11.4478149         0.0000010
+       1304    11.4570523         0.0000010
+       1305    11.4618450         0.0000016
+       1306    11.4718509         0.0000011
+       1307    11.4853182         0.0000011
+       1308    11.4860661         0.0000016
+       1309    11.5004330         0.0000026
+       1310    11.5173538         0.0000011
+       1311    11.5290934         0.0000018
+       1312    11.5302141         0.0000011
+       1313    11.5397708         0.0000010
+  
+ STEP CPU TIME =     3.06 TOTAL CPU TIME =    55709.9 (  928.5 MIN)
+ TOTAL WALL CLOCK TIME=    55710.0 SECONDS, CPU UTILIZATION IS 100.00%
+ Plot data points evaluated.
+ STEP CPU TIME =     0.02 TOTAL CPU TIME =    55709.9 (  928.5 MIN)
+ TOTAL WALL CLOCK TIME=    55710.0 SECONDS, CPU UTILIZATION IS 100.00%
+ Execution of Mulvib terminated normally Fri Dec  3 05:56:31 2021
