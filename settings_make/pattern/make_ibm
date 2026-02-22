@@ -1,5 +1,0 @@
-LDOPTS := -Wl,-m  -Wl,-bmaxdata:900000000  -Wl,-bloadmap:../lked.map
-LIBRARIES := -lblas
-BLAS :=  
-VECTOR :=  
-QUICHE := zunix.o

@@ -1,5 +1,0 @@
-LDOPTS := -Wl,-M   # add -non_shared to see libraries
-LIBRARIES := 
-BLAS := blas.o
-VECTOR :=
-QUICHE := zunix.o

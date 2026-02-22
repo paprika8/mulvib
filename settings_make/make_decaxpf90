@@ -1,3 +1,0 @@
-LDR := f90
-
-include settings_make/pattern/make_decaxpf

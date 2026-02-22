@@ -1,3 +1,0 @@
-LDR := xlf
-
-include settings_make/pattern/make_ibm

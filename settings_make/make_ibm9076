@@ -1,3 +1,0 @@
-LDR := mpxlf
-
-include settings_make/pattern/make_ibm
