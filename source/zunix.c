@@ -640,6 +640,28 @@ void memrel_(locmem) FORTINT *locmem;
 void naptime_(nptime) FORTINT *nptime;
    { Sleep((DWORD) *nptime*1000); }
 
+double xqtime_(float *a)
+   { double elapsed;
+    FILETIME creationTime, exitTime, kernelTime, userTime;
+    ULARGE_INTEGER kernel, user;
+    LARGE_INTEGER perfCount, perfFreq;
+
+    QueryPerformanceFrequency(&perfFreq);
+    QueryPerformanceCounter(&perfCount);
+    elapsed = (double)perfCount.QuadPart / (double)perfFreq.QuadPart;
+
+    GetProcessTimes(GetCurrentProcess(), &creationTime, &exitTime, &kernelTime, &userTime);
+
+    kernel.LowPart = kernelTime.dwLowDateTime;
+    kernel.HighPart = kernelTime.dwHighDateTime;
+    user.LowPart = userTime.dwLowDateTime;
+    user.HighPart = userTime.dwHighDateTime;
+
+    a[0] = (float)(user.QuadPart / 1e7);
+    a[1] = (float)(kernel.QuadPart / 1e7);
+
+    return elapsed;
+   }
 #ifndef WINDOWSAZURE
 
 #include <mpi.h>
