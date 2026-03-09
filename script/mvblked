@@ -22,6 +22,8 @@ date
 #
 echo MULVIB will be linked into the executable image $EXE.$VERNO.x.
 #
+# rm -f $EXE.$VERNO.exe
+
 if (-e $EXE.$VERNO.exe) then
    echo An old executable $EXE.$VERNO.exe already exists!
    echo Bombing out...
@@ -107,15 +109,18 @@ if ($TARGET == sun) then
    set VECTOR=' '
    set QUICHE='zunix.o'
 endif
+#   set OMP = ' '
+   set OMP = '-fopenmp'
 #
 set echo
 chdir object
+
 $LDR   -o ../$EXE.$VERNO.exe   $LDOPTS    \
        mulvib.o unport64.o                 \
        clean.o fuldg.o initz.o input.o   \
        lacor.o mtcor.o nstdo.o splot.o   \
        tridg.o utlib.o                   \
-       $BLAS   $VECTOR  $QUICHE  $LIBRARIES
+       $BLAS   $VECTOR  $QUICHE  $LIBRARIES $OMP
 #
 unset echo
 time

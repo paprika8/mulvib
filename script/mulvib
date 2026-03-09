@@ -53,6 +53,14 @@ setenv output $scr/$job.f06
 setenv punch  $scr/$job.f07
 setenv resta  $scr/$job.f08
 #
+#   ----- settings openMP -----
+#
+setenv OMP_WAIT_POLICY ACTIVE
+setenv OMP_PROC_BIND SPREAD
+#setenv OMP_NUM_THREADS 4
+setenv OMP_NUM_THREADS 6
+#setenv OMP_PLACES cores
+#
 #   ----- execute Mulvib -----
 #
 cp $MVBRT/mulvib.$VERNO.exe $scr

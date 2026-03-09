@@ -255,9 +255,11 @@ endif
 #   DREAL complex function, so it is hacked to DBLE instead.
 #
 if ($TARGET == pcunix) then
-   set OPT = '-O2'
+   set OPT = '-O2' # '-g'
+#   set OMP = ' '
+   set OMP = '-fopenmp'
    set echo
-   gfortran -c -fdefault-integer-8 $OPT $SRCDIR/$MODULE.f
+   gfortran $OMP -c -fdefault-integer-8 $OPT $SRCDIR/$MODULE.f
    rm -f $MODULE.f
    unset echo
 endif
