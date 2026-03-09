@@ -11,3 +11,30 @@
       EndIf
       Return
       End
+
+      SUBROUTINE ICoCal(num, k, NDo, NMax, out)
+      Dimension NMax (NDo)
+      integer num, k, out, it
+      out = num - 1
+      it = 1
+      if (k .eq. 1) then
+         out = num - 1
+         go to 20
+      end if
+      do 10 i=1,k - 1
+         out = out / NMax (it)
+         it = it + 1
+   10 continue
+   20 out = mod(out, NMax(it)) + 1
+      end
+
+      SUBROUTINE MCoCal(num, Ic, NDo, NMax)
+      Dimension Ic (NDo), NMax (NDo)
+      integer num, out
+      out = num - 1
+      do 10 i=1,NDo
+         Ic (i) = mod(out, NMax(i)) + 1
+         out = out / NMax (i)
+         if (out.eq.0) go to 10
+   10 continue
+      end

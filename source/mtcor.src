@@ -27,8 +27,19 @@ c
          IConf (i) = 1
    10 Continue
 c
+      IConf (1) = 0
+c
 c.... Loop over configurations
 c
+!$OMP parallel shared(IntEl, ILTr, MulTab, ModBlo, IReAd, P, Q,
+!$OMP& ISyEl, NModSy, LimQN, ZklSqr, Indxx, IDeb,
+!$OMP& IPart, EnEl, ZnFrq, NInt)
+!$OMP&private(MEnd, Ms, NM, m, KSym, KSta, KEnd, n1, k, j, Jx,
+!$OMP& Hij, Term, ilast, i, Ix, Pi, n0, Ns, Hii) 
+!$OMP&default(none)
+!$OMP&firstprivate(NConf, NMod, IConf)
+      ilast = -5
+!$OMP do schedule(static) 
       Do 50 i=1,NConf
          If (IDeb) Write (6,1100) i, ((IConf (jx)-1),jx=1,Nmod),
      #             IPart (i), IReAd (i)
@@ -38,6 +49,11 @@ c
          Pi = P (Ix)
          Term = Zero
          Hii = EnEl (Ns)
+         if ((i - 1) .eq. ilast) then
+            Call NstDo (IConf,NMod,LimQN)
+         else
+            call MCoCal(i, IConf, NMod, LimQN)
+         endif
 c....... Diagonal contribution
          Do 15 k=1,NMod
             n0  = IConf (k)
@@ -47,6 +63,7 @@ c....... Off-diagonat contribution
 c....... Loop over states interacting with Ns
          MEnd = NInt (Ns)
          If (MEnd .Eq. 0) go to 40
+
          Do 30 m=1,MEnd
             Ms = IntEl (Ns,m)
             NM = ILTr  (Ns,Ms)
@@ -67,9 +84,12 @@ c.......... Loop over coupling modes
             If (IDeb) Write (6,1200) Ns,Ms,NM,KSym,KSta,KEnd,Hii
    30    Continue
          Q (Ix) = Q (Ix) + Hii * Pi + Term
+         ilast = i
 c....... Get next set of quantum nubers
-   40    Call NstDo (IConf,NMod,LimQN)
+c   40    Call NstDo (IConf,NMod,LimQN)
+   40 Continue
    50 Continue
+!$OMP end parallel
       Return
       End
 c
