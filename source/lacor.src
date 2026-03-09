@@ -1,9 +1,6 @@
       Subroutine LaCor (ZnFrq, ZklSqr, IPart, IReAd, P, Q, R, A, B)
       Implicit Double Precision (A-H,O-Z)
-      include "omp_lib.h"
       Parameter (Zero=0.0d+00, One=1.0d+00)
-      integer ktid, debIt
-      double precision kvsum, start, end, s1,s2,s3,bufA,bufT1,bufT2
 c
 c.... In-Core Lanczos.
 c.... Note that -IPart- and -IReAd- are DUMMY without symmtery.
@@ -67,7 +64,6 @@ c
       Call Flush (6)
       Do 60 i=IStar,IEnd
 c
-c         start = omp_get_wtime();
          A (i) = Zero
          B (i) = Zero
 c
@@ -81,62 +77,23 @@ c@@@
             Write (Iw,*) 'Vector Q :'
             call prtve (Q,NMatx)
          EndIf
-c         s1 = s1 + omp_get_wtime() - start
-c         start = omp_get_wtime();
 c@@@
-!$OMP parallel shared(Q, P, R, A, B, kvsum, bufA, Beta) 
-!$OMP&private(j, start, end, ktid, debIt, bufT1, bufT2)
-!$OMP&firstprivate(NMatx, i) default(none)
-         kvsum = 0
-!$OMP do schedule(static) reduction(+:kvsum)
-         Do j=1,NMatx
-            kvsum = kvsum + Q (j) * P (j)
-         end do
-!$OMP end do
-!$OMP master
-         A (i) = A (i) + kvsum
-c         print '(5x, f14.7)', A (i)
-         bufA = A(i)
-!$OMP end master
-!$OMP barrier
-         bufT1 = bufA
-         bufT2 = Beta
+         Do 30 j=1,NMatx
+            A (i) = A (i) + Q (j) * P (j)
+   30    Continue
 c
-c         start = omp_get_wtime();
-c         ktid = omp_get_thread_num()
-c         print '(i0,1x, f9.5, 2x, i0)', ktid, start, NMatx
-c         debIt = 0
-         kvsum = 0
-!$OMP do schedule(static) reduction(+:kvsum)
-         Do j=1,NMatx
-            Q (j) = Q (j) - bufT1 * P (j) - bufT2 * R (j)
+         Do 40 j=1,NMatx
+            Q (j) = Q (j) - A (i) * P (j) - Beta * R (j)
             R (j) = P (j)
-c            debIt = debIt + 1
-            kvsum = kvsum + Q (j) * Q (j)
-c            ktid = omp_get_thread_num()
-c            print '(i3, 1x, i0)', ktid, j
-         end do
-!$OMP end do
-c         end = omp_get_wtime()
-c         print '(i0,1x, i0)', ktid, debIt
-!$OMP master
-         B (i) = B (i) + kvsum
+            B (i) = B (i) + Q (j) * Q (j)
+   40    Continue
+c
          B (i) = DSqrt (B (i))
          Beta = B (i)
-c         print '(4x, f14.7)', Beta
-!$OMP end master
-!$OMP barrier
-         bufT2 = Beta
 c
-!$OMP do schedule(static)
-         Do j=1,NMatx
-            P (j) = Q (j) / bufT2
-         end do
-!$OMP end do
-!$OMP end parallel
-c         s2 = s2 + omp_get_wtime() - start
-c         start = omp_get_wtime();
-c
+         Do 50 j=1,NMatx
+            P (j) = Q (j) / B (i)
+   50    Continue
 c@@@
 c        If (Its.ne.0) then
 c           Write (Iw,*) 'Vector P :'
@@ -153,11 +110,9 @@ c
             ToTim = ToTim + ZTm
             KTims = 0
          End If
-c         s3 = s3 + omp_get_wtime() - start
 c        Write (6,3400) i, A(i), B(i)
 c3400    Format (1x,'i=',i3,' A=',f12.6,' B=',f12.6)
    60 Continue
-c      print '(f12.6,1x,f12.5,1x,f12.5)', s1, s2, s3
 c
 c.... Final timing
 c
