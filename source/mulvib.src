@@ -56,6 +56,9 @@ c.... Open R/W files
 c
       Call SeqOpn (Ir,'input' ,'unknown','formatted'  )
       Call SeqOpn (Iw,'output','unknown','formatted'  )
+c.... Open Debug files
+c      Idfile = 11
+c      Call SeqOpn (Idfile,'deb' ,'unknown','formatted'  )
 c
 c.... Start Timer
 c

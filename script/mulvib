@@ -57,8 +57,8 @@ setenv resta  $scr/$job.f08
 #
 setenv OMP_WAIT_POLICY ACTIVE
 setenv OMP_PROC_BIND SPREAD
-#setenv OMP_NUM_THREADS 4
-setenv OMP_NUM_THREADS 6
+setenv OMP_NUM_THREADS 9
+#setenv OMP_NUM_THREADS 6
 #setenv OMP_PLACES cores
 #
 #   ----- execute Mulvib -----

@@ -12,6 +12,8 @@ c
 c
       Dimension IConf (MxMod)
       Logical IDeb
+	Integer im
+      Include 'omp_lib.h'
 c
  1100 Format ((1x,23i3))
  1200 Format (1x,'Ns,Ms,NM,KSym,KSta,KEnd:',6i5,' Hii=',f10.6)
@@ -26,29 +28,33 @@ c
       Do 10 i=1,NMod
          IConf (i) = 1
    10 Continue
-c
+c.... Set null iteration
       IConf (1) = 0
+!$OMP parallel shared(IntEl, ILTr, MulTab, ModBlo, IReAd, P, Q,
+!$OMP& ISyEl, NModSy, LimQN, ZklSqr, Indxx, IDeb,
+!$OMP& IPart, EnEl, ZnFrq, NInt, QBuff)
+!$OMP&private(MEnd, Ms, NM, m, KSym, KSta, KEnd, n1, k, j, Jx,
+!$OMP& Hij, Term, ilast, i, Ix, Pi, n0, Ns, Hii,
+!$OMP& NNs, MMs, NNM, im, QQ) 
+!$OMP&default(none)
+!$OMP&firstprivate(NConf, NMod, IConf, ktid)
+c.... Сounter of previous iteration 
+      ilast = 0
+c!$OMP do schedule(dynamic, NConf / 120) 
+!$OMP do schedule(static) 
 c
 c.... Loop over configurations
 c
-!$OMP parallel shared(IntEl, ILTr, MulTab, ModBlo, IReAd, P, Q,
-!$OMP& ISyEl, NModSy, LimQN, ZklSqr, Indxx, IDeb,
-!$OMP& IPart, EnEl, ZnFrq, NInt)
-!$OMP&private(MEnd, Ms, NM, m, KSym, KSta, KEnd, n1, k, j, Jx,
-!$OMP& Hij, Term, ilast, i, Ix, Pi, n0, Ns, Hii) 
-!$OMP&default(none)
-!$OMP&firstprivate(NConf, NMod, IConf)
-      ilast = -5
-!$OMP do schedule(static) 
       Do 50 i=1,NConf
          If (IDeb) Write (6,1100) i, ((IConf (jx)-1),jx=1,Nmod),
      #             IPart (i), IReAd (i)
          Ns = IPart (i)
          If (Ns .Eq. 0) go to 40
-         Ix = IReAd (i)
+         Ix = i
          Pi = P (Ix)
          Term = Zero
          Hii = EnEl (Ns)
+c....... Get next set of quantum nubers
          if ((i - 1) .eq. ilast) then
             Call NstDo (IConf,NMod,LimQN)
          else
@@ -63,7 +69,7 @@ c....... Off-diagonat contribution
 c....... Loop over states interacting with Ns
          MEnd = NInt (Ns)
          If (MEnd .Eq. 0) go to 40
-
+c         
          Do 30 m=1,MEnd
             Ms = IntEl (Ns,m)
             NM = ILTr  (Ns,Ms)
@@ -72,21 +78,28 @@ c.......... Loop over coupling modes
             KSta = ModBlo (KSym)
             KEnd = KSta + NModSy (KSym) - 1
             Do 20 k=KSta,KEnd
-               n1 = IConf (k) + 1
+               n0 = IConf (k)
+               n1 = n0 + 1
                If (n1 .Le. LimQN (k)) then
-                  j  = i + Indxx (k)
-                  Jx = IReAd (j)
+                  j = i + Indxx (k)
                   Hij  = ZklSqr (k,n1,NM)
-                  Term = Term + Hij * P (Jx)
-                  Q (Jx) = Q (Jx) + Hij * Pi
+                  Term = Term + Hij * P (j)
+               EndIf
+               If (n0 .Ge. 2) then
+                  j = i - Indxx (k)
+                  NNs = IPart (j)
+                  im = MulTab(Ns, m)
+                  im = MulTab(NNs, im)
+c
+                  MMs = IntEl (NNs,im)
+                  NNM = ILTr  (NNs,MMs)
+                  Hij  = ZklSqr (k,n0,NNM)
+                  Term = Term + Hij * P (j)
                EndIf
    20       Continue
-            If (IDeb) Write (6,1200) Ns,Ms,NM,KSym,KSta,KEnd,Hii
    30    Continue
          Q (Ix) = Q (Ix) + Hii * Pi + Term
          ilast = i
-c....... Get next set of quantum nubers
-c   40    Call NstDo (IConf,NMod,LimQN)
    40 Continue
    50 Continue
 !$OMP end parallel
