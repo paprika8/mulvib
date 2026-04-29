@@ -316,7 +316,8 @@ c
       ITs1 = Index (Title,'#debug')
       ITs2 = Index (Title,'#input')
       IDeb = ITs1 .Ne. 0 .Or. ITs2 .Ne. 0
-      If (IDeb) Call InDmp
+c      If (IDeb) Call InDmp
+      Call InDmp
 c
       write (Iw,4000) LinBuf
 c

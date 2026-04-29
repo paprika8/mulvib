@@ -175,7 +175,8 @@ c
 c     ........ ibm r*8 accuracy parameters
 c
 *aix  data eps,tol /z3410000000000000,z0d10000000000000/
-*unx  data eps,tol /z'3410000000000000',z'0d10000000000000'/
+c*unx  data eps,tol /z'3410000000000000',z'0d10000000000000'/
+*unx  data eps,tol /6.372367644529809D-058,9.153422936374701D-246/
 *f2c  data eps,tol /6.372367644529809D-058,9.153422936374701D-246/
 c
 c     ........ ibm r*4 accuracy parameters

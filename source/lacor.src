@@ -56,6 +56,7 @@ c@@@
       ZTm   = Zero
       KTims = 0
       Iterx = 0
+      s1 = Zero
 c
 c.... Lanczos iterations
 c
@@ -78,22 +79,37 @@ c@@@
             call prtve (Q,NMatx)
          EndIf
 c@@@
+         start = omp_get_wtime();
+         Temp = Zero
+!$OMP parallel num_threads(3)
+!$OMP do reduction(+:Temp)
          Do 30 j=1,NMatx
-            A (i) = A (i) + Q (j) * P (j)
+            Temp = Temp + Q (j) * P (j)
    30    Continue
+!$OMP single
+         A (i) = A (i) + Temp
+         Temp = Zero
+!$OMP end single
 c
+!$OMP do reduction(+:Temp)
          Do 40 j=1,NMatx
             Q (j) = Q (j) - A (i) * P (j) - Beta * R (j)
             R (j) = P (j)
-            B (i) = B (i) + Q (j) * Q (j)
+            Temp = Temp + Q (j) * Q (j)
    40    Continue
+!$OMP single
+         B (i) = B (i) + Temp
 c
          B (i) = DSqrt (B (i))
          Beta = B (i)
+!$OMP end single
 c
+!$OMP do
          Do 50 j=1,NMatx
-            P (j) = Q (j) / B (i)
+            P (j) = Q (j) / Beta
    50    Continue
+!$OMP end parallel
+         s1 = s1 + omp_get_wtime() - start
 c@@@
 c        If (Its.ne.0) then
 c           Write (Iw,*) 'Vector P :'
@@ -113,6 +129,7 @@ c
 c        Write (6,3400) i, A(i), B(i)
 c3400    Format (1x,'i=',i3,' A=',f12.6,' B=',f12.6)
    60 Continue
+      print *, s1
 c
 c.... Final timing
 c

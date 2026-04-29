@@ -34,7 +34,7 @@ int main(){
 	fclose(outfile);
 	fclose(infile);
 
-	printf("activate complete");
+	printf("activate complete\n");
 
 	return 0;
 }
