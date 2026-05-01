@@ -35,6 +35,10 @@
       do 10 i=1,NDo
          Ic (i) = mod(out, NMax(i)) + 1
          out = out / NMax (i)
-         if (out.eq.0) go to 10
+         if (out.eq.0) go to 11
    10 continue
+   11 i = i + 1
+      do 12 j=i,NDo
+         Ic (j) = 1
+   12 continue
       end
