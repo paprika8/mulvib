@@ -1,3 +1,10 @@
+FGCC:= mpif90
+#FGCC:=gfortran
+GCC:= mpicc
+#GCC:= gcc
+TARGET := mulvib_mpi.00.exe
+#TARGET := mulvib.00.exe
+
 SRC := $(wildcard source/*.src) $(wildcard source/mpi/*.src)
 
 F := $(SRC:.src=.f)
@@ -7,11 +14,11 @@ OBJ := $(F:.f=.fo) $(C:.c=.co)
 OBJ := $(patsubst source/%,%,$(OBJ))
 OBJ := $(addprefix object/,$(OBJ)) 
 
-TARGET := mulvib.00.exe
 
-FLAGS := -O2 -fdefault-integer-8 -fopenmp
-CFLAGS := -g -c -DWINDOWS64 -DWINDOWSAZURE -m64 -fopenmp 
-#CFLAGS := -c -DLINUX64 -m64
+
+FLAGS := -O2 -fopenmp -fdefault-integer-8 
+#CFLAGS := -g -c -DWINDOWS64 -DWINDOWSAZURE -m64 -fopenmp 
+CFLAGS := -c -DLINUX64 -m64 -fopenmp 
 
 INCLUDE := 
 LIB := -fopenmp
@@ -29,7 +36,7 @@ clean:
 	rm -f ./$(TARGET)
 
 $(TARGET): $(OBJ)
-	gfortran -o $(TARGET) $(OBJ) $(LIB)
+	$(FGCC) -o $(TARGET) $(OBJ) $(LIB)
 	chmod +x ./$(TARGET)
 
 %.f: %.src
@@ -37,8 +44,8 @@ $(TARGET): $(OBJ)
 
 object/%.co: source/%.c
 	@mkdir -p $(dir $@)
-	gcc $(CFLAGS) $(INCLUDE) -c $< -o $@
+	$(GCC) $(CFLAGS) $(INCLUDE) -c $< -o $@
 
 object/%.fo: source/%.f
 	@mkdir -p $(dir $@)
-	gfortran $(FLAGS) $(INCLUDE) -c $< -o $@
+	$(FGCC) $(FLAGS) $(INCLUDE) -c $< -o $@

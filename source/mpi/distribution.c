@@ -37,7 +37,7 @@ void MCoCal(ll num, ll *Ic, ll NDo, ll *NMax)
 		Ic[i] = 1;
 }
 
-void getreaddr_(ll *irank, ll *limQN, ll *Indxx, ll *len, ll *n, ll *q_offset, ll *block_size)
+void getreaddr_(int *irank, ll *limQN, ll *Indxx, int *len, ll *n, ll *q_offset, ll *block_size)
 {
 	ll i;
 	ll *ic = malloc(sizeof(ll) * *len);

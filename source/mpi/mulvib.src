@@ -9,8 +9,6 @@ c
 c
 c      Common / FmCom / X (1)
 c     ZnFrq, ZklSqr, IPart, IReAd, P, Q, R, A, B
-c     X(L01), X(L02), X(L03), X(L04), 
-c    #            X(M01), X(M02), X(M03), X(M04), X(M05)
       DOUBLE PRECISION, DIMENSION(:,:), ALLOCATABLE :: ZnFrq
       DOUBLE PRECISION, DIMENSION(:,:,:), ALLOCATABLE :: ZklSqr
       DOUBLE PRECISION, DIMENSION(:), ALLOCATABLE :: IPart
@@ -24,6 +22,7 @@ c
       Dimension TimStr (3)
       Character*50 Versn
       Logical Deb
+      integer*4 irank, icmlen, ierr
 
       include "omp_lib.h"
       include 'mpif.h'
@@ -65,7 +64,8 @@ c.... Initilize MPI
 c
       call MPI_Init(ierr)
       if (ierr .ne. 0) then
-            Write(Iw, 1800, ierr);
+            Write(Iw, 1800) ierr
+            print *, ierr
             Stop
       end if
 c
@@ -158,14 +158,15 @@ c
       call MPI_Comm_rank(MPI_COMM_WORLD, irank, ierr)
       call MPI_Comm_size(MPI_COMM_WORLD, icmlen, ierr)
 
-      if (icmlen .eq. 1) then
-            print *, 'Must have at least 2 processes'
+      if (icmlen .eq. 0) then
+            print *, 'Must have at least 1 processes'
             call MPI_Finalize(ierr)
             stop
       endif
 
       call getReAddr(irank, LimQN, Indxx, NMod, icmlen, iQofst, iblksz)
-      print *, "Rang number = ", irank, "Q offset = ", iQofst, " block size = ", iblksz
+      print *, "Rang number = ", irank, "Q offset = ", iQofst, 
+     #   " block size = ", iblksz
 c
 c.... In-memory Lanczos
 c
@@ -174,16 +175,14 @@ c
       allocate(P(NMatx))
       allocate(Q(iblksz))
       allocate(R(Max0 (NMatx,MxLan+1)))
-      if(irank .eq. 0) then 
-            allocate(A(MxLan+1))
-            allocate(B(MxLan+1))
-      end if
+      allocate(A(MxLan+1))
+      allocate(B(MxLan+1))
 c
 c:::  LaCor (ZnFrq, ZklSqr, IPart, IReAd, P, Q, R, A, B)
       Call LaCor (ZnFrq, ZklSqr, IPart, IReAd, 
      #            P, Q, R, A, B, iQofst, iblksz)
 c
-      deallocate(Q)
+c      deallocate(Q)
       if(irank .ne. 0) then 
             Stop
       end if

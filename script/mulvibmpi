@@ -6,29 +6,11 @@
 #              name --> input/name.inp
 #              ver      version to execute
 #
-# --- IWR ---
-#
-#set MVBRT=$HOME/mulvib
-#set scr=$HOME/work/$1
-#mkdir $scr
-#
-# --- PCI ---
-#
-#set MVBRT=/u/pci/d77/mulvib
-#set scr=/tmpa/$USER/$1
-#mkdir $scr
-#
-# --- INFO ---
-#
-#set MVBRT=/home/lkx/mulvib
-#set scr=/disk5/homes/tmp/$USER/$1
-#mkdir $scr
-#
-#
 # --- PCLINUX ---
 #
 set MVBRT=$HOME/projects/mulvib
 set scr=/tmp/$USER/$1
+mkdir /tmp/$USER
 mkdir $scr
 #
 # set echo
@@ -57,18 +39,20 @@ setenv resta  $scr/$job.f08
 #
 setenv OMP_WAIT_POLICY ACTIVE
 setenv OMP_PROC_BIND SPREAD
-setenv OMP_NUM_THREADS 9
+setenv OMP_NUM_THREADS 6
+setenv OMP_PLACES cores        # привязываем к физическим ядрам
 #setenv OMP_NUM_THREADS 6
 #setenv OMP_PLACES cores
 #
 #   ----- execute Mulvib -----
 #
-cp $MVBRT/mulvib.$VERNO.exe $scr
+cp $MVBRT/mulvib_mpi.$VERNO.exe $scr
+cp $MVBRT/hosts.txt $scr
 cd $scr
-$scr/mulvib.$VERNO.exe
+mpirun --hostfile $scr/hosts.txt -np 2 --bind-to none $scr/mulvib_mpi.$VERNO.exe 
 #
 echo ------ accounting info ------
-echo program version :  mulvib.$VERNO.exe
+echo program version :  mulvib_mpi.$VERNO.exe
 echo executed on :  `hostname`
 echo executed at :  `date`
 echo executed by :  $USER
@@ -76,9 +60,10 @@ echo -----------------------------
 #
 ls -lF $scr/$job.*
 #
+mkdir $MVB/output
 cp $scr/$job.f06 $MVB/output/$job.out
 if (-e $scr/$job.f07) cp $scr/$job.f07 $MVB/output/$job.dat
 #
-rm $scr/mulvib.$VERNO.exe
+rm $scr/mulvib_mpi.$VERNO.exe
 cd $HOME/mulvib
 time

@@ -5,10 +5,10 @@ c
 c.... In-Core Lanczos.
 c.... Note that -IPart- and -IReAd- are DUMMY without symmtery.
 c
-*unx  Include 'infcom.com'
-*unx  Include 'ioscom.com'
-*aix  Include (infcom.com)
-*aix  Include (ioscom.com)
+*unx  Include '../infcom.com'
+*unx  Include '../ioscom.com'
+*aix  Include (../infcom.com)
+*aix  Include (../ioscom.com)
 c
       Dimension IPart (*), IReAd (*), ZnFrq (NMod,NQMax), 
      #          ZklSqr (NMod,NQMax,MxLT), P (NMatx), Q (NMatx), 
