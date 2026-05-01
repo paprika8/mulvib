@@ -1,7 +1,7 @@
-SRC := $(wildcard source/*.src)
+SRC := $(wildcard source/*.src) $(wildcard source/mpi/*.src)
 
 F := $(SRC:.src=.f)
-C := $(wildcard source/*.c)
+C := $(wildcard source/*.c) $(wildcard source/mpi/*.c)
 
 OBJ := $(F:.f=.fo) $(C:.c=.co)
 OBJ := $(patsubst source/%,%,$(OBJ))
@@ -10,7 +10,7 @@ OBJ := $(addprefix object/,$(OBJ))
 TARGET := mulvib.00.exe
 
 FLAGS := -O2 -fdefault-integer-8 -fopenmp
-CFLAGS := -c -DWINDOWS64 -DWINDOWSAZURE -m64 -fopenmp
+CFLAGS := -g -c -DWINDOWS64 -DWINDOWSAZURE -m64 -fopenmp 
 #CFLAGS := -c -DLINUX64 -m64
 
 INCLUDE := 

@@ -1,0 +1,241 @@
+      Program MulVib
+      Implicit Double Precision (A-H,O-Z)
+      Parameter (Zero=0.0d+00)
+c
+*unx  Include 'infcom.com'
+*unx  Include 'ioscom.com'
+*aix  Include (infcom.com)
+*aix  Include (ioscom.com)
+c
+c      Common / FmCom / X (1)
+c     ZnFrq, ZklSqr, IPart, IReAd, P, Q, R, A, B
+c     X(L01), X(L02), X(L03), X(L04), 
+c    #            X(M01), X(M02), X(M03), X(M04), X(M05)
+      DOUBLE PRECISION, DIMENSION(:,:), ALLOCATABLE :: ZnFrq
+      DOUBLE PRECISION, DIMENSION(:,:,:), ALLOCATABLE :: ZklSqr
+      DOUBLE PRECISION, DIMENSION(:), ALLOCATABLE :: IPart
+      DOUBLE PRECISION, DIMENSION(:), ALLOCATABLE :: IReAd
+      DOUBLE PRECISION, DIMENSION(:), ALLOCATABLE :: P
+      DOUBLE PRECISION, DIMENSION(:), ALLOCATABLE :: Q
+      DOUBLE PRECISION, DIMENSION(:), ALLOCATABLE :: R
+      DOUBLE PRECISION, DIMENSION(:), ALLOCATABLE :: A
+      DOUBLE PRECISION, DIMENSION(:), ALLOCATABLE :: B
+c
+      Dimension TimStr (3)
+      Character*50 Versn
+      Logical Deb
+
+      include "omp_lib.h"
+c
+ 1000 Format (1x,50(1h=),/,
+     #        1x,'=   Mulvib written: 28 Feb 1999 (A. Trofimov)    =',/,
+     #        1x,'=   Multistate Linear Vibronic Coupling Model    =',/,
+     #        1x,'=   H. Koeppel, W. Domcke and L. S. Cederbaum    =',/,
+     #        1x,'=   Advances in Chemical Physics 57 (1984) 59    =',/,
+     #        1x,a50,/,1x,50(1h=))
+ 1100 Format (1x,'Execution of Mulvib begun ',3a8)
+ 1200 Format (1x,'Execution of Mulvib terminated normally ',3A8)
+ 1300 Format (1x,'Matrix dimension found on restart unit:',i12,'.'/,
+     #        1x,'Number of earlier performed iterations:',i12,'.')
+ 1400 Format (1x,'>>> Restart error: incorrect matrix dimension ! <<<')
+ 1600 Format (1x,'>>> Restart error: restart file is unreadable ! <<<')
+ 1500 Format (1x,'End of Information-only run.')
+c
+c.... IO units
+c
+      Ir = 5
+      Iw = 6
+      Ip = 7
+      Iz = 8
+c
+c.... Initilize UNPORT routines
+c
+      Call UnpInt
+c
+c.... Open R/W files
+c
+      Call SeqOpn (Ir,'input' ,'unknown','formatted'  )
+      Call SeqOpn (Iw,'output','unknown','formatted'  )
+c.... Open Debug files
+c      Idfile = 11
+c      Call SeqOpn (Idfile,'deb' ,'unknown','formatted'  )
+c
+c.... Start Timer
+c
+      Call Timit  (0)
+      Call TMDate (TimStr)
+c
+c.... Version info and timestemp
+c
+      Versn = '=   LINIX 64 bit version ABT 17/07/2017          ='
+      Write (IW,1000) Versn
+      Write (IW,1100) TimStr
+c
+c.... Read input open memory pool and more files
+c
+      Call Input
+c      Call SetFM (MemWd)
+c
+      IRest = Index (Title,'#resta' )
+      INSav = Index (Title,'#nosave')
+      INPlt = Index (Title,'#noplot')
+      Ideb  = Index (Title,'#debug' )
+      Imvb  = Index (Title,'#mulvib')
+      Deb   = Ideb .Ne. 0 .Or. Imvb .Ne. 0
+c
+      If (IRest.Ne.0 .Or.
+     #    INSav.Eq.0) Call SeqOpn (Iz,'resta','unknown','unformatted')
+      If (INPlt.Eq.0) Call SeqOpn (Ip,'punch','unknown','formatted' )
+c
+c.... Set Indexing and precompute factors
+c
+c old  LFM1 = 0
+c      Call ValFM (LFM1)
+c     L01 = LFM1 + 1
+c      L02 = L01 + NMod * NQMax
+c      L03 = L02 + NMod * NQMax * MxLT
+c      If (NoSym .Ne. 0) then
+c         Need1 = L03 - L01
+c         L03 = L01
+c         L04 = L01
+c      else
+c         L04 = L03 + NConf
+c         L05 = L04 + NConf
+c         Need1 = L05 - L01
+c      End If
+c      Call GetFM (Need1)
+c      Call InitZ (X(L01), X(L02), X(L03), X(L04))
+c.... --------------ZnFrq, ZklSqr, IPart, IReAd
+      allocate(ZnFrq(NMod,NQMax))
+      allocate(ZklSqr(NMod,NQMax,MxLT))
+      If (NoSym .Ne. 1) then
+            allocate(IPart(NConf))
+            allocate(IReAd(NConf))
+      end if
+      Call InitZ (ZnFrq, ZklSqr, IPart, IReAd)
+c
+c.... Check restart file
+c
+      MxLan = NLanc
+      If (IRest .Ne. 0) then
+         Read (Iz,End=900,Err=900) NMatx0, NLanc0
+         Write (IW,1300) NMatx0, NLanc0
+         If (NMatx0 .Ne. NMatx) then
+            Write (IW,1400)
+            Stop
+         End If
+         MxLan = NLanc + NLanc0
+      End If
+c
+c.... Quit if Info-only run 
+c
+      Infly = Index (Title,'#info')
+      If (Infly .Ne. 0) then
+         Write (Iw,1500)
+         Go to 100
+      End If
+c
+c.... Full Hamiltonian
+c
+      Ifdg = Index (Title,'#full')
+c old  If (Ifdg .Ne. 0) then
+c         LFM2 = 0
+c         Call ValFM (LFM2)
+c         M01 = LFM2 + 1
+c         M02 = M01 + NMatx
+c         M03 = M02 + NMatx
+c         M04 = M03 + NMatx * NMatx
+c         M05 = M04 + NMatx
+c         Need2 = M05 - M01
+c         Call GetFM (Need2)
+c         Call FulDg (X(L01), X(L02), X(L03), X(L04), 
+c     #               X(M01), X(M02), X(M03), X(M04))
+c         Call Clean (X(M01), X(M02), NMatx, Neff)
+c         If (INPlt.Eq.0) Call SPlot (X(M01), X(M02), Neff)
+c         go to 100
+c      End If
+c.... --------------------- A, B, P, Q
+      If (Ifdg .Ne. 0) then
+            allocate(A(NMatx))
+            allocate(B(NMatx))
+            allocate(P(NMatx * NMatx))
+            allocate(Q(NMatx))
+            Call FulDg (ZnFrq, ZklSqr, IPart, IReAd, 
+     #               A, B, P, Q)
+            Call Clean (A, B, NMatx, Neff)
+            If (INPlt.Eq.0) Call SPlot (A, B, Neff)
+            go to 100
+      End If
+            
+c
+c.... In-memory Lanczos
+c
+c old  LFM2 = 0
+c      Call ValFM (LFM2)
+c      M01 = LFM2 + 1
+c      M02 = M01 + NMatx
+c      M03 = M02 + NMatx
+c      M04 = M03 + Max0 (NMatx,MxLan+1)
+c      M05 = M04 + MxLan+1
+c      M06 = M05 + MxLan+1
+c      Need2 = M06 - M01
+c      Call GetFM (Need2)
+c
+c.... --------------------- P, Q, R, A, B
+      allocate(P(NMatx))
+      allocate(Q(NMatx))
+      allocate(R(Max0 (NMatx,MxLan+1)))
+      allocate(A(MxLan+1))
+      allocate(B(MxLan+1))
+c
+c:::  LaCor (ZnFrq, ZklSqr, IPart, IReAd, P, Q, R, A, B)
+c old  Call LaCor (X(L01), X(L02), X(L03), X(L04), 
+c old #            X(M01), X(M02), X(M03), X(M04), X(M05))
+      Call LaCor (ZnFrq, ZklSqr, IPart, IReAd, 
+     #            P, Q, R, A, B)
+c
+      If (Deb) then
+         Write (Iw,*) ' Results of Lanczos:'
+c old    Call PrtVC (X(M04), X(M05), MxLan)
+         Call PrtVC (A, B, MxLan)
+      End If
+c
+c.... Tridiagonal transformation
+c
+c old Call VClear (X(M03), MxLan)
+      Call VClear (R, MxLan)
+c old Call Tridg  (X(M04), X(M05), X(M03), MxLan)
+      Call Tridg  (A, B, R, MxLan)
+      If (Deb) then
+         Write (Iw,*) ' Results of transformation:'
+c old    Call PrtVC (X(M04), X(M03), MxLan)
+         Call PrtVC (A, R, MxLan)
+      End If
+c
+c.... Result analysis
+c
+c old Call Clean (X(M04), X(M03), MxLan, Neff)
+      Call Clean (A, R, MxLan, Neff)
+c old If (INPlt.Eq.0) Call SPlot (X(M04), X(M03), Neff)
+      If (INPlt.Eq.0) Call SPlot (A, R, Neff)
+c      
+C.... Normal termination
+C
+  100 Continue
+      Call BigFM  (MaxMem)
+      Call TMDate (TimStr)
+      Write (IW,1200) TimStr
+      Call SeqClo (Ir,'keep')
+      Call SeqClo (Iw,'keep')
+      If (IRest.Ne.0 .Or.
+     #    INSav.Eq.0) Call SeqClo (Iz,'keep')
+      If (INPlt.Eq.0) Call SeqClo (Ip,'keep')
+      Call Ending
+      Stop
+c
+c.... Error section
+c
+  900 Continue
+      Write (Iw,1600)
+      Stop
+      End

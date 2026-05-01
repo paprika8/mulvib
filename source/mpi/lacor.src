@@ -1,0 +1,189 @@
+      Subroutine LaCor (ZnFrq, ZklSqr, IPart, IReAd, P, Q, R, A, B,
+     # iQofst, iblksz)
+      Implicit Double Precision (A-H,O-Z)
+      Parameter (Zero=0.0d+00, One=1.0d+00)
+c
+c.... In-Core Lanczos.
+c.... Note that -IPart- and -IReAd- are DUMMY without symmtery.
+c
+*unx  Include 'infcom.com'
+*unx  Include 'ioscom.com'
+*aix  Include (infcom.com)
+*aix  Include (ioscom.com)
+c
+      Dimension IPart (*), IReAd (*), ZnFrq (NMod,NQMax), 
+     #          ZklSqr (NMod,NQMax,MxLT), P (NMatx), Q (NMatx), 
+     #          R (NMatx), A (*), B (*)
+c
+      call MPI_Comm_rank(MPI_COMM_WORLD, irank, ierr)
+      call MPI_Comm_size(MPI_COMM_WORLD, icmlen, ierr)
+      Dimension BufMpi(icmlen)
+c
+ 1000 Format (1x,'Starting Lanczos iterations.')
+ 1100 Format (1x,'End of Iteration No.',i6,' (absolute No.',i6,').')
+ 1200 Format (1x,'Average performance is',f7.2,' sec per Lanczos ',
+     #           'iteration.')
+ 1400 Format (1x,'Restart information saved on unit',i3,'.')
+ 3000 Format (1x,'>>> Error or EOF while reading restart unit ! <<<')
+ 4000 Format ((4x,f10.4,5x,f10.4))
+c
+c.... Initialization
+c
+      IRest = Index (Title,'#restart')
+      If (IRest .ne. 0) then
+         Rewind (Iz)
+         Read (Iz) NMatx0, NLanc0
+         Read (Iz,Err=900,End=900) (A (m),m=1,NLanc0),
+     #                             (B (m),m=1,NLanc0), Beta, P,R
+         IStar = NLanc0 + 1
+         IEnd  = NLanc0 + NLanc
+      else
+         Call VClear (P,NMatx)
+         P (1) = One
+         Beta  = Zero 
+         IStar = 1
+         IEnd  = NLanc
+      EndIf
+      Write (Iw,1000)
+c
+c@@@
+      Its = Index (Title,'#mult_tst')
+      If (Its .Ne. 0) then
+         Write (Iw,*) ' *** Trial vector initialized for testing ! ***'
+         Ter = One / Dsqrt (DFloat (NMatx))
+         Do 10 i=1,NMatx
+            P (i) = Ter
+   10    Continue 
+      End If
+c@@@
+c
+      integer status(MPI_STATUS_SIZE), ierror
+c
+      InTim = Max0 (NLanc/100, 1)
+      ToTim = Zero
+      ZTm   = Zero
+      KTims = 0
+      Iterx = 0
+      iQstr = iQofst
+      iQend = iQstr + iblksz - 1
+c
+c.... Lanczos iterations
+c
+      Call Timit (1)
+      Write (6,*) ' Starting Lanczos iterations.'
+      Call Flush (6)
+      Do 60 i=IStar,IEnd
+c
+         A (i) = Zero
+         B (i) = Zero
+c
+         Call MtCor  (IPart, IReAd, ZnFrq, ZklSqr, P, Q, iQofst, iQend, iblksz)
+c@@@
+         If (Its.ne.0) then
+            Write (Iw,*) 'Vector Q :'
+            call prtve (Q,NMatx)
+         EndIf
+c@@@
+         Temp = Zero
+!$OMP parallel num_threads(3)
+!$OMP do reduction(+:Temp)
+         Do 30 j=iQstr,iQend
+            Temp = Temp + Q (j - iQofst) * P (j)
+   30    Continue
+!$OMP master
+         print *, "irank = ", irank, " ATEMP= ", Temp;
+         call MPI_Barrier( MPI_COMM_WORLD );
+         call MPI_Gather(Temp, 1, MPI_DOUBLE_PRECISION,
+     #      BufMpi, 1, MPI_DOUBLE_PRECISION,
+     #      0, MPI_COMM_WORLD, ierror)
+         if(irank .eq. 0) then
+            print *, "irank = ", irank, " BufMpi[", ib,"]= ", BufMpi[ib];
+            do ib = 1,icmlen
+               A (i) = A (i) + BufMpi[ib]
+            end do
+         endif
+         call MPI_Bcast(A (i), 1, MPI_DOUBLE_PRECISION, 
+     #      0, MPI_COMM_WORLD, ierror)
+         Temp = Zero
+!$OMP end master
+!$OMP barrier
+c
+!$OMP do reduction(+:Temp)
+         Do 40 j=iQstr,iQend
+            jq = j - iQofst
+            Q (jq) = Q (jq) - A (i) * P (j) - Beta * R (j)
+            R (j) = P (j)
+            Temp = Temp + Q (jq) * Q (jq)
+   40    Continue
+!$OMP master
+         call MPI_Barrier( MPI_COMM_WORLD );
+         CALL MPI_GATHER(Temp, 1, MPI_DOUBLE_PRECISION,
+     #      BufMpi, 1, MPI_DOUBLE_PRECISION,
+     #      0, MPI_COMM_WORLD, ierror)
+         if(irank .eq. 0) then
+            do ib = 1,icmlen
+               B (i) = B (i) + BufMpi[ib]
+            end do
+         endif
+         CALL MPI_BCAST(B (i), 1, MPI_DOUBLE_PRECISION, 
+     #      0, MPI_COMM_WORLD, ierror)
+c
+         B (i) = DSqrt (B (i))
+         Beta = B (i)
+!$OMP end master
+!$OMP barrier
+c
+!$OMP do
+         Do 50 j=iQstr,iQend
+            jq = j - iQofst
+            P (j) = Q (jq) / Beta
+   50    Continue
+!$OMP end parallel
+c@@@
+c        If (Its.ne.0) then
+c           Write (Iw,*) 'Vector P :'
+c           call prtve (P,NMatx)
+c        EndIf
+c@@@
+c
+         Iterx = Iterx + 1
+         KTims = KTims + 1
+         If (KTims .eq. InTim) then
+            Write (Iw,1100) Iterx,i
+            Call Timit (1)
+            Call Flush (6)
+            ToTim = ToTim + ZTm
+            KTims = 0
+         End If
+c        Write (6,3400) i, A(i), B(i)
+c3400    Format (1x,'i=',i3,' A=',f12.6,' B=',f12.6)
+   60 Continue
+c
+c.... Final timing
+c
+      If (KTims .Ne. 0) Write (Iw,1100) NLanc,IEnd
+      Write (6,*) ' Finished with Lanczos iterations.'
+      Call Timit (1)
+      Call Flush (6)
+c     ToTim = ToTim + ZTm
+c     APerf = ToTim / DFloat (NLanc)
+c     Write (Iw,1200) APerf
+c
+c.... Save restart information
+c
+      INoSav = Index (Title,'#nosave')
+      If (INoSav .Eq. 0) then
+         Rewind (Iz)
+         Write (Iz) NMatx, IEnd
+         Write (Iz) (A (m),m=1,IEnd),
+     #              (B (m),m=1,IEnd), Beta, P,R
+         Write (Iw,1400) Iz
+      End If
+      Return
+c
+c.... Error section
+c
+  900 Continue
+      Write (6,3000)
+      Stop
+      End
