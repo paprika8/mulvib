@@ -1,5 +1,5 @@
       Subroutine LaCor (ZnFrq, ZklSqr, IPart, IReAd, P, Q, R, A, B,
-     # iQofst, iblksz)
+     # iQofst, iblksz, NCStrt, NCEend)
       Implicit Double Precision (A-H,O-Z)
       Parameter (Zero=0.0d+00, One=1.0d+00)
 c
@@ -83,7 +83,7 @@ c
          B (i) = Zero
 c
          Call MtCor  (IPart, IReAd, ZnFrq, ZklSqr, P, Q, iQofst,
-     #      iQend, iblksz)
+     #      iQend, iblksz, NCStrt, NCEend)
 c@@@
          If (Its.ne.0) then
             Write (Iw,*) 'Vector Q :'

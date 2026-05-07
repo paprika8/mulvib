@@ -1,5 +1,5 @@
       Subroutine MtCor (IPart, IReAd, ZnFrq, ZklSqr, P, Q,
-     #   iQofst, iQend, iblksz)
+     #   iQofst, iblksz, NCStrt, NCEend)
       Implicit Double Precision (A-H,O-Z)
       Parameter (Zero=0.0d+00)
 c
@@ -24,7 +24,6 @@ c
       ITs1 = Index (Title,'#debug')
       ITs2 = Index (Title,'#mtcor')
       IDeb = ITs1.Ne.0 .Or. ITs2.Ne.0
-      iQstr = iQofst
 c
       Call VClear (Q,iblksz)
       Do 10 i=1,NMod
@@ -39,20 +38,21 @@ c.... Set null iteration
 !$OMP& Hij, Term, ilast, i, Iq, Pi, n0, Ns, Hii,
 !$OMP& NNs, MMs, NNM, im, QQ) 
 !$OMP&default(none)
-!$OMP&firstprivate(iQstr, iQend, iQofst, NMod, IConf, ktid)
+!$OMP&firstprivate(iQofst, NMod, IConf, ktid, NCStrt, NCEend)
 c.... Сounter of previous iteration 
       ilast = 0
 !$OMP do schedule(static) 
 c
 c.... Loop over configurations
 c
-      Do 50 i=iQstr,iQend
+      Do 50 i=NCStrt,NCEend
          If (IDeb) Write (6,1100) i, ((IConf (jx)-1),jx=1,Nmod),
      #             IPart (i), IReAd (i)
          Ns = IPart (i)
          If (Ns .Eq. 0) go to 40
-         Iq = i - iQofst
-         Pi = P (i)
+         Iq = IReAd(i) - iQofst
+         Ix = IReAd(i)
+         Pi = P (Ix)
          Term = Zero
          Hii = EnEl (Ns)
 c....... Get next set of quantum nubers
@@ -83,20 +83,24 @@ c.......... Loop over coupling modes
                n1 = n0 + 1
                If (n1 .Le. LimQN (k)) then
                   j = i + Indxx (k)
+                  Jx = IReAd(j)
                   Hij  = ZklSqr (k,n1,NM)
-                  Term = Term + Hij * P (j)
+                  Term = Term + Hij * P (Jx)
                EndIf
                If (n0 .Ge. 2) then
                   j = i - Indxx (k)
+                  Jx = IReAd(j)
                   NNs = IPart (j)
+                  If (NNs .Eq. 0) go to 21
                   im = MulTab(Ns, m)
                   im = MulTab(NNs, im)
 c
                   MMs = IntEl (NNs,im)
                   NNM = ILTr  (NNs,MMs)
                   Hij  = ZklSqr (k,n0,NNM)
-                  Term = Term + Hij * P (j)
+                  Term = Term + Hij * P (Jx)
                EndIf
+   21       Continue
    20       Continue
    30    Continue
          Q (Iq) = Q (Iq) + Hii * Pi + Term

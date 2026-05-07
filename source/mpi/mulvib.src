@@ -164,7 +164,8 @@ c
             stop
       endif
 
-      call getReAddr(irank, LimQN, Indxx, NMod, icmlen, iQofst, iblksz)
+      call getReAddr(irank, icmlen, LimQN, NMod, IReAd, NMatx, 
+     #   iQofst, iblksz, NCStrt, NCEend)
       print *, "Rang number = ", irank, "Q offset = ", iQofst, 
      #   " block size = ", iblksz
 c
@@ -180,7 +181,7 @@ c
 c
 c:::  LaCor (ZnFrq, ZklSqr, IPart, IReAd, P, Q, R, A, B)
       Call LaCor (ZnFrq, ZklSqr, IPart, IReAd, 
-     #            P, Q, R, A, B, iQofst, iblksz)
+     #            P, Q, R, A, B, iQofst, iblksz, NCStrt, NCEend)
 c
 c      deallocate(Q)
       if(irank .ne. 0) then 

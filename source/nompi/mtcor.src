@@ -50,7 +50,7 @@ c
      #             IPart (i), IReAd (i)
          Ns = IPart (i)
          If (Ns .Eq. 0) go to 40
-         Ix = i
+         Ix = IReAdd(i)
          Pi = P (Ix)
          Term = Zero
          Hii = EnEl (Ns)
@@ -82,20 +82,25 @@ c.......... Loop over coupling modes
                n1 = n0 + 1
                If (n1 .Le. LimQN (k)) then
                   j = i + Indxx (k)
+                  Jx = IReAdd(j)
                   Hij  = ZklSqr (k,n1,NM)
-                  Term = Term + Hij * P (j)
+                  Term = Term + Hij * P (Jx)
                EndIf
                If (n0 .Ge. 2) then
                   j = i - Indxx (k)
+                  Jx = IReAdd(j)
                   NNs = IPart (j)
+c                 TODO check
+                  If (NNs .Eq. 0) go to 21
                   im = MulTab(Ns, m)
                   im = MulTab(NNs, im)
 c
                   MMs = IntEl (NNs,im)
                   NNM = ILTr  (NNs,MMs)
                   Hij  = ZklSqr (k,n0,NNM)
-                  Term = Term + Hij * P (j)
+                  Term = Term + Hij * P (Jx)
                EndIf
+   21      Continue
    20       Continue
    30    Continue
          Q (Ix) = Q (Ix) + Hii * Pi + Term
