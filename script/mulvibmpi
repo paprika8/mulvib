@@ -29,6 +29,7 @@ echo ----- Mulvib execution script -----
 #   Grab a copy of the input file
 #
 cp $MVB/input/$job.inp $scr/$job.f05
+source child_mulvib_mpi
 #
 setenv input  $scr/$job.f05
 setenv output $scr/$job.f06
@@ -40,16 +41,27 @@ setenv resta  $scr/$job.f08
 setenv OMP_WAIT_POLICY ACTIVE
 setenv OMP_PROC_BIND SPREAD
 setenv OMP_NUM_THREADS 6
-setenv OMP_PLACES cores        # привязываем к физическим ядрам
+setenv OMP_PLACES cores         # привязываем к физическим ядрам
 #setenv OMP_NUM_THREADS 6
 #setenv OMP_PLACES cores
 #
 #   ----- execute Mulvib -----
 #
+
+set EXPORT_VARS=""
+set EXPORT_VARS="$EXPORT_VARS -x input"
+set EXPORT_VARS="$EXPORT_VARS -x output"
+set EXPORT_VARS="$EXPORT_VARS -x punch"
+set EXPORT_VARS="$EXPORT_VARS -x resta"
+set EXPORT_VARS="$EXPORT_VARS -x OMP_WAIT_POLICY"
+set EXPORT_VARS="$EXPORT_VARS -x OMP_PROC_BIND"
+#set EXPORT_VARS="$EXPORT_VARS -x OMP_NUM_THREADS"
+set EXPORT_VARS="$EXPORT_VARS -x OMP_PLACES"
+
 cp $MVBRT/mulvib_mpi.$VERNO.exe $scr
 cp $MVBRT/hosts.txt $scr
 cd $scr
-mpirun --hostfile $scr/hosts.txt -np 2 --bind-to none $scr/mulvib_mpi.$VERNO.exe 
+mpirun $EXPORT_VARS --hostfile $scr/hosts.txt --bind-to none $scr/mulvib_mpi.$VERNO.exe 
 #
 echo ------ accounting info ------
 echo program version :  mulvib_mpi.$VERNO.exe

@@ -1,0 +1,32 @@
+#!/bin/csh -f
+
+# set_remote_env.csh — установка переменных окружения на удалённых хостах
+# Использование: ./set_remote_env.csh VAR1=значение1 VAR2=значение2 ...
+
+set hosts_file = "hosts.txt"
+
+if (! -f $hosts_file) then
+    echo "Ошибка: файл $hosts_file не найден"
+    exit 1
+endif
+
+if ($#argv == 0) then
+    echo "Использование: $0 VAR=значение [VAR2=значение2 ...]"
+    exit 1
+endif
+
+foreach line ("`cat $hosts_file`")
+    if ("$line" == "") continue
+    set host = `echo $line | awk '{print $1}'`
+    echo "Копирование на хост: $host"
+    ssh $host "mkdir $scr"
+    scp $MVB/input/$job.inp ${host}:$scr/$job.f05
+    scp $MVBRT/mulvib_mpi.$VERNO.exe ${host}:$scr
+    if ($status != 0) then
+        echo "Ошибка scp на $host"
+        exit 1
+    endif
+
+end
+
+echo "Готово."
