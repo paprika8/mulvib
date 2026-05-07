@@ -29,9 +29,9 @@ void getreaddr_(int *irank, int *n, ll *limQN, ll *lenLim, ll* readdr, ll* NMatx
 	i = 0;
 	offset ++; //to fortran index
 	for(; i < limit; ++i)
-		if(readdr[i] == offset) *conf_start = i + 1;
+		if(readdr[i] == offset) {*conf_start = i + 1; break;}
 	offset += limit_block - 1;
 	for(; i < limit; ++i)
-		if(readdr[i] == offset) *conf_end = i + 1;
+		if(readdr[i] == offset) {*conf_end = i + 1; break;}
 	return;
 }

@@ -167,7 +167,9 @@ c
       call getReAddr(irank, icmlen, LimQN, NMod, IReAd, NMatx, 
      #   iQofst, iblksz, NCStrt, NCEend)
       print *, "Rang number = ", irank, "Q offset = ", iQofst, 
-     #   " block size = ", iblksz
+     #   " block size = ", iblksz,
+     #   " NCStrt = ", NCStrt,
+     #   " NCEend = ", NCEend
 c
 c.... In-memory Lanczos
 c
