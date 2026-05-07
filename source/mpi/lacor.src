@@ -15,6 +15,7 @@ c
 c
       integer*4 status(MPI_STATUS_SIZE), ierror
       integer*4 irank, icmlen
+      Logical IDeb
       Dimension IPart (*), IReAd (*), ZnFrq (NMod,NQMax), 
      #          ZklSqr (NMod,NQMax,MxLT), P (NMatx), Q (NMatx), 
      #          R (NMatx), A (*), B (*)
@@ -36,6 +37,7 @@ c
 c.... Initialization
 c
       IRest = Index (Title,'#restart')
+      IDeb  = (Index (Title,'#debug') .ne. 0)
       If (IRest .ne. 0) then
          Rewind (Iz)
          Read (Iz) NMatx0, NLanc0
@@ -97,15 +99,14 @@ c@@@
             Temp = Temp + Q (j - iQofst) * P (j)
    30    Continue
 !$OMP master
-         print *, "irank = ", irank, " ATEMP= ", Temp;
-         call MPI_Barrier( MPI_COMM_WORLD );
+         If (IDeb) print *, "irank = ", irank, " ATEMP= ", Temp;
          call MPI_Gather(Temp, 1, MPI_DOUBLE_PRECISION,
      #      BufMpi, 1, MPI_DOUBLE_PRECISION,
      #      0, MPI_COMM_WORLD, ierror)
          if(irank .eq. 0) then
             do ib = 1,icmlen
-               print *, "irank = ", irank, " BufMpi[", ib,"]= ", 
-     #         BufMpi(ib)
+               If (IDeb) print *, "irank = ", irank, " 
+     #         BufMpi[", ib,"]= ", BufMpi(ib)
                A (i) = A (i) + BufMpi(ib)
             end do
          endif
@@ -123,8 +124,7 @@ c
             Temp = Temp + Q (jq) * Q (jq)
    40    Continue
 !$OMP master
-         print *, "Birank = ", irank, " ATEMP= ", Temp;
-         call MPI_Barrier( MPI_COMM_WORLD );
+         If (IDeb) print *, "Birank = ", irank, " ATEMP= ", Temp;
          CALL MPI_GATHER(Temp, 1, MPI_DOUBLE_PRECISION,
      #      BufMpi, 1, MPI_DOUBLE_PRECISION,
      #      0, MPI_COMM_WORLD, ierror)
