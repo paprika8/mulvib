@@ -36,7 +36,7 @@ c.... Set null iteration
 !$OMP& IPart, EnEl, ZnFrq, NInt, QBuff)
 !$OMP&private(MEnd, Ms, NM, m, KSym, KSta, KEnd, n1, k, j, Jx,
 !$OMP& Hij, Term, ilast, i, Iq, Pi, n0, Ns, Hii,
-!$OMP& NNs, MMs, NNM, im, QQ) 
+!$OMP& NNs, MMs, NNM, im, QQ, Ix, Ij) 
 !$OMP&default(none)
 !$OMP&firstprivate(iQofst, NMod, IConf, ktid, NCStrt, NCEend)
 c.... Сounter of previous iteration 
