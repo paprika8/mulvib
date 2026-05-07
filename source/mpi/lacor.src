@@ -83,7 +83,7 @@ c
          B (i) = Zero
 c
          Call MtCor  (IPart, IReAd, ZnFrq, ZklSqr, P, Q, iQofst,
-     #      iQend, iblksz, NCStrt, NCEend)
+     #      iblksz, NCStrt, NCEend)
 c@@@
          If (Its.ne.0) then
             Write (Iw,*) 'Vector Q :'

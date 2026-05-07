@@ -91,7 +91,7 @@ c.......... Loop over coupling modes
                   j = i - Indxx (k)
                   Jx = IReAd(j)
                   NNs = IPart (j)
-                  If (NNs .Eq. 0) go to 21
+                  If (NNs .Eq. 0) go to 19
                   im = MulTab(Ns, m)
                   im = MulTab(NNs, im)
 c
@@ -100,7 +100,7 @@ c
                   Hij  = ZklSqr (k,n0,NNM)
                   Term = Term + Hij * P (Jx)
                EndIf
-   21       Continue
+   19       Continue
    20       Continue
    30    Continue
          Q (Iq) = Q (Iq) + Hii * Pi + Term

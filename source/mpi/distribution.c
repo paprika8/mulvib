@@ -28,10 +28,14 @@ void getreaddr_(int *irank, int *n, ll *limQN, ll *lenLim, ll* readdr, ll* NMatx
 		limit *= limQN[i];
 	i = 0;
 	offset ++; //to fortran index
+	printf("irank=%lld == offset=%lld\n", *irank, offset);
 	for(; i < limit; ++i)
 		if(readdr[i] == offset) {*conf_start = i + 1; break;}
 	offset += limit_block - 1;
+	printf("irank=%lld == conf_start=%lld\n", *irank, *conf_start);
+	printf("irank=%lld == offset=%lld\n", *irank, offset);
 	for(; i < limit; ++i)
 		if(readdr[i] == offset) {*conf_end = i + 1; break;}
+	printf("irank=%lld == conf_end=%lld\n", *irank, *conf_end);
 	return;
 }
