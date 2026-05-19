@@ -120,6 +120,7 @@ c
          Do 40 j=iQstr,iQend
             jq = j - iQofst
             Q (jq) = Q (jq) - A (i) * P (j) - Beta * R (j)
+c           ERROR 
             R (j) = P (j)
             Temp = Temp + Q (jq) * Q (jq)
    40    Continue
@@ -144,6 +145,7 @@ c
 !$OMP do
          Do 50 j=iQstr,iQend
             jq = j - iQofst
+c           ERROR 
             P (j) = Q (jq) / Beta
    50    Continue
 !$OMP end parallel
