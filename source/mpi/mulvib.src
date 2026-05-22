@@ -176,7 +176,7 @@ c
 c.... --------------------- P, Q, R, A, B
 c
       allocate(P(NMatx))
-      allocate(Q(iblksz))
+      allocate(Q(NMatx))
       allocate(R(Max0 (NMatx,MxLan+1)))
       allocate(A(MxLan+1))
       allocate(B(MxLan+1))

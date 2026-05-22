@@ -14,17 +14,21 @@ c
 *aix  Include (../ioscom.com)
 c
       integer*4 status(MPI_STATUS_SIZE), ierror
-      integer*4 irank, icmlen
+      integer*4 irank, icmlen, request
       Logical IDeb
       Dimension IPart (*), IReAd (*), ZnFrq (NMod,NQMax), 
      #          ZklSqr (NMod,NQMax,MxLT), P (NMatx), Q (NMatx), 
      #          R (NMatx), A (*), B (*)
-      Double Precision, Allocatable :: BufMpi(:)
+      Double Precision, Allocatable :: BufMpi(:), Qmpibf(:)
+      Integer*4, Allocatable :: iArrBlkSz(:), ioffs(:)
       
 c
       call MPI_Comm_rank(MPI_COMM_WORLD, irank, ierr)
       call MPI_Comm_size(MPI_COMM_WORLD, icmlen, ierr)
       Allocate(BufMpi(icmlen))
+      Allocate(iArrBlkSz(icmlen))
+      Allocate(ioffs(icmlen))
+      Allocate(Qmpibf(iblksz))
 c
  1000 Format (1x,'Starting Lanczos iterations.')
  1100 Format (1x,'End of Iteration No.',i6,' (absolute No.',i6,').')
@@ -53,6 +57,13 @@ c
          IEnd  = NLanc
       EndIf
       Write (Iw,1000)
+c.... 
+      call MPI_Allgather(iblksz, 1, MPI_INTEGER, 
+     #   iArrBlkSz, 1, MPI_INTEGER, 
+     #   MPI_COMM_WORLD, ierr)
+      call MPI_Allgather(iQstr, 1, MPI_INTEGER, 
+     #   ioffs, 1, MPI_INTEGER, 
+     #   MPI_COMM_WORLD, ierr)
 c
 c@@@
       Its = Index (Title,'#mult_tst')
@@ -79,24 +90,23 @@ c
       Call Timit (1)
       Write (6,*) ' Starting Lanczos iterations.'
       Call Flush (6)
-      Do 60 i=IStar,IEnd
+      Do 70 i=IStar,IEnd
 c
          A (i) = Zero
          B (i) = Zero
 c
-         Call MtCor  (IPart, IReAd, ZnFrq, ZklSqr, P, Q, iQofst,
+         Call MtCor  (IPart, IReAd, ZnFrq, ZklSqr, P, Qmpibf, iQofst,
      #      iblksz, NCStrt, NCEend)
 c@@@
-         If (Its.ne.0) then
-            Write (Iw,*) 'Vector Q :'
-            call prtve (Q,NMatx)
-         EndIf
+         CALL MPI_IALLGATHERV(Qmpibf, iblksz, MPI_DOUBLE_PRECISION, 
+     #      Q, iArrBlkSz, ioffs, MPI_DOUBLE_PRECISION
+     #      MPI_COMM_WORLD, request, ierror)
 c@@@
          Temp = Zero
 !$OMP parallel num_threads(3)
 !$OMP do reduction(+:Temp)
          Do 30 j=iQstr,iQend
-            Temp = Temp + Q (j - iQofst) * P (j)
+            Temp = Temp + Qmpibf (j - iQofst) * P (j)
    30    Continue
 !$OMP master
          If (IDeb) print *, "irank = ", irank, " ATEMP= ", Temp;
@@ -116,13 +126,11 @@ c@@@
 !$OMP end master
 !$OMP barrier
 c
-!$OMP do reduction(+:Temp)
+!$OMP do reduction(+:Temp) private(jq, j, TempQ)
          Do 40 j=iQstr,iQend
             jq = j - iQofst
-            Q (jq) = Q (jq) - A (i) * P (j) - Beta * R (j)
-c           ERROR 
-            R (j) = P (j)
-            Temp = Temp + Q (jq) * Q (jq)
+            TempQ = Qmpibf (jq) - A (i) * P (j) - Beta * R (j)
+            Temp = Temp + TempQ * TempQ
    40    Continue
 !$OMP master
          If (IDeb) print *, "Birank = ", irank, " ATEMP= ", Temp;
@@ -138,17 +146,21 @@ c           ERROR
      #      0, MPI_COMM_WORLD, ierror)
 c
          B (i) = DSqrt (B (i))
-         Beta = B (i)
+         call MPI_Wait(request, MPI_STATUS_IGNORE, ierr)
 !$OMP end master
 !$OMP barrier
 c
 !$OMP do
-         Do 50 j=iQstr,iQend
-            jq = j - iQofst
-c           ERROR 
-            P (j) = Q (jq) / Beta
+         Do 50 j=1,NMatx
+            Q (j) = Q (j) - A (i) * P (j) - Beta * R (j)
+            R (j) = P (j)
    50    Continue
+!$OMP do
+         Do 60 j=1,NMatx
+            P (j) = Q (j) / B (i)   
+   60    Continue
 !$OMP end parallel
+         Beta = B (i)
 c@@@
 c        If (Its.ne.0) then
 c           Write (Iw,*) 'Vector P :'
@@ -167,7 +179,7 @@ c
          End If
 c        Write (6,3400) i, A(i), B(i)
 c3400    Format (1x,'i=',i3,' A=',f12.6,' B=',f12.6)
-   60 Continue
+   70 Continue
       deallocate(BufMpi)
 c
 c.... Final timing
