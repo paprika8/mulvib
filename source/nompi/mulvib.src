@@ -2,10 +2,10 @@
       Implicit Double Precision (A-H,O-Z)
       Parameter (Zero=0.0d+00)
 c
-*unx  Include 'infcom.com'
-*unx  Include 'ioscom.com'
-*aix  Include (infcom.com)
-*aix  Include (ioscom.com)
+*unx  Include '../infcom.com'
+*unx  Include '../ioscom.com'
+*aix  Include (../infcom.com)
+*aix  Include (../ioscom.com)
 c
 c      Common / FmCom / X (1)
 c     ZnFrq, ZklSqr, IPart, IReAd, P, Q, R, A, B

@@ -4,8 +4,8 @@
 c
 c.... In-memory  Q = H * P  using symmetry
 c
-*unx  Include 'infcom.com'
-*aix  Include (infcom.com)
+*unx  Include '../infcom.com'
+*aix  Include (../infcom.com)
 c
       Dimension IPart (NConf), IReAd (NConf), ZnFrq (NMod,NQMax), 
      #          ZklSqr (NMod,NQMax,MxLT), P (NMatx), Q (NMatx)
@@ -103,8 +103,8 @@ c
 c.... In-memory  Q = H * P  without symmetry.
 c.... All empty positions in -ZklSqr- should be zeroed !
 c
-*unx  Include 'infcom.com'
-*aix  Include (infcom.com)
+*unx  Include '../infcom.com'
+*aix  Include (../infcom.com)
 c
       Dimension ZnFrq (NMod,NQMax), ZklSqr (NMod,NQMax,MxLT), 
      #          P (NMatx), Q (NMatx)

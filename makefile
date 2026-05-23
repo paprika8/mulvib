@@ -1,14 +1,25 @@
+
+ifdef MPI
+
 FGCC:= mpif90
-#FGCC:=gfortran
 GCC:= mpicc
-#GCC:= gcc
 TARGET := mulvib_mpi.00.exe
-#TARGET := mulvib.00.exe
 
 SRC := $(wildcard source/*.src) $(wildcard source/mpi/*.src)
+C := $(wildcard source/*.c) $(wildcard source/mpi/*.c)
+
+else
+
+FGCC:=gfortran
+GCC:= gcc
+TARGET := mulvib.00.exe
+
+SRC := $(wildcard source/*.src) $(wildcard source/nompi/*.src)
+C := $(wildcard source/*.c) $(wildcard source/nompi/*.c)
+
+endif
 
 F := $(SRC:.src=.f)
-C := $(wildcard source/*.c) $(wildcard source/mpi/*.c)
 
 OBJ := $(F:.f=.fo) $(C:.c=.co)
 OBJ := $(patsubst source/%,%,$(OBJ))
@@ -25,7 +36,7 @@ LIB := -fopenmp
 
 #.SECONDARY: $(F) # for debug
 
-.PHONY: all clean rebuild
+.PHONY: all clean rebuild actvte
 
 all: $(TARGET)
 
@@ -39,7 +50,7 @@ $(TARGET): $(OBJ)
 	$(FGCC) -o $(TARGET) $(OBJ) $(LIB)
 	chmod +x ./$(TARGET)
 
-%.f: %.src
+%.f: %.src ./tools/actvte.exe
 	MACHIN='*unx' SRCIN=$< CODEOUT=$@ ./tools/actvte.exe
 
 object/%.co: source/%.c
@@ -49,3 +60,8 @@ object/%.co: source/%.c
 object/%.fo: source/%.f
 	@mkdir -p $(dir $@)
 	$(FGCC) $(FLAGS) $(INCLUDE) -c $< -o $@
+
+actvte: ./tools/actvte.exe
+
+./tools/actvte.exe: ./tools/activate.c
+	gcc -o ./tools/actvte.exe ./tools/activate.c 
