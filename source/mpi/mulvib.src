@@ -186,8 +186,13 @@ c:::  LaCor (ZnFrq, ZklSqr, IPart, IReAd, P, Q, R, A, B)
      #            P, Q, R, A, B, iQofst, iblksz, NCStrt, NCEend)
 c
 c      deallocate(Q)
+c
+c.... MPI final
+c
       if(irank .ne. 0) then 
-            Stop
+         call MPI_Barrier(MPI_COMM_WORLD, ierr)
+         call MPI_Finalize(ierr)
+         Stop
       end if
 c
       If (Deb) then
@@ -221,15 +226,18 @@ C
      #    INSav.Eq.0) Call SeqClo (Iz,'keep')
       If (INPlt.Eq.0) Call SeqClo (Ip,'keep')
       Call Ending
-c
 c.... MPI final
 c
+      call MPI_Barrier(MPI_COMM_WORLD, ierr)
       call MPI_Finalize(ierr)
       Stop
+c
 c
 c.... Error section
 c
   900 Continue
       Write (Iw,1600)
+      call MPI_Barrier(MPI_COMM_WORLD, ierr)
+      call MPI_Finalize(ierr)
       Stop
       End

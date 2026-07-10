@@ -33,6 +33,7 @@ source child_mulvib_mpi
 #
 setenv input  $scr/$job.f05
 setenv output $scr/$job.f06
+setenv output2 $scr/$job.f062
 setenv punch  $scr/$job.f07
 setenv resta  $scr/$job.f08
 #
@@ -50,7 +51,6 @@ setenv OMP_PLACES cores         # привязываем к физическим
 
 set EXPORT_VARS=""
 set EXPORT_VARS="$EXPORT_VARS -x input"
-set EXPORT_VARS="$EXPORT_VARS -x output"
 set EXPORT_VARS="$EXPORT_VARS -x punch"
 set EXPORT_VARS="$EXPORT_VARS -x resta"
 set EXPORT_VARS="$EXPORT_VARS -x OMP_WAIT_POLICY"

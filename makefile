@@ -65,3 +65,6 @@ actvte: ./tools/actvte.exe
 
 ./tools/actvte.exe: ./tools/activate.c
 	gcc -o ./tools/actvte.exe ./tools/activate.c 
+
+
+#./scripts/mulvibmpi Imz_ccsdt_BTE_l0_23_a1

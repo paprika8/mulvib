@@ -50,7 +50,7 @@ c
      #             IPart (i), IReAd (i)
          Ns = IPart (i)
          If (Ns .Eq. 0) go to 40
-         Iq = IReAd(i) - iQofst
+         Iq = IReAd(i) - iQofst + 1
          Ix = IReAd(i)
          Pi = P (Ix)
          Term = Zero

@@ -21,6 +21,7 @@ c
      #          R (NMatx), A (*), B (*)
       Double Precision, Allocatable :: BufMpi(:), Qmpibf(:)
       Integer*4, Allocatable :: iArrBlkSz(:), ioffs(:)
+      Integer*4  mpioff, mpibsz
       
 c
       call MPI_Comm_rank(MPI_COMM_WORLD, irank, ierr)
@@ -57,13 +58,6 @@ c
          IEnd  = NLanc
       EndIf
       Write (Iw,1000)
-c.... 
-      call MPI_Allgather(iblksz, 1, MPI_INTEGER, 
-     #   iArrBlkSz, 1, MPI_INTEGER, 
-     #   MPI_COMM_WORLD, ierr)
-      call MPI_Allgather(iQstr, 1, MPI_INTEGER, 
-     #   ioffs, 1, MPI_INTEGER, 
-     #   MPI_COMM_WORLD, ierr)
 c
 c@@@
       Its = Index (Title,'#mult_tst')
@@ -84,6 +78,19 @@ c
       Iterx = 0
       iQstr = iQofst
       iQend = iQstr + iblksz - 1
+c.... 
+      mpioff = iQstr - 1
+      mpibsz = iblksz
+      call MPI_Allgather(mpibsz, 1, MPI_INTEGER, 
+     #   iArrBlkSz, 1, MPI_INTEGER, 
+     #   MPI_COMM_WORLD, ierr)
+      call MPI_Allgather(mpioff, 1, MPI_INTEGER, 
+     #   ioffs, 1, MPI_INTEGER, 
+     #   MPI_COMM_WORLD, ierr)
+      print*, "priem"
+      print*, icmlen
+      print*, (i, " ", iArrBlkSz(i), i=1,icmlen)
+      print*, (i, " ", ioffs(i), i=1,icmlen)
 c
 c.... Lanczos iterations
 c
@@ -99,14 +106,14 @@ c
      #      iblksz, NCStrt, NCEend)
 c@@@
          CALL MPI_IALLGATHERV(Qmpibf, iblksz, MPI_DOUBLE_PRECISION, 
-     #      Q, iArrBlkSz, ioffs, MPI_DOUBLE_PRECISION
+     #      Q, iArrBlkSz, ioffs, MPI_DOUBLE_PRECISION,
      #      MPI_COMM_WORLD, request, ierror)
 c@@@
          Temp = Zero
 !$OMP parallel num_threads(3)
 !$OMP do reduction(+:Temp)
          Do 30 j=iQstr,iQend
-            Temp = Temp + Qmpibf (j - iQofst) * P (j)
+            Temp = Temp + Qmpibf (j - iQofst + 1) * P (j)
    30    Continue
 !$OMP master
          If (IDeb) print *, "irank = ", irank, " ATEMP= ", Temp;
@@ -128,7 +135,7 @@ c@@@
 c
 !$OMP do reduction(+:Temp) private(jq, j, TempQ)
          Do 40 j=iQstr,iQend
-            jq = j - iQofst
+            jq = j - iQofst + 1
             TempQ = Qmpibf (jq) - A (i) * P (j) - Beta * R (j)
             Temp = Temp + TempQ * TempQ
    40    Continue
@@ -181,6 +188,9 @@ c        Write (6,3400) i, A(i), B(i)
 c3400    Format (1x,'i=',i3,' A=',f12.6,' B=',f12.6)
    70 Continue
       deallocate(BufMpi)
+      deallocate(iArrBlkSz)
+      deallocate(ioffs)
+      deallocate(Qmpibf)
 c
 c.... Final timing
 c
@@ -195,7 +205,7 @@ c
 c.... Save restart information
 c
       INoSav = Index (Title,'#nosave')
-      If (INoSav .Eq. 0) then
+      If (irank .eq. 0 .and. INoSav .Eq. 0) then
          Rewind (Iz)
          Write (Iz) NMatx, IEnd
          Write (Iz) (A (m),m=1,IEnd),
